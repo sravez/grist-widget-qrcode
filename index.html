@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+  
+  <head>
+    <meta charset="utf-8">
+    <title>KBOCode</title>
+    <script src="https://docs.getgrist.com/grist-plugin-api.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="screen.css" />
+  </head>
+  
+  <body>
+    <!-- Réglages -->
+    <dialog id="settings" closedby="none">
+      <h2>Configuration</h2>
+      <form id="settings_form">
+        <img id="example" width="128px" height="128px"/>
+        
+        <label for="qr_size">Taille du QR Code :</label>
+        <input id="qrc_size" name="qrc_size" type="number" min="128" value="256"/>
+        
+        <label for="background_color">Fond du QR Code :</label>
+        <input id="background_color" name="background_color" type="color" value=""/>
+        
+        <label for="foreground_color">Blocs du QR Code :</label>
+        <input id="foreground_color" name="foreground_color" type="color" value=""/>
+        
+        <label for="padding">Largeur du contour :</label>
+        <input id="padding" name="padding" type="number" min="0" value="20"/>
+        
+        <label for="text_size">Taille du texte :</label>
+        <input id="text_size" name="text_size" type="number" min="6" value="16"/>
+        
+        <label for="text_color">Couleur du texte :</label>
+        <input id="text_color" name="text_color" type="color" value=""/>
+      </form>
+      <button id="settings_cancel">Annuler</button>
+      <button id="settings_save">Enregistrer</button>
+      <button id="settings_test">Test</button>
+    </dialog>
+    
+    <h1>KBO Code</h1>
+    <h2>QR Code</h2>
+        <img id="label"/>
+        <img id="qrcode"/>
+        <button id="saveBtn">Enregistrer</button>
+    <h2>log</h2>    
+    <pre id="log">---</pre>
+    
+    <!-- Chargement du JavaScript -->
+    <script src="page.mjs" type="module"></script>
+  </body>
+  
+</html>

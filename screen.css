@@ -1,0 +1,33 @@
+h1 {
+	font-family: sans-serif;
+}
+
+#settings {
+	padding: 10px;
+	border: 1px solid lightgray;
+	border-radius: 5px;
+	background: white;
+}
+
+#settings_form {
+	display: grid;
+	grid-template-columns: repeat(3, max-content);
+	column-gap: 10px;
+	row-gap: 5px;
+}
+
+#example {
+	grid-column: 3;
+	grid-row: 1 / 7;
+}
+
+#form > label {
+	width: 100%;
+	text-align: right;
+	display: block;
+}
+
+#form > input {
+	width: 7em;
+	text-align: center;
+}
