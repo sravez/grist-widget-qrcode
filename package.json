@@ -1,17 +1,17 @@
 {
-  "name": "@sravez/widget-kbocode",
+  "name": "@sravez/widget-qrcode",
   "description": "QR Code pour l'application KBO.",
-  "homePage": "https://github.com/sravez/widget-kbocode",
+  "homePage": "https://github.com/sravez/grist-widget-qrcode",
   "version": "0.0.1",
   "grist": [
     {
-      "name": "KBOCode",
-      "url": "https://gristlabs.github.io/grist-widget/kbocode/index.html",
-      "widgetId": "@sravez/widget-kbocode",
+      "name": "QR Code",
+      "url": "https://gristlabs.github.io/grist-widget/sravez-qrcode/index.html",
+      "widgetId": "@sravez/widget-qrcode",
       "published": true,
       "accessLevel": "full",
       "renderAfterReady": true,
-      "description": "QR Code pour KBO",
+      "description": "QR Code",
       "authors": [
         {
           "name": "Serge RAVEZ",
