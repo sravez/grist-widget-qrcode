@@ -1,11 +1,11 @@
 {
   "name": "@sravez/widget-qrcode",
-  "description": "QR Code pour l'application KBO.",
+  "description": "Génération de QR Codes",
   "homePage": "https://github.com/sravez/grist-widget-qrcode",
   "version": "0.0.1",
   "grist": [
     {
-      "name": "QR Code",
+      "name": "QR Code by sravez",
       "url": "https://gristlabs.github.io/grist-widget/sravez-qrcode/index.html",
       "widgetId": "@sravez/widget-qrcode",
       "published": true,
