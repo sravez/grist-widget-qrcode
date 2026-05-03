@@ -1,19 +1,65 @@
 import { getLabel } from "./label.mjs"
 
-export let options = {
+const default_options = {
 	img_type: "png",
 	qrc_size: 256,
+	resilience: "Q",
 	foreground_color: "#000000",
 	background_color: "#FFFFFF",
 	padding: 26,
 	text_size: 18,
-	text_color: "#0F0F0F"
+	text_color: "#808080",
+	test_val_length: 256,
+	display_size: 128,
+	auto_show: false,
+	btn_replace: true,
+	btn_save_first: false,
+	btn_save_last: false,
+	btn_refresh: true,
+	btn_refresh_all: true,
+	btn_refresh_unvalid: true,
+	save: "replace",
+	refresh_val: "",
+	validity_test: "filename"
 }
+
+const options_types = {
+	qrc_size: "Int",
+	padding: "Int",
+	text_size: "Int",
+	test_val_length: "Int",
+	display_size: "Int",
+	auto_show: "Boolean",
+}
+
+export let options = null
 
 /** Boîte de dialogue */
 const settings_dialog = document.getElementById("settings")
 /** Formulaire de saisie des options */
 const settings_form = document.getElementById("settings_form")
+
+export async function initOptions() {
+	if (!options) {
+		const o = await grist.getOption("options")
+		options = { ...default_options, ...(o ?? {}) }
+		if (!o) {
+			await grist.setOption("options", options)
+		}
+	}
+	setSettingsFormData(options)
+}
+
+
+function setSettingsFormData(a_options) {
+	for (const n in a_options) {
+		settings_form[n].value = a_options[n]
+	}
+}
+
+function resetSettingsFormData() {
+	setSettingsFormData(options)
+}
 
 /** Obtention des données du formulaire */
 function getSettingsFormData() {
@@ -23,14 +69,13 @@ function getSettingsFormData() {
 	for(let pair of formData.entries()) {
 		form_data[pair[0]] = integers.includes(pair[0])? parseInt(pair[1]) : pair[1]
 	}
-	/*
-	for (const i of integers) {
-		form_data[i] = parseInt(form_data[i])
-	}
-	*/
 	return form_data	
 }
 
+function closeDialog() {
+	example.src = ""
+	settings_dialog.close()
+}
 /**
  * Réglages du widget
  * 
@@ -52,19 +97,20 @@ export function onEditOptions() {
 	const btnTest = document.getElementById("settings_test");
 	btnTest.onclick = () => {
 		const formOptions = getSettingsFormData();
-		const qrc = getLabel(test_content, {...options, ...formOptions });
+		const qrc = getLabel(test_content, formOptions);
 		example.src = qrc.toDataURL();
 	}
 	
 	const btnSave = document.getElementById("settings_save");
 	btnSave.onclick = async () => {
-		settings_dialog.close();
+		closeDialog();
 		options = {...options, ...getSettingsFormData() }
 		await grist.setOption("options", options)  
 	}
 	
 	const btnCancel = document.getElementById("settings_cancel");
 	btnCancel.onclick = () => {
-		settings_dialog.close();
+		resetSettingsFormData();
+		closeDialog();
 	}	 	  
 }

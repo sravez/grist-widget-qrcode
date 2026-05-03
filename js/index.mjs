@@ -1,14 +1,6 @@
-import { getLabel } from "./js/label.mjs"
-import { onEditOptions } from "./js/options.mjs"
-
-const options = {
-	img_type: "png",
-	qrc_size: 256,
-	padding: 26,
-	text_size: 18,
-	text_color: "gray"
-}
-
+import mapping from "./columns.mjs"
+import { getLabel } from "./label.mjs"
+import { options, initOptions, onEditOptions } from "./options.mjs"
 
 
 /**
@@ -16,17 +8,11 @@ const options = {
  */
 grist.ready({
 	requiredAccess: 'full',
-	columns: [
-		{ name: 'label'   , title: 'Etiquette'     , type: 'Attachments'      , optional: false, description: "Image de l'étiquette" },
-		{ name: 'val'     , title: "Contenu"       , type: 'Text, Number, Int', optional: false, description: "Chaîne à encoder dans le QR Code" },
-		{ name: 'filename', title: "Nom du fichier", type: 'Text'             , optional: false, description: "Nom du fichier sans extension" },
-		{ name: 'top'     , title: 'Texte en haut' , type: 'Text'             , optional: true },
-		{ name: 'bottom'  , title: 'Texte en bas'  , type: 'Text'             , optional: true },
-		{ name: 'left'    , title: 'Texte à gauche', type: 'Text'             , optional: true },
-		{ name: 'right'   , title: 'Texte à droite', type: 'Text'             , optional: true }
-	],
+	columns: mapping,
 	onEditOptions: onEditOptions
 });
+
+initOptions()
 
 /** @constant {string} Extension des fichiers d'images générées */
 const fileext = "png"
@@ -50,8 +36,6 @@ saveBtn.addEventListener('click', async () => {
 	let blob = await fetch(image.src).then(r => r.blob());
   await upload_label(currentRecord, blob, false, currentRecord.filename+"."+fileext)
 });
-
-
 
 
 /**

@@ -19,7 +19,7 @@ function generate_qrcode (a_val, options) {
 	const qr = new QRious ({
 		background: options.background_color,
 		foreground: options.foreground_color,
-		level: 'M',
+		level: options.resilience,
 		size: options.qrc_size,
 		value: a_val
 	});

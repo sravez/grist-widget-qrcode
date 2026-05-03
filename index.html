@@ -6,7 +6,7 @@
     <title>QR Code</title>
     <script src="https://docs.getgrist.com/grist-plugin-api.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="screen.css" />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   
   <body>
@@ -14,25 +14,40 @@
     <dialog id="settings" closedby="none">
       <h2>Configuration</h2>
       <form id="settings_form">
+        <img id="help" src="./img/help.png"/>
         <img id="example" width="128px" height="128px"/>
         
-        <label for="qr_size">Taille du QR Code :</label>
+        <label for="img_type">Type d'image :</label>
+        <select id="img_type" name="img_type">
+          <option value="jpg">JPEG</option>  
+          <option value="png">PNG</option>
+        </select>
+        
+        <label for="qrc_size">Taille du QR Code <span class="help">(a)</span> :</label>
         <input id="qrc_size" name="qrc_size" type="number" min="128" value="256"/>
         
-        <label for="background_color">Fond du QR Code :</label>
-        <input id="background_color" name="background_color" type="color" value=""/>
+        <label for="resilience">Résilience :</label>
+        <select id="resilience" name="img_type">
+          <option value="L">Basse</option>  
+          <option value="M">Moyenne</option>
+          <option value="Q">Standard</option>  
+          <option value="H">Haute</option>
+        </select>
         
-        <label for="foreground_color">Blocs du QR Code :</label>
-        <input id="foreground_color" name="foreground_color" type="color" value=""/>
-        
-        <label for="padding">Largeur du contour :</label>
+        <label for="padding">Largeur du contour <span class="help">(b)</span> :</label>
         <input id="padding" name="padding" type="number" min="0" value="20"/>
         
-        <label for="text_size">Taille du texte :</label>
+        <label for="background_color">Fond du QR Code <span class="help">(C<sub>2</sub>)</span> :</label>
+        <input id="background_color" name="background_color" type="color" value="#ffffff"/>
+        
+        <label for="foreground_color">Blocs du QR Code <span class="help">(C<sub>1</sub>)</span> :</label>
+        <input id="foreground_color" name="foreground_color" type="color" value="#000000"/>
+        
+        <label for="text_size">Taille du texte <span class="help">(t)</span> :</label>
         <input id="text_size" name="text_size" type="number" min="6" value="16"/>
         
-        <label for="text_color">Couleur du texte :</label>
-        <input id="text_color" name="text_color" type="color" value=""/>
+        <label for="text_color">Couleur du texte <span class="help">(C<sub>3</sub>)</span> :</label>
+        <input id="text_color" name="text_color" type="color" value="#808080"/>
       </form>
       <button id="settings_cancel">Annuler</button>
       <button id="settings_save">Enregistrer</button>
