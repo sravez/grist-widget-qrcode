@@ -10,22 +10,23 @@ const default_options = {
 
 /**
  * Génère un QR Code et renvoie un objet Image
- * @param {string}  a_val  Chaîne à encoder dans le QR Code
- * @param {integer} a_size Taille en pixels de l'image (le QR Code peut être plus petit)
+ * @param {string} a_val     Chaîne à encoder dans le QR Code
+ * @param {object} a_options Options
  * @returns {Image} Objet Image
  */
-function generate_qrcode (a_val, options) {
+function generate_qrcode (a_val, a_options) {
 	
-	const qr = new QRious ({
-		background: options.background_color,
-		foreground: options.foreground_color,
-		level: options.resilience,
-		size: options.qrc_size,
-		value: a_val
+	const div = document.createElement('div')
+	// QRCode crée un élément <canvas> masqué et un élément <img> dans div
+	new QRCode(div, {
+		text: a_val,
+		width: a_options.qrc_size,
+		height: a_options.qrc_size,
+		colorDark : a_options.foreground_color,
+		colorLight : a_options.background_color,
+		correctLevel : QRCode.CorrectLevel[a_options.resilience]
 	});
-	const image = new Image()
-	image.src = qr.toDataURL()
-	return image
+	return div.querySelector("img")
 }
 
 /**

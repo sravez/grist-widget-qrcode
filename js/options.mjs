@@ -53,7 +53,11 @@ export async function initOptions() {
 
 function setSettingsFormData(a_options) {
 	for (const n in a_options) {
-		settings_form[n].value = a_options[n]
+		try {
+			settings_form[n].value = a_options[n]
+		} catch(e) {
+			
+		}
 	}
 }
 

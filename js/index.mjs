@@ -79,8 +79,12 @@ async function upload_label(record, file, add=false, filename = null) {
 grist.onRecord(async (record) => {
 	currentRecord = grist.mapColumnNames(record) || {};;
 	const tokenInfo = await grist.docApi.getAccessToken({ readOnly: false });
-	let url = `${tokenInfo.baseUrl}/attachments/${currentRecord.label[0]}/download?auth=${tokenInfo.token}`
-	img.src = url;
+	if(currentRecord.label?.length > 0) {
+		let url = `${tokenInfo.baseUrl}/attachments/${currentRecord.label[0]}/download?auth=${tokenInfo.token}`
+		img.src = url;
+	} else {
+		img.src = ""
+	}
 	const canvas = getLabel({
 		val   : currentRecord.val,
 		top   : currentRecord.top ?? null,
