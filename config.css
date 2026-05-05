@@ -1,0 +1,70 @@
+/* Variables */
+:root {
+    --font: Verdana, sans-serif;
+    --fsize: 12px;
+    --ssize: calc(var(--fsize) + 2px);
+}
+
+#form_div {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 10px;
+    row-gap: 1px;
+    font-family: var(--font);
+    font-size: var(--fsize);
+    align-items: center;
+}
+
+.section {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-auto-rows: 36px;
+    background-color: antiquewhite;
+}
+
+.section_title {
+    grid-row: 1;
+    grid-column: 1 / -1;
+    font-size: var(--ssize);
+    background-color: blue;
+}
+
+
+.left {
+    align-self: stretch;
+    background-color: red;
+    grid-column: 1;
+    grid-row: 2 / 5 ;
+}
+
+input[type="color"] {
+    height: 24px;
+    width: 24px;
+}
+
+input[type="number"] {
+    width: 4em;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    text-align: center;
+    font-family: var(--font);
+    font-size: var(--fsize);
+
+}
+
+select {
+    width: max-content;
+    text-align: center;
+    font-family: var(--font);
+    font-size: var(--fsize);
+}
+
+fieldset {
+    border: none;
+    padding: 0px;
+}
+
+label {
+    justify-self: end;
+}

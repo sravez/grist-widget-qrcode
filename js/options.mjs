@@ -4,34 +4,33 @@ import { apply_options } from "./card.mjs"
 
 const default_options = {
 	/** 0 -> "first", -1 -> "last" */
-	current_qrcode: 0,
-// Options d'affichage
-	/** Affichage de l'image stockée */
-	show_existing: true,
-	/** Taille de l'image (0 pour taille réelle) */
+	position: 0,
+	// Options d'affichage
+	/** Taille de l'image (-1 :taille réelle, 0 : masqué) */
 	existing_size: 128,
-	
-	show_computed: false,
 	computed_size: 128,
+	/** always | never | invalid */
+	compute: "always",
+	auto_save: true,
 	
 	img_type: "png",
 	qrc_size: 256,
 	resilience: "Q",
 	foreground_color: "#000000",
 	background_color: "#FFFFFF",
-	padding: 26,
+	margin: 12,
+	border: 30,
 	text_size: 18,
 	text_color: "#808080",
 	test_val_length: 256,
 	display_size: 128,
 	auto_show: false,
 	btn_replace: true,
-	btn_save_first: false,
-	btn_save_last: false,
+	
 	btn_refresh: true,
 	btn_refresh_all: true,
 	btn_refresh_unvalid: true,
-	save: "replace",
+	save_mode: "replace",
 	refresh_val: "",
 	validity_test: "filename"
 }
