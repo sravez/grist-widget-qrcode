@@ -1,10 +1,12 @@
+import { getLabel } from "./label.mjs"
+import { getAttachmentURL } from "./files.mjs"
 
 /** Image stockée (élément DOM) */
 const existing_qrcode_div = document.getElementById("existing_qrcode")
 const existing_qrcode_img = existing_qrcode_div.querySelector("img")
 
 /** Image calculée */
-const computed_qrcode_div = document.getElementById("existing_qrcode")
+const computed_qrcode_div = document.getElementById("computed_qrcode")
 const computed_qrcode_img = computed_qrcode_div.querySelector("img")
 
 
@@ -17,8 +19,8 @@ function apply_options_to_qrcode(a_div, a_show, a_size) {
 	if (a_show) {
 		a_div.classList.remove("masked")
 		const img = a_div.querySelector("img")
-		if (size > 0) {
-			img.width = size
+		if (a_size > 0) {
+			img.width = a_size
 		} else {
 			img.removeAttribute("width")
 		}
@@ -28,14 +30,27 @@ function apply_options_to_qrcode(a_div, a_show, a_size) {
 }
 
 export async function apply_record(record, a_options) {
-	console.log("RVZ", record?.label.length ?? "no label")
-	console.log(record.label)
 	if( (record.label?.length ?? 0) > 0) {
 		const current_qrcode = (record.label).at(a_options.current_qrcode);
-		const tokenInfo = await grist.docApi.getAccessToken({ readOnly: false });
-		let url = `${tokenInfo.baseUrl}/attachments/${current_qrcode}/download?auth=${tokenInfo.token}`
-		existing_qrcode_img.src = url;
+		existing_qrcode_img.src = await getAttachmentURL(current_qrcode);
 	} else {
-		existing_qrcode_img.src = "";
-	}	
+		existing_qrcode_img.src = "./img/no_label.png"
+	}
+	
+	const canvas = getLabel({
+		val   : record.val,
+		top   : record.top ?? null,
+		bottom: record.bottom ?? null,
+		left  : record.left ?? null,
+		right : record.top ?? null,
+	}, a_options)
+	computed_qrcode_img.src = canvas.toDataURL()
+	
 }
+
+/*
+saveBtn.addEventListener('click', async () => {
+	let blob = await fetch(image.src).then(r => r.blob());
+  await upload_label(currentRecord, blob, false, currentRecord.filename+"."+fileext)
+ */
+ 

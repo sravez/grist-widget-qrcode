@@ -60,6 +60,8 @@ export async function initOptions() {
 		options = { ...default_options, ...(o ?? {}) }
 		if (!o) {
 			await setOptions(options)
+		} else {
+			apply_options(options)
 		}
 	}
 	setSettingsFormData(options)

@@ -35,8 +35,8 @@ function generate_qrcode (a_val, a_options) {
  * @param {object} content Valeur à encoder et textes à afficher
  * @param {object} options
  */
-export function getLabel(content, options) {
-	const o = { ...default_options, ...options }
+export function getLabel(content, a_options) {
+	const o = { ...default_options, ...a_options }
 	const canvas = document.createElement("canvas")
 	const ctx = canvas.getContext("2d");
 	canvas.width = o.qrc_size + 2 * o.padding

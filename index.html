@@ -6,6 +6,7 @@
     <title>QR Code</title>
     <script src="https://docs.getgrist.com/grist-plugin-api.js"></script>
     <script src="./lib/qrcode.min.js"></script>
+    <script src="./js/index.mjs" type="module"></script>
     <link rel="stylesheet" href="styles.css" />
   </head>
   
@@ -55,7 +56,7 @@
     </dialog>
     
     <h2>QR Code</h2>
-        <div id="existing_qrcode">
+        <div id="existing_qrcode" class="">
           <img />
           <p>QR Code actuel</p>
         </div>
@@ -70,8 +71,6 @@
     
     <pre id="log">---</pre>
     
-    <!-- Chargement du JavaScript -->
-    <script src="./js/index.mjs" type="module"></script>
   </body>
   
 </html>
