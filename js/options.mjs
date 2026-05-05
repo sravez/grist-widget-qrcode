@@ -1,6 +1,19 @@
 import { getLabel } from "./label.mjs"
+import { apply_options } from "./card.mjs"
+
 
 const default_options = {
+	/** 0 -> "first", -1 -> "last" */
+	current_qrcode: 0,
+// Options d'affichage
+	/** Affichage de l'image stockée */
+	show_existing: true,
+	/** Taille de l'image (0 pour taille réelle) */
+	existing_size: 128,
+	
+	show_computed: false,
+	computed_size: 128,
+	
 	img_type: "png",
 	qrc_size: 256,
 	resilience: "Q",
@@ -24,6 +37,8 @@ const default_options = {
 }
 
 const options_types = {
+	current_qrcode: "Int",
+	existing_size: "Int",
 	qrc_size: "Int",
 	padding: "Int",
 	text_size: "Int",
@@ -44,12 +59,16 @@ export async function initOptions() {
 		const o = await grist.getOption("options")
 		options = { ...default_options, ...(o ?? {}) }
 		if (!o) {
-			await grist.setOption("options", options)
+			await setOptions(options)
 		}
 	}
 	setSettingsFormData(options)
 }
 
+async function setOptions(a_options) {
+	await grist.setOption("options", options)
+	apply_options(a_options)
+}
 
 function setSettingsFormData(a_options) {
 	for (const n in a_options) {
@@ -109,7 +128,7 @@ export function onEditOptions() {
 	btnSave.onclick = async () => {
 		closeDialog();
 		options = {...options, ...getSettingsFormData() }
-		await grist.setOption("options", options)  
+		await setOptions(options)  
 	}
 	
 	const btnCancel = document.getElementById("settings_cancel");

@@ -44,3 +44,7 @@ h1 {
 	width: 9em;
 	text-align: center;
 }
+
+.masked {
+	display: none
+}

@@ -1,7 +1,7 @@
 import mapping from "./columns.mjs"
 import { getLabel } from "./label.mjs"
 import { options, initOptions, onEditOptions } from "./options.mjs"
-
+import { apply_record } from "./card.mjs"
 
 /**
  * Gestion des QR Code
@@ -19,8 +19,6 @@ const fileext = "png"
 /** @constant {string} Type MIME des images générées */
 const mime = "image/"+"fileext"
 
-/** Image stockée (élément DOM) */
-const img = document.getElementById("label")
 /** Image générée */
 const image = document.getElementById("qrcode")
 /** Bouton d'enregistrement (élément DOM) */
@@ -77,14 +75,8 @@ async function upload_label(record, file, add=false, filename = null) {
  * Changement d'enregistrement
  */
 grist.onRecord(async (record) => {
-	currentRecord = grist.mapColumnNames(record) || {};;
-	const tokenInfo = await grist.docApi.getAccessToken({ readOnly: false });
-	if(currentRecord.label?.length > 0) {
-		let url = `${tokenInfo.baseUrl}/attachments/${currentRecord.label[0]}/download?auth=${tokenInfo.token}`
-		img.src = url;
-	} else {
-		img.src = ""
-	}
+	currentRecord = grist.mapColumnNames(record) || {};
+	await apply_record(currentRecord, options)
 	const canvas = getLabel({
 		val   : currentRecord.val,
 		top   : currentRecord.top ?? null,
