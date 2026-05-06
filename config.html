@@ -48,8 +48,8 @@
                 <div class="controls">
                     <label>Dimensions :</label>
                     <span>
-                        <label for="qrc_size" class="dim">L :</label>
-                        <input id="qrc_size" name="qrc_size" type="number" min="128" value="256"/>
+                        <label for="size" class="dim">L :</label>
+                        <input id="size" name="size" type="number" min="128" value="256"/>
                         
                         <label for="margin" class="dim">M :</label>
                         <input id="margin" name="margin" type="number" min="10" value="10"/>
@@ -87,12 +87,14 @@
                         <label for="text_color" class="colorLabel">C<sub>4</sub> :</label>
                         <input id="text_color" name="text_color" type="color" value="#ffffff"/>
                     </span>
-                    
-                    <label for="auto_test">Visualisation :</label>
-                    <input id="auto_test" name="auto_test" type="checkbox" value="1"/>   
+                       
                 </div>
                 <div id="options_test" class="r">
                     <img id="options_test_img" src="./img/click.png" />
+                    <span>
+                        <input id="auto_test" name="auto_test" type="checkbox" value="1"/>
+                        <label for="auto_test">auto</label>
+                    </span>    
                 </div>
             </div>    
             

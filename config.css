@@ -7,7 +7,7 @@
 
 #options {
     display: grid;
-    grid-template-columns: 15em 20em 1fr;
+    grid-template-columns: 12em 20em 1fr;
     font-family: var(--font);
     font-size: var(--fsize);
 }
@@ -43,17 +43,14 @@
 
 #options .r {
     grid-area: r;
+    width: min-content;
 }
 #options_test {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-#options_test_img {
-    aspect-ratio: 1 / 1;
-    width: 128px;
-    height: 128px;
-}
+
 
 input[type="color"] {
     height: 22px;
