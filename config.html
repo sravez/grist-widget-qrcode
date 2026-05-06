@@ -9,105 +9,119 @@
 </head>
 
 <body>
-
+    <div id="options_help" popover><img src="./img/help.png"></div>
     <form id="settings_form">
-        <div id="form_div">
-        <div class="section">
-            <h2 class="section_title">Interface</h2>
+        <div id="options">            
+            <div class="section">
+                <div class="section_title">Interface</div>
+                <div class="controls">
+                    <label for="display_size">Taille :</label>
+                    <select id="display_size" name="display_size">
+                        <option value="-1"> Taille réelle</option>
+                        <option value="32" selected>32</option>
+                        <option value="64" selected>64</option>
+                        <option value="128">128</option>
+                        <option value="256">256</option>
+                    </select>
+                    
+                    <label for="auto_next">Génération :</label>
+                    <select id="auto_next" name="auto_next">
+                        <option value="always">Toujours</option>  
+                        <option value="invalid">Si invalide</option>
+                        <option value="never">Jamais</option>  
+                    </select>
+                    
+                    <label>Mise à jour :</label>
+                    <span>
+                        <input type="checkbox" id="btn_update_all" name="btn_update_all" value="true"/>
+                        <label for="btn_update_all">Tous</label>
+                        
+                        <input type="checkbox" id="btn_update_invalid" name="btn_update_invalid" value="true"/>
+                        <label for="btn_update_invalid">Invalides</label> 
+                    </span>
+                </div>
+                <div class="r"></div>
+            </div>    
             
-            <div class="left">Left Interface</div>
+            <div class="section">
+                <div class="section_title">QR Code</div>
+                <div class="controls">
+                    <label>Dimensions :</label>
+                    <span>
+                        <label for="qrc_size" class="dim">L :</label>
+                        <input id="qrc_size" name="qrc_size" type="number" min="128" value="256"/>
+                        
+                        <label for="margin" class="dim">M :</label>
+                        <input id="margin" name="margin" type="number" min="10" value="10"/>
+                    </span>
+                    <label></label>
+                    <span>
+                        <label for="border" class="dim">B :</label>
+                        <input id="border" name="border" type="number" min="0" value="20"/>
+                    
+                        <label for="text_size" class="dim">T :</label>
+                        <input id="text_size" name="text_size" type="number" min="6" value="16"/>
+                    </span>
+                    
+                    <label for="redundancy">Résilience :</label>
+                    <select id="redundancy" name="redundancy">
+                        <option value="L">Basse</option>  
+                        <option value="M">Moyenne</option>
+                        <option value="Q">Standard</option>  
+                        <option value="H">Haute</option>
+                    </select>
+                
+                    <label>Couleurs :</label>
+                    <span>
+                        <label for="foreground_color" class="colorLabel">C<sub>1</sub> :</label>
+                        <input id="foreground_color" name="foreground_color" type="color" value="#ffffff"/>
+                        
+                        <label for="background_color" class="colorLabel">C<sub>2</sub> :</label>
+                        <input id="background_color" name="background_color" type="color" value="#ffffff"/>
+                    </span>
+                    <label></label>
+                    <span>    
+                        <label for="border_color" class="colorLabel">C<sub>3</sub> :</label>
+                        <input id="border_color" name="border_color" type="color" value="#ffffff"/>
+                        
+                        <label for="text_color" class="colorLabel">C<sub>4</sub> :</label>
+                        <input id="text_color" name="text_color" type="color" value="#ffffff"/>
+                    </span>
+                    
+                    <label for="auto_test">Visualisation :</label>
+                    <input id="auto_test" name="auto_test" type="checkbox" value="1"/>   
+                </div>
+                <div id="options_test" class="r">
+                    <img id="options_test_img" src="./img/click.png" />
+                </div>
+            </div>    
             
-            <label for="existing_size">Actuel :</label>
-            <select id="existing_size" name="existing_size">
-                <option value="0">Masquer</option>
-                <option value="-1"> Taille réelle</option>
-                <option value="64" selected>64</option>
-                <option value="128">128</option>
-                <option value="256">256</option>
-            </select>
-            
-            <label for="computed_size">Nouveau :</label>
-            <select id="computed_size" name="computed_size">
-                <option value="0">Masquer</option>
-                <option value="-1"> Taille réelle</option>
-                <option value="64" selected>64</option>
-                <option value="128">128</option>
-                <option value="256">256</option>
-            </select>
-            
-            <label for="compute">Génération :</label>
-            <select id="compute" name="compute">
-                <option value="always">Toujours</option>  
-                <option value="invalid">Si invalide</option>
-                <option value="never">Jamais</option>  
-            </select>
-            
-            <label for="auto_save">Sauvegarde automatique :</label>
-            <select id="auto_save" name="auto_save">
-                <option value="always">Toujours</option>  
-                <option value="invalid">Si invalide</option>
-                <option value="never">Jamais</option>  
-            </select>
-        </div>    
-        
-        <div class="section">
-            <h2 class="section_title">QR Code</h2>
-            <div class="left">Left QR</div>
-
-            <label for="qrc_size">Taille du QR Code :<span class="help">(A)</span> :</label>
-            <input id="qrc_size" name="qrc_size" type="number" min="128" value="256"/>
-        
-            <label for="margin">Marge <span class="help">(M)</span> :</label>
-            <input id="margin" name="margin" type="number" min="10" value="10"/>
-            
-            <label for="border">Bordure <span class="help">(B)</span> :</label>
-            <input id="border" name="border" type="number" min="0" value="20"/>
-            
-            <label for="resilience">Résilience :</label>
-            <select id="resilience" name="resilience">
-                <option value="L">Basse</option>  
-                <option value="M">Moyenne</option>
-                <option value="Q">Standard</option>  
-                <option value="H">Haute</option>
-            </select>
-        
-            <label for="background_color">Fond du QR Code <span class="help">(C<sub>2</sub>)</span>     :</label>
-            <input id="background_color" name="background_color" type="color" value="#ffffff"/>
-        
-            <label for="foreground_color">Blocs du QR Code <span class="help">(C<sub>1</sub>)</span> :</label>
-            <input id="foreground_color" name="foreground_color" type="color" value="#000000"/>
-        
-            <label for="text_size">Taille du texte <span class="help">(T)</span> :</label>
-            <input id="text_size" name="text_size" type="number" min="6" value="16"/>
-        
-            <label for="text_color">Couleur du texte <span class="help">(C<sub>3</sub>)</span> :</label>
-            <input id="text_color" name="text_color" type="color" value="#808080"/>
-        </div>    
-        
-        <div class="section">
-            <h2 class="section_title">Enregistrer</h2>
-            <div class="left">Left Enregistrer</div>
-
-            <label for="position">Position :</label>
-            <fieldset id="position" name="position">
-                <input type="radio" name="position" value="0">Premier</option>
-                <input type="radio" name="position" value="-1">Dernier</option>
-            </fieldset>
-            
-            <label for="save_mode">Mode :</label>
-            <fieldset id="save_mode" name="save_mode">
-                <input type="radio" name="save_mode" value="replace">Remplacer</option>
-                <input type="radio" name="save_mode" value="add">Ajouter</option>
-            </fieldset>
-        </div>    
-        
-        <div class="section">     
-            <h2 class="section_title">Actions</h2>
-            <div class="left">Left Actions</div>
-
-        </div>
+            <div class="section">
+                <div class="section_title">Données</div>
+                <div class="controls">
+                    <label for="position">Position :</label>
+                    <fieldset id="position" name="position">
+                        <input type="radio" name="position" value="0">Premier</option>
+                        <input type="radio" name="position" value="-1">Dernier</option>
+                    </fieldset>
+                    <label for="position">Validité :</label>
+                    <fieldset id="validity" name="validity">
+                        <input type="radio" name="validity" value="column">Champ</option>
+                        <input type="radio" name="validity" value="filename">Nom de fichier</option>
+                        <input type="radio" name="validity" value="none">Aucune</option>
+                    </fieldset>
+                    <label for="save_mode">Enregistrement :</label>
+                    <fieldset id="save_mode" name="save_mode">
+                        <input type="radio" name="save_mode" value="replace">Remplacer</option>
+                        <input type="radio" name="save_mode" value="add">Ajouter</option>
+                    </fieldset>
+                </div>
+                <div class="r"></div>
+            </div>    
+     
         </div>    
     </form>
+    <button popovertarget="options_help">Aide</button>
     <button id="settings_cancel">Annuler</button>
     <button id="settings_save">Enregistrer</button>
     <button id="settings_test">Test</button>
