@@ -1,5 +1,12 @@
-import { getLabel } from "./label.mjs"
-import default_options from "./options.default.mjs"
+/**
+ * # Gestion du questionnaire de configuration
+ * @author Serge RAVEZ
+ */
+
+/** Générateur d'étiquette */
+import getQRLabel  from "./qrlabel.mjs"
+/** Options par défaut */
+import default_options from "./widget_options.default.mjs"
 
 let options = default_options;
 let form_initialized = false;
@@ -68,7 +75,7 @@ function getImage() {
 		left: "GAUCHE",
 	}
 	const o = getFormData()
-	options_test_img.src = getLabel(data, o.qrcode)
+	options_test_img.src = getQRLabel(data, o.qrcode)
 	options_test_img.classList.remove("empty")
 }
 

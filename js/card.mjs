@@ -1,4 +1,4 @@
-import { getLabel } from "./label.mjs"
+import getQRLabel from "./qrlabel.mjs"
 import { getAttachmentURL } from "./files.mjs"
 
 /** Image stockée (élément DOM) */
@@ -37,7 +37,7 @@ export async function apply_record(record, a_options) {
 		existing_qrcode_img.src = "./img/no_label.png"
 	}
 	
-	const canvas = getLabel({
+	const canvas = getQRLabel({
 		val   : record.val,
 		top   : record.top ?? null,
 		bottom: record.bottom ?? null,

@@ -1,4 +1,4 @@
-import { getLabel } from "./label.mjs"
+import { getLabel } from "./qrlabel.mjs"
 import { apply_options } from "./card.mjs"
 
 
