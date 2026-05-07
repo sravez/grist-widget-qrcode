@@ -51,6 +51,18 @@
     align-items: center;
 }
 
+#display_help {
+    width: 14px;
+    cursor: help;
+}
+
+#options_test_img.empty {
+    cursor: copy;
+}
+
+#options_test_img {
+    cursor: zoom-in;
+}
 
 input[type="color"] {
     height: 22px;
@@ -90,6 +102,5 @@ label.colorLabel {
     display: inline-block;
     text-align: right;
     width: 3em;
-   
 }
 

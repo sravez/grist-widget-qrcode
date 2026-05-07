@@ -4,12 +4,12 @@
 <head>
     <meta charset="utf-8">
     <title>QR Code - Configuration</title>
-    <script src="./config.mjs" type="module"></script>
-    <link rel="stylesheet" href="./config.css" />
+    <script src="./lib/qrcode.min.js"></script>
+    <script src="./js/config.mjs" type="module"></script>
+    <link rel="stylesheet" href="./css/config.css" />
 </head>
 
 <body>
-    <div id="options_help" popover><img src="./img/help.png"></div>
     <form id="settings_form">
         <div id="options">            
             <div class="section">
@@ -24,8 +24,8 @@
                         <option value="256">256</option>
                     </select>
                     
-                    <label for="auto_next">Génération :</label>
-                    <select id="auto_next" name="auto_next">
+                    <label for="display_auto_next">Génération :</label>
+                    <select id="display_auto_next" name="display_auto_next">
                         <option value="always">Toujours</option>  
                         <option value="invalid">Si invalide</option>
                         <option value="never">Jamais</option>  
@@ -33,67 +33,73 @@
                     
                     <label>Mise à jour :</label>
                     <span>
-                        <input type="checkbox" id="btn_update_all" name="btn_update_all" value="true"/>
-                        <label for="btn_update_all">Tous</label>
+                        <input type="checkbox" id="display_btn_update_all" name="display_btn_update_all" value="true"/>
+                        <label for="display_btn_update_all">Tous</label>
                         
-                        <input type="checkbox" id="btn_update_invalid" name="btn_update_invalid" value="true"/>
-                        <label for="btn_update_invalid">Invalides</label> 
+                        <input type="checkbox" id="display_btn_update_invalid" name="display_btn_update_invalid" value="true"/>
+                        <label for="display_btn_update_invalid">Invalides</label>
                     </span>
                 </div>
                 <div class="r"></div>
             </div>    
             
             <div class="section">
-                <div class="section_title">QR Code</div>
+                <div class="section_title">
+                    QR Code
+                    <div id="options_help" popover><img src="./img/help.png" /></div>
+                    <img src="./img/questionmark.png" id="display_help" onclick="document.getElementById('options_help').showPopover()"/>
+                </div>
                 <div class="controls">
                     <label>Dimensions :</label>
                     <span>
-                        <label for="size" class="dim">L :</label>
-                        <input id="size" name="size" type="number" min="128" value="256"/>
+                        <label for="qrcode_size" class="dim">L :</label>
+                        <input id="qrcode_size" name="qrcode_size" type="number" min="128" value="256"/>
                         
-                        <label for="margin" class="dim">M :</label>
-                        <input id="margin" name="margin" type="number" min="10" value="10"/>
+                        <label for="qrcode_margin" class="dim">M :</label>
+                        <input id="qrcode_margin" name="qrcode_margin" type="number" min="10" value="10"/>
                     </span>
                     <label></label>
                     <span>
-                        <label for="border" class="dim">B :</label>
-                        <input id="border" name="border" type="number" min="0" value="20"/>
+                        <label for="qrcode_border" class="dim">B :</label>
+                        <input id="qrcode_border" name="qrcode_border" type="number" min="0" value="20"/>
                     
-                        <label for="text_size" class="dim">T :</label>
-                        <input id="text_size" name="text_size" type="number" min="6" value="16"/>
+                        <label for="qrcode_text_size" class="dim">T :</label>
+                        <input id="qrcode_text_size" name="qrcode_text_size" type="number" min="6" value="16"/>
                     </span>
-                    
-                    <label for="redundancy">Résilience :</label>
-                    <select id="redundancy" name="redundancy">
-                        <option value="L">Basse</option>  
-                        <option value="M">Moyenne</option>
-                        <option value="Q">Standard</option>  
-                        <option value="H">Haute</option>
-                    </select>
                 
                     <label>Couleurs :</label>
                     <span>
-                        <label for="foreground_color" class="colorLabel">C<sub>1</sub> :</label>
-                        <input id="foreground_color" name="foreground_color" type="color" value="#ffffff"/>
+                        <label for="qrcode_foreground_color" class="colorLabel">C<sub>c</sub> :</label>
+                        <input id="qrcode_foreground_color" name="qrcode_foreground_color" type="color" value="#ffffff"/>
                         
-                        <label for="background_color" class="colorLabel">C<sub>2</sub> :</label>
-                        <input id="background_color" name="background_color" type="color" value="#ffffff"/>
+                        <label for="qrcode_background_color" class="colorLabel">C<sub>f</sub> :</label>
+                        <input id="qrcode_background_color" name="qrcode_background_color" type="color" value="#ffffff"/>
                     </span>
                     <label></label>
-                    <span>    
-                        <label for="border_color" class="colorLabel">C<sub>3</sub> :</label>
-                        <input id="border_color" name="border_color" type="color" value="#ffffff"/>
-                        
-                        <label for="text_color" class="colorLabel">C<sub>4</sub> :</label>
-                        <input id="text_color" name="text_color" type="color" value="#ffffff"/>
+                    <span>
+                        <label for="qrcode_text_color" class="colorLabel">C<sub>t</sub> :</label>
+                        <input id="qrcode_text_color" name="qrcode_text_color" type="color" value="#ffffff"/>
+
+                        <label for="qrcode_border_color" class="colorLabel">C<sub>b</sub> :</label>
+                        <input id="qrcode_border_color" name="qrcode_border_color" type="color" value="#ffffff"/>
                     </span>
+
+                    <label for="qrcode_redundancy">Résilience :</label>
+                    <select id="qrcode_redundancy" name="qrcode_redundancy">
+                        <option value="L">Basse</option>
+                        <option value="M">Moyenne</option>
+                        <option value="Q">Standard</option>
+                        <option value="H">Haute</option>
+                    </select>
                        
                 </div>
                 <div id="options_test" class="r">
-                    <img id="options_test_img" src="./img/click.png" />
+                    <img id="options_test_img" src="./img/click.png" width="128px" height="128px" class="empty"/>
                     <span>
-                        <input id="auto_test" name="auto_test" type="checkbox" value="1"/>
-                        <label for="auto_test">auto</label>
+                        <input id="qrcode_auto_test" name="qrcode_auto_test" type="checkbox" value="1"/>
+                        <label for="qrcode_auto_test">auto</label>
+
+                        <div id="full_size" popover><img id="full_size_img" src="" /></div>
                     </span>    
                 </div>
             </div>    
@@ -101,21 +107,21 @@
             <div class="section">
                 <div class="section_title">Données</div>
                 <div class="controls">
-                    <label for="position">Position :</label>
-                    <fieldset id="position" name="position">
-                        <input type="radio" name="position" value="0">Premier</option>
-                        <input type="radio" name="position" value="-1">Dernier</option>
+                    <label for="data_position">Position :</label>
+                    <fieldset id="data_position" name="data_position">
+                        <input type="radio" name="data_position" value="0">Premier</option>
+                        <input type="radio" name="data_position" value="-1">Dernier</option>
                     </fieldset>
-                    <label for="position">Validité :</label>
-                    <fieldset id="validity" name="validity">
-                        <input type="radio" name="validity" value="column">Champ</option>
-                        <input type="radio" name="validity" value="filename">Nom de fichier</option>
-                        <input type="radio" name="validity" value="none">Aucune</option>
+                    <label for="data_position">Validité :</label>
+                    <fieldset id="data_validity" name="data_validity">
+                        <input type="radio" name="data_validity" value="column">Champ</option>
+                        <input type="radio" name="data_validity" value="filename">Nom de fichier</option>
+                        <input type="radio" name="data_validity" value="none">Aucune</option>
                     </fieldset>
-                    <label for="save_mode">Enregistrement :</label>
-                    <fieldset id="save_mode" name="save_mode">
-                        <input type="radio" name="save_mode" value="replace">Remplacer</option>
-                        <input type="radio" name="save_mode" value="add">Ajouter</option>
+                    <label for="data_save_mode">Enregistrement :</label>
+                    <fieldset id="data_save_mode" name="save_mode">
+                        <input type="radio" name="data_save_mode" value="replace">Remplacer</option>
+                        <input type="radio" name="data_save_mode" value="add">Ajouter</option>
                     </fieldset>
                 </div>
                 <div class="r"></div>

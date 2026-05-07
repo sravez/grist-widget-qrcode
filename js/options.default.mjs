@@ -6,7 +6,7 @@
  * @type {object} options
  *
  * @property {object}  display                    Configuration de l'affichage
- * @property {integer} display.display_size       Taille des QR Code à l'écran
+ * @property {integer} display.size       Taille des QR Code à l'écran
  * @property {string}  display.auto_next          Génération automatique du QR Code(always|invalid|never)
  * @property {boolean} display.btn_update_all     Affichage du bouton de mise à jour de tous les QRC
  * @property {boolean} display.btn_update_invalid Affichage du bouton de mise à jour de tous les QRC invalides
@@ -19,26 +19,26 @@
  */ 
 export const default_options = {
 	display: {
-		display_size: 64,
+		size: 64,
 		auto_next: "invalid",
 		btn_update_all: false,
 		btn_update_invalid: true
 	},
 	qrcode: {
 		size: 256,
-		margin: 12,
-		border: 30,
+		margin: 24,
+		border: 48,
 		text_size: 18,
 		redundancy: "Q",
-		foreground_color: "#0000FF",
+		foreground_color: "#000000",
 		background_color: "#FFFFFF",
-		border_color: "#FF0000",
-		text_color: "#000000",
+		border_color: "#B0B0B0",
+		text_color: "#FFFFFF",
 		auto_test: true,		
 	},
 	data: {
 		position: 0,
-		save_mode: "replace"
+		save_mode: "replace",
 	}
 }
 
