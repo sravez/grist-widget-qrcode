@@ -11,6 +11,7 @@
  * * `no` : toutes les étiquettes sont invalides
  * @type { "col" | "fn" | "col|fn" | "yes" | "no" }
  */
+
 /**
  * @typedef WidgetOptions Options de configuration du widget
  * @type {object}

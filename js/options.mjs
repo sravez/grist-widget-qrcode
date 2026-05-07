@@ -1,50 +1,6 @@
-import { getLabel } from "./qrlabel.mjs"
+import getQRLabel from "./qrlabel.mjs"
 import { apply_options } from "./card.mjs"
 
-
-const default_options = {
-	/** 0 -> "first", -1 -> "last" */
-	position: 0,
-	// Options d'affichage
-	/** Taille de l'image (-1 :taille réelle, 0 : masqué) */
-	existing_size: 128,
-	computed_size: 128,
-	/** always | never | invalid */
-	compute: "always",
-	auto_save: true,
-	
-	img_type: "png",
-	qrc_size: 256,
-	resilience: "Q",
-	foreground_color: "#000000",
-	background_color: "#FFFFFF",
-	margin: 12,
-	border: 30,
-	text_size: 18,
-	text_color: "#808080",
-	test_val_length: 256,
-	display_size: 128,
-	auto_show: false,
-	btn_replace: true,
-	
-	btn_refresh: true,
-	btn_refresh_all: true,
-	btn_refresh_unvalid: true,
-	save_mode: "replace",
-	refresh_val: "",
-	validity_test: "filename"
-}
-
-const options_types = {
-	current_qrcode: "Int",
-	existing_size: "Int",
-	qrc_size: "Int",
-	padding: "Int",
-	text_size: "Int",
-	test_val_length: "Int",
-	display_size: "Int",
-	auto_show: "Boolean",
-}
 
 export let options = null
 
@@ -121,7 +77,7 @@ export function onEditOptions() {
 	const btnTest = document.getElementById("settings_test");
 	btnTest.onclick = () => {
 		const formOptions = getSettingsFormData();
-		const qrc = getLabel(test_content, formOptions);
+		const qrc = getQRLabel(test_content, formOptions);
 		example.src = qrc.toDataURL();
 	}
 	

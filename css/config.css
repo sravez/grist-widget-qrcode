@@ -45,22 +45,25 @@
     grid-area: r;
     width: min-content;
 }
-#options_test {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+
 
 #display_help {
     width: 14px;
     cursor: help;
 }
 
-#options_test_img.empty {
+/* Preview */
+
+#preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#preview_img.empty {
     cursor: copy;
 }
 
-#options_test_img {
+#preview_img {
     cursor: zoom-in;
 }
 
