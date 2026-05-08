@@ -13,40 +13,56 @@
  * `input[type=number]`.
  *
  * **NB :** la valeur d'une _checkbox_ n'est remontée que si elle est cochée, il faut
- * donc traîtées les données booléenes absentes comme _false_.
+ * donc traiter les données booléennes absentes comme _false_.
  *
  * @author Serge RAVEZ
  */
 
+import FormDataInterface from "./FormDataInterface.mjs";
+
+/**
+ * Interface avec le formulaire
+ * @type {FormDataInterface}
+ */
+let formDataInterface;
+
 /** Générateur d'étiquette */
-import getQRLabel  from "./qrlabel.mjs"
+import getQRLabel from "./qrlabel.mjs"
+
 /** Options par défaut */
 import default_options from "./widget_options.default.mjs"
 
-/** @type {WidgetOptions} options en cours */
+/**
+ * Options en cours
+ * @type {WidgetOptions}
+ */
 let options = default_options;
-let form_initialized = false;
 
-/** @type {string} Séparateur domaine/option dans les `id` et `name` des contrôles */
-const sep = "_"
+/**
+ * Formulaire de configuration
+ * @type {HTMLFormElement}
+ */
+let form;
 
-/** @type {HTMLFormElement} Formulaire de configuration */
-const form = document.getElementById("config_form")
+/**
+ * Image de visualisation de la configuration
+ * @type {HTMLImageElement}
+ */
+let preview_img
 
-/** @type {HTMLImageElement} Image de visualisation de la configuration */
-const preview_img = document.getElementById("preview_img")
-
-/** @type {HTMLImageElement} Image de visualisation dans le pop up */
-const preview_popover_img = document.getElementById("preview_popover_img")
-
+/**
+ * Image de visualisation dans le pop-up
+ * @type {HTMLImageElement}
+ */
+let preview_popover_img
 
 /**
  * ### Demande l'étiquette basée sur les données du formulaire et l'affiche.
  *
  * On supprime également la classe `empty` dont l'absence ou présence détermine
  * la réaction à un clic sur l'image :
- * * si présente : un clic provoque l'appel de `getPreviewImage()`
- * * si absente : affichage dans un pop-up
+ * * si présente : un clic provoque l'appel de `getPreviewImage()` ;
+ * * si absente : affichage dans un pop-up.
  */
 function getPreviewImage() {
 	const data = {
@@ -56,7 +72,7 @@ function getPreviewImage() {
 		bottom: "BAS",
 		left: "GAUCHE",
 	}
-	const o = getFormData()
+	const o = formDataInterface.getFormData()
 	preview_img.src = getQRLabel(data, o.qrcode)
 	preview_img.classList.remove("empty")
 }
@@ -64,13 +80,13 @@ function getPreviewImage() {
 /**
  * ### Réaction à un changement de valeur dans le formulaire.
  *
- * Si `autoPreview` on charge l'image de prévisuation, sinon on la
+ * Si `autoPreview` on charge l'image de prévisualisation, sinon on la
  * supprime et on met la classe `empty` pour indiquer qu'il faut cliquer
  * pour la charger.
  *
  * @param {Event} e Événement
  */
-function onFormChange(e) {
+function onQRCodeOptionsChange(e) {
 	if(form['autoPreview'].checked) {
 		getPreviewImage()
 	} else {
@@ -83,8 +99,8 @@ function onFormChange(e) {
  * ### Réaction à un clic sur l'image de prévisualisation.
  *
  * Le comportement est déterminé par la présence ou absence de la classe `empty` :
- * - présente : on charge l'image,
- * - absente : on affiche le pop-up après y avoir assigné l'image.
+ * * présente : on charge l'image,
+ * * absente : on affiche le pop-up après y avoir assigné l'image.
  * @param {Event} e Événement
  */
 function onImgClick(e) {
@@ -99,22 +115,57 @@ function onImgClick(e) {
 /**
  * ### Initialise le formulaire
  *
+ * * Définit les variables globales
  * * Assigne les comportements aux éléments lors de la première initialisation
- * * Applique les options
- *
- * @param {WidgetOptions} a_options
  */
 function init_form(a_options) {
-	if(!form_initialized) {
-		preview_img.onclick = onImgClick
-		for(const o in options.qrcode) {
-			form["qrcode"+sep+o].onchange = onFormChange
+	form = document.getElementById("config_form")
+	formDataInterface = new FormDataInterface(form, ".");
+	preview_img = document.getElementById("preview_img")
+	preview_popover_img = document.getElementById("preview_popover_img")
+	preview_img.onclick = onImgClick
+	// Réaction au changement de prévisualisation
+	form['autoPreview'].onchange = (e) => {
+		if(e.target.checked) {
+			getPreviewImage()
 		}
-		form_initialized = true;
 	}
-	setFormData(a_options)
-}
+	// Gestion de la synchronisation (à injecter avant onQROptionsChange)
+	document.querySelectorAll(".SyncBtn").forEach(syncBtn => {
+		
+		syncBtn.addEventListener("click", (e) => {
+			syncBtn.classList.toggle("on")
+			if(syncBtn.classList.contains("on")){
+				console.debug("on")
+				//form[syncBtn.dataset.dest].disabled = true
+				form[syncBtn.dataset.src]?.dispatchEvent(new Event('change'))
+			} else {
+				console.debug("off")
+				//form[syncBtn.dataset.dest].disabled = false
+			}
+		})
 
+		if(form[syncBtn.dataset.src] && form[syncBtn.dataset.dest]) {
+			form[syncBtn.dataset.src].addEventListener("change", (e) => {
+				// les arrow functions mémorise le syncBtn au moment de leur création
+				if(syncBtn.classList.contains("on")) {
+					console.debug("sync")
+					form[syncBtn.dataset.dest].value = form[syncBtn.dataset.src].value
+				}
+			})
+		}
+	})
+	// Réactions aux changements de paramètres des codes QR
+	for(const o in a_options.qrcode) {
+		form["qrcode."+o].addEventListener('change', onQRCodeOptionsChange)
+	}
+	// Affichage des aides
+	document.getElementById("display_qrcode_help").onclick = (e) => {
+		document.getElementById('qrcode_help').showPopover()
+	}
+	// Assignation des données
+	formDataInterface.setData(options)
+}
 
 /**
  * Déclenchement de l'initialisation du formulaire une fois
@@ -123,14 +174,3 @@ function init_form(a_options) {
 window.onload = () => {
 	init_form(options)
 }
-
-/**
- * Détermine si une variable est un objet JavaScript.
- * @param obj
- * @returns {boolean}
- */
-function isObject(obj) {
-	return typeof obj === 'object'
-		&& obj !== null
-		&& ! Array.isArray(obj)
-};

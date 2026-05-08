@@ -10,24 +10,27 @@
  */
 
 /**
- * @typedef QRLabelContent Textes (QR Code et bordure) de l'étiquette
+ * @typedef QRLabelContent Textes (QR code et bordure) de l'étiquette
+ * @type {object}
  * @property {string}         val    Texte à encoder dans le QR code
  * @property {?string | null} top    Texte positionné au-dessus du QR code
  * @property {?string | null} right  Texte positionné à droite du QR code
  * @property {?string | null} bottom Texte positionné sous le QR code
  * @property {?string | null} left   Texte positionné à gauche du QR code
  */
+
 /**
- * @typedef QRLabelOptions Options de production de QRLabel
- * @property {number}          size            Taille du QR Code (carré)
- * @property {string}          foregroundColor Couleur des blocs du QR code
- * @property {string}          backgroundColor Couleur de fond du QR code
- * @property {"L"|"M"|"Q"|"H"} redundancy      Niveau de correction du QR code
- * @property {number}          margin          Espace de même couleur que le fond autour du QR code (_Quiet zone_)
- * @property {number}          border          Largeur de la zone extérieure accueillant l'éventuel texte
- * @property {string}          border_color    Couleur de la bordure
- * @property {number}          text_size       Taille du texte
- * @property {string}          text_color      Couleur du texte
+ * @typedef LabelOptions
+ * @type {object} Options de production de QRLabel ajoutées à QRCodeOptions
+ * @property {number}          margin           Espace de même couleur que le fond autour du QR code (_Quiet zone_)
+ * @property {number}          border           Largeur de la zone extérieure accueillant l'éventuel texte
+ * @property {string}          border_color     Couleur de la bordure
+ * @property {number}          text_size        Taille du texte
+ * @property {string}          text_color       Couleur du texte
+ */
+
+/**
+ * @typedef {QRCodeOptions & LabelOptions} QRLabelOptions
  */
 
 /**
@@ -37,7 +40,9 @@
 
 import getQRCode from "./qrcode.mjs"
 
-/** @type {QRLabelOptions} Options par défaut */
+/**
+ * Options par défaut
+ * @type {QRLabelOptions} */
 const default_options = {
 	size: 256,
 	margin: 12,
@@ -50,72 +55,115 @@ const default_options = {
 	text_color: "#000000",
 }
 
-/** @type {string} Type MIME de l'image générée */
+/**
+ * Type MIME de l'image générée
+ * @type {string}
+ */
 const mime = "image/png";
+
+/**
+ * Image de fond
+ * @type {HTMLCanvasElement | null}
+ */
+let background_canvas
+
+/**
+ * Options
+ * @type {QRLabelOptions}
+ */
+let options
 
 /**
  * Génère une étiquette contenant le QR code éventuellement
  * entouré d'informations textuelles.
  *
- * @param {QRLabelContent} content Valeur à encoder et textes à afficher
- * @param {QRLabelOptions} a_options
+ * @param {QRLabelContent}         content         Valeur à encoder et textes à afficher
+ * @param {QRLabelOptions | null} [a_options=null] Paramètres : tailles et couleurs
  * @returns {DataURL}
  */
-export default function getQRLabel(content, a_options) {
-	const o = { ...default_options, ...a_options }
+export default function getQRLabel(content, a_options = null) {
+	let reset = !background_canvas || a_options
+	/** @type {QRLabelOptions} */
+	options = { ...default_options, ...(a_options ?? {}) }
+
+	if(reset) {
+		background_canvas = getBackgroundCanvas();
+	}
+	const canvas = document.createElement("canvas")
+	canvas.width = background_canvas.width
+	canvas.height = background_canvas.height
+	const ctx = canvas.getContext("2d");
+	ctx.drawImage(background_canvas, 0, 0);
+	const qrc_pos = options.border + options.margin
+	ctx.drawImage(getQRCode(content.val, reset ? options : null), qrc_pos, qrc_pos)
+	drawText(canvas, content)
+	return canvas.toDataURL(mime)
+}
+
+/**
+ * Renvoie un canvas comportant le fond (bordure et marge)
+ * @param {QRLabelOptions} [o] Paramètres : tailles et couleurs
+ */
+function getBackgroundCanvas(o = options) {
 	const canvas = document.createElement("canvas")
 	/** Taille de l'étiquette, en pixels */
 	const size = o.size + 2 * (o.margin + o.border)
 	canvas.width = size
 	canvas.height = size
 	const ctx = canvas.getContext("2d");
-
-	const middle = Math.floor(canvas.width/2)
-	
 	// Bordure extérieure à coins arrondis
 	if(o.border) {
 		ctx.fillStyle = o.border_color;
 		ctx.roundRect(0, 0, canvas.width, canvas.height, Math.floor(o.border/2));
-		ctx.fill()		
+		ctx.fill()
 	}
 	// Marge / Quiet zone de même couleur que le fond du QR code
 	if(o.margin) {
 		ctx.fillStyle = o.background_color;
 		ctx.fillRect(o.border, o.border, o.size + 2 * o.margin, o.size + 2 * o.margin);
 	}
-	// QR code, positionné au centre
-	ctx.drawImage(getQRCode(content.val, o), o.border + o.margin, o.border + o.margin)
+	return canvas
+}
 
-	// Informations textuelles
+/**
+ * Écrit les textes
+ * @param {HTMLCanvasElement} canvas
+ * @param {QRLabelContent}    content
+ * @param {QRLabelOptions}    o
+ */
+function drawText(canvas, content, o = options) {
+	const middle_x = Math.floor(canvas.width/2)
+	const middle_y = Math.floor(canvas.height/2)
+	// 0.8 est empirique
+	const text_pos = Math.max(2, Math.ceil((o.border - 0.8 * o.text_size)/2))
+
+	const ctx = canvas.getContext("2d");
 
 	ctx.textAlign = "center"
 	ctx.font = `${o.text_size}px monospace`;
 	ctx.fillStyle = o.text_color;
 
-	/** Distance du texte par rapport à la bordure extérieure (0.8 déterminé empiriquement */
-	const text_pos = Math.max(2, Math.ceil((o.border - 0.8 * o.text_size)/2))
 	// Bas
 	if (content.bottom) {
 		ctx.textBaseline = "alphabetic"
-		ctx.fillText(content.bottom, middle, canvas.height-text_pos);
+		ctx.fillText(content.bottom, middle_x, canvas.height-text_pos);
 	}
 	ctx.textBaseline = "hanging"
 	// Haut
 	if (content.top) {
-		ctx.fillText(content.top, middle, text_pos);
+		ctx.fillText(content.top, middle_x, text_pos);
 	}
 	// Gauche
 	if(content.left) {
-		ctx.translate(text_pos, middle)
+		ctx.translate(text_pos, middle_y)
 		ctx.rotate(-Math.PI/2)
 		ctx.fillText(content.left, 0, 0)
 	}
 	// Droite
 	if(content.right) {
 		ctx.setTransform(1,0,0,1,0,0)
-		ctx.translate(canvas.width - text_pos, middle)
+		ctx.translate(canvas.width - text_pos, middle_y)
 		ctx.rotate(+Math.PI/2)
 		ctx.fillText(content.right, 0, 0);
 	}
-	return canvas.toDataURL(mime)
 }

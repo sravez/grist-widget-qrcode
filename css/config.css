@@ -47,7 +47,7 @@
 }
 
 
-#display_help {
+.display_help {
     width: 14px;
     cursor: help;
 }
@@ -105,5 +105,12 @@ label.colorLabel {
     display: inline-block;
     text-align: right;
     width: 3em;
+}
+
+.SyncBtn {
+    cursor: pointer;
+}
+.SyncBtn.on {
+    background-color: cornflowerblue;
 }
 

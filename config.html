@@ -46,8 +46,8 @@
             <div id="section_qrcode" class="section">
                 <div class="section_title">
                     QR Code
-                    <div id="options_help" popover><img src="./img/help.png" /></div>
-                    <img src="img/questionmark.png" id="display.help" onclick="document.getElementById('options_help').showPopover()"/>
+                    <div id="qrcode_help" popover><img src="./img/help.png"/></div>
+                    <img id="display_qrcode_help" src="img/questionmark.png" class="display_help"/>
                 </div>
                 <div class="controls">
                     <label>Dimensions :</label>
@@ -71,14 +71,18 @@
                     <span>
                         <label for="qrcode.foreground_color" class="colorLabel">C<sub>c</sub> :</label>
                         <input id="qrcode.foreground_color" name="qrcode.foreground_color" type="color" value="#ffffff"/>
-                        
-                        <label for="qrcode.background_color" class="colorLabel">C<sub>f</sub> :</label>
-                        <input id="qrcode.background_color" name="qrcode.background_color" type="color" value="#ffffff"/>
+
+                        <span class="SyncBtn" data-src="qrcode.foreground_color" data-dest="qrcode.text_color">=></span>
+
+                        <label for="qrcode.text_color" class="colorLabel">C<sub>t</sub> :</label>
+                        <input id="qrcode.text_color" name="qrcode.text_color" type="color" value="#ffffff"/>
                     </span>
                     <label></label>
                     <span>
-                        <label for="qrcode.text_color" class="colorLabel">C<sub>t</sub> :</label>
-                        <input id="qrcode.text_color" name="qrcode.text_color" type="color" value="#ffffff"/>
+                        <label for="qrcode.background_color" class="colorLabel">C<sub>f</sub> :</label>
+                        <input id="qrcode.background_color" name="qrcode.background_color" type="color" value="#ffffff"/>
+
+                        <span class="SyncBtn" data-src="qrcode.background_color" data-dest="qrcode.border_color">=></span>
 
                         <label for="qrcode.border_color" class="colorLabel">C<sub>b</sub> :</label>
                         <input id="qrcode.border_color" name="qrcode.border_color" type="color" value="#ffffff"/>
@@ -115,7 +119,7 @@
                         <label for="data.position.-1">Dernier</label>
                         Dernier
                     </fieldset>
-                    <label for="data.position">Validité :</label>
+                    <label for="data.validity">Validité :</label>
                     <fieldset id="data.validity" name="data.validity">
                         <input id="data.validity.col" type="radio" name="data.validity" value="col"/>
                         <label for="data.validity.col">Champ</label>
