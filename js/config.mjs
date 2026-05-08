@@ -132,15 +132,13 @@ function init_form(a_options) {
 	}
 	// Gestion de la synchronisation (à injecter avant onQROptionsChange)
 	document.querySelectorAll(".SyncBtn").forEach(syncBtn => {
-		
+
 		syncBtn.addEventListener("click", (e) => {
 			syncBtn.classList.toggle("on")
 			if(syncBtn.classList.contains("on")){
-				console.debug("on")
 				//form[syncBtn.dataset.dest].disabled = true
 				form[syncBtn.dataset.src]?.dispatchEvent(new Event('change'))
 			} else {
-				console.debug("off")
 				//form[syncBtn.dataset.dest].disabled = false
 			}
 		})
@@ -149,8 +147,7 @@ function init_form(a_options) {
 			form[syncBtn.dataset.src].addEventListener("change", (e) => {
 				// les arrow functions mémorise le syncBtn au moment de leur création
 				if(syncBtn.classList.contains("on")) {
-					console.debug("sync")
-					form[syncBtn.dataset.dest].value = form[syncBtn.dataset.src].value
+					form[syncBtn.dataset.dest].value = e.target.value
 				}
 			})
 		}
