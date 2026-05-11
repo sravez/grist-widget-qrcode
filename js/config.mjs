@@ -164,6 +164,24 @@ function init_form(a_options) {
 		}
 	})
 
+	window.addEventListener("message", (e) => {
+		if(e.origin === window.location.origin) {
+			switch(e.data.action) {
+				case "setConfig":
+					console.debug("config received by iframe")
+					break
+				case "getConfig":
+					e.source.postMessage({
+						action: "sendConfig",
+						data: {
+							size: 32
+						}
+					})
+					console.debug("config sent by iframe")
+					break;
+			}
+		}
+	})
 	// Assignation des données
 	formDataInterface.setData(options)
 }

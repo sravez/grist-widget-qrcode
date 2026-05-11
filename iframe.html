@@ -4,14 +4,44 @@
 <head>
   <meta charset="utf-8">
   <title>Configuration</title>
+  <link rel="stylesheet" href="./css/styles.css" />
 </head>
 <body>
 
 <iframe
   id="configuration"
   title="Configuration"
-  src="./config.html">
+  src="./config.html"
+  popover>
 </iframe>
 
+
+<script>
+
+  window.onload = () => {
+    const config = document.getElementById("configuration");
+
+    window.addEventListener("message", (e) => {
+      if(e.origin === window.location.origin) {
+        switch(e.data.action) {
+          case "sendConfig":
+            console.debug("config received by top")
+            console.debug(e.data.data);
+            break;
+        }
+      }
+    })
+
+    config.showPopover();
+    config.contentWindow.postMessage({
+      action: "setConfig",
+      data: {}
+    });
+    config.contentWindow.postMessage({
+      action: "getConfig",
+      data: {}
+    });
+  }
+</script>
 </body>
 </html>
