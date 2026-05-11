@@ -5,6 +5,7 @@
     --ssize: calc(var(--fsize) + 2px);
 }
 
+
 #options {
     display: grid;
     grid-template-columns: 12em 20em 1fr;
@@ -24,7 +25,8 @@
     grid-area: h;
     font-size: var(--ssize);
     font-weight: bold;
-    padding: 1em 0px 0.5em 1em;
+    color: #336699;
+    padding: 1em 0px 0.5em 0em;
 }
 
 
@@ -143,3 +145,16 @@ label.colorLabel {
     background-image: url("../img/sync_on.png");
 }
 
+/* ------------- buttons ------------ */
+
+.button {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: #336699 1px solid;
+    padding: 2px;
+    align: center
+}
+.button img {
+    height: 100%;
+}

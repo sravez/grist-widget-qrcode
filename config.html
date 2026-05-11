@@ -10,11 +10,11 @@
 </head>
 
 <body>
-    <div id="config_title">Configuration du Widget</div>
     <form id="config_form">
         <div id="options">            
             <div id="section_display" class="section">
                 <div class="section_title">
+                    <img src="img/section_display.png" height="14" class="section_icon" />
                     Interface
                     <div id="display_help" class="help_popover" popover>
                         <p class="help_title">Réglages d'affichage<p>
@@ -73,6 +73,7 @@
             
             <div id="section_qrcode" class="section">
                 <div class="section_title">
+                    <img src="img/section_qrcode.png" height="14" class="section_icon" />
                     Étiquettes
                     <div id="qrcode_help" class="help_popover" popover><img src="img/help.qrcode.png"/></div>
                     <img src="img/help.png" class="help_btn" data-target="qrcode_help" />
@@ -136,6 +137,7 @@
             
             <div id="section_data" class="section">
                 <div class="section_title">
+                    <img src="img/section_data.png" height="14"/>
                     Données
                     <div id="data_help" class="help_popover" popover>
                         <p class="help_title">Réglages des données<p>
@@ -149,10 +151,6 @@
                             <dd>
                                 Détermine si une nouvelle étiquette remplace la ou les précédentes ou si elle
                                 vient s'y ajouter (et est alors insérée à la position définie ci-dessus).
-                            </dd>
-                            <dt>Validité</dt>
-                            <dd>
-                                Boutons de mise à jour groupée à afficher.
                             </dd>
                         </dl>
                     </div>
@@ -170,21 +168,12 @@
                         <option value="replace">Remplacer</option>
                         <option value="add">Ajouter</option>
                     </select>
-
-                    <label for="data.validity">Validité :</label>
-                    <select id="data.validity" name="data.validity">
-                        <option value="col">Champ</option>
-                        <option value="fn">Nom de fichier</option>
-                        <option value="non">Aucune</option>
-                    </select>
                 </div>
                 <div class="r"></div>
             </div>    
      
         </div>    
     </form>
-    <button id="settings_cancel">Annuler</button>
-    <button id="settings_save">Enregistrer</button>
 </body>
 
 </html>

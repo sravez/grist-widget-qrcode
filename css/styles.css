@@ -1,18 +1,24 @@
 #config_dialog {
-
-}
-#configuration {
 	position: absolute;
 	top: 20px;
 	left: 20px;
-	width: 600px;
-	height: 600px;
+	bottom: 20px;
+	right: 20px;
+	padding: 0;
+	margin: 0;
+	background-color: gainsboro;
 }
-#configuration::backdrop {
+
+#config_dialog::backdrop {
 	background-color: rgba(0, 0, 0, 0.7);
 	backdrop-filter: blur(2px);
 }
-
-.masked {
-	display: none
+#configuration {
+	background-color: azure;
+	border: 0;
+	position: absolute;
+	top: 60px;
+	right:0;
+	bottom: 20px;
+	left:10px;
 }

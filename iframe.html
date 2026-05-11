@@ -8,13 +8,19 @@
 </head>
 <body>
 
-<iframe
-  id="configuration"
-  title="Configuration"
-  src="./config.html"
-  popover>
-</iframe>
-
+  <div id="config_dialog">
+    <div id="config_title">
+      Configuration du Widget
+      <div id="buttons">
+        <button id="settings_cancel">Annuler</button>
+        <button id="settings_save">Enregistrer</button>
+      </div>
+    </div>
+    <iframe id="configuration"
+            title="Configuration"
+            src="./config.html">
+    </iframe>
+</div>
 
 <script>
 
@@ -32,7 +38,8 @@
       }
     })
 
-    config.showPopover();
+    //document.getElementById("config_dialog").showModal();
+
     config.contentWindow.postMessage({
       action: "setConfig",
       data: {}
