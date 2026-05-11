@@ -46,13 +46,28 @@
     width: min-content;
 }
 
+/* -------------- help -------------- */
 
-.display_help {
+.help_btn {
     width: 14px;
     cursor: help;
 }
 
-/* Preview */
+.help_popover {
+    font: normal var(--ssize) var(--font);
+    border: 1px solid lightgray;
+    padding: 6px;
+}
+
+.help_popover dt {
+    font-weight: bold;
+    padding-top: 3px;
+}
+
+.help_title {
+    font-weight: bold;
+}
+/* ------------- preview ------------ */
 
 #preview {
     display: flex;
@@ -65,6 +80,15 @@
 
 #preview_img {
     cursor: zoom-in;
+}
+
+#preview_popover {
+    border: 1px solid lightgray;
+}
+
+#preview_popover::backdrop {
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(2px);
 }
 
 input[type="color"] {
@@ -108,9 +132,14 @@ label.colorLabel {
 }
 
 .SyncBtn {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-size: 100%;
+    background-image: url("../img/sync_off.png");
     cursor: pointer;
 }
 .SyncBtn.on {
-    background-color: cornflowerblue;
+    background-image: url("../img/sync_on.png");
 }
 

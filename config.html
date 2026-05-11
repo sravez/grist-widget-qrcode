@@ -10,10 +10,38 @@
 </head>
 
 <body>
+    <div id="config_title">Configuration du Widget</div>
     <form id="config_form">
         <div id="options">            
             <div id="section_display" class="section">
-                <div class="section_title">Interface</div>
+                <div class="section_title">
+                    Interface
+                    <div id="display_help" class="help_popover" popover>
+                        <p class="help_title">Réglages d'affichage<p>
+                        <dl>
+                            <dt>Taille</dt>
+                            <dd>
+                                Taille en pixels des étiquettes affichées dans le widget (la taille
+                                réelle de l'étiquette, déterminée par la section suivante, pouvant être
+                                plus grande)
+                            </dd>
+                            <dt>Génération</dt>
+                            <dd>
+                                Détermine quand une nouvelle étiquette doit être générée (mais pas
+                                enregistrée) lors de l'affichage d'une fiche.
+                            </dd>
+                            <dt>Boutons</dt>
+                            <dd>
+                                Boutons de mise à jour groupée à afficher.
+                                <ul>
+                                    <li>Tous : Mise à jour de toutes les étiquettes</li>
+                                    <li>Invalides : Mise à jour des étiquettes invalides (cf. rubrique Données)</li>
+                                </ul>
+                            </dd>
+                        </dl>
+                    </div>
+                    <img src="img/help.png" class="help_btn" data-target="display_help"/>
+                </div>
                 <div class="controls">
                     <label for="display.size">Taille :</label>
                     <select id="display.size" name="display.size">
@@ -31,7 +59,7 @@
                         <option value="never">Jamais</option>  
                     </select>
                     
-                    <label>Mise à jour :</label>
+                    <label>Boutons :</label>
                     <span>
                         <input type="checkbox" id="display.btn_update_all" name="display.btn_update_all" value="true"/>
                         <label for="display.btn_update_all">Tous</label>
@@ -45,9 +73,9 @@
             
             <div id="section_qrcode" class="section">
                 <div class="section_title">
-                    QR Code
-                    <div id="qrcode_help" popover><img src="img/help.qrcode.png"/></div>
-                    <img id="display_qrcode_help" src="img/help.png" class="display_help"/>
+                    Étiquettes
+                    <div id="qrcode_help" class="help_popover" popover><img src="img/help.qrcode.png"/></div>
+                    <img src="img/help.png" class="help_btn" data-target="qrcode_help" />
                 </div>
                 <div class="controls">
                     <label>Dimensions :</label>
@@ -72,8 +100,7 @@
                         <label for="qrcode.foreground_color" class="colorLabel">C<sub>c</sub> :</label>
                         <input id="qrcode.foreground_color" name="qrcode.foreground_color" type="color" value="#ffffff"/>
 
-                        <span class="SyncBtn" data-src="qrcode.foreground_color" data-dest="qrcode.text_color">=></span>
-
+                        <div class="SyncBtn" data-src="qrcode.foreground_color" data-dest="qrcode.text_color"></div>
                         <label for="qrcode.text_color" class="colorLabel">C<sub>t</sub> :</label>
                         <input id="qrcode.text_color" name="qrcode.text_color" type="color" value="#ffffff"/>
                     </span>
@@ -82,7 +109,7 @@
                         <label for="qrcode.background_color" class="colorLabel">C<sub>f</sub> :</label>
                         <input id="qrcode.background_color" name="qrcode.background_color" type="color" value="#ffffff"/>
 
-                        <span class="SyncBtn" data-src="qrcode.background_color" data-dest="qrcode.border_color">=></span>
+                        <div class="SyncBtn" data-src="qrcode.background_color" data-dest="qrcode.border_color"></div>
 
                         <label for="qrcode.border_color" class="colorLabel">C<sub>b</sub> :</label>
                         <input id="qrcode.border_color" name="qrcode.border_color" type="color" value="#ffffff"/>
@@ -98,57 +125,66 @@
                        
                 </div>
                 <div id="preview" class="r">
-                    <img id="preview_img" src="./img/click.png" width="128px" height="128px" class="empty" alt="preview"/>
+                    <img id="preview_img" src="./img/click.png" width="112px" height="112px" class="empty" alt="preview"/>
+                    <span id="preview_settings">
+                        <input id="autoPreview" type="checkbox" value="1"/>
+                        <label for="autoPreview">Afficher</label>
+                    </span>
                     <div id="preview_popover" popover><img id="preview_popover_img" src=""/></div>
-                    <span>
-                        <input id="autoPreview" name="autoPreview" type="checkbox" value="1"/>
-                        <label for="autoPreview">auto</label>
-                    </span>    
                 </div>
             </div>    
             
             <div id="section_data" class="section">
-                <div class="section_title">Données</div>
+                <div class="section_title">
+                    Données
+                    <div id="data_help" class="help_popover" popover>
+                        <p class="help_title">Réglages des données<p>
+                        <dl>
+                            <dt>Position</dt>
+                            <dd>
+                                Position de l'étiquette courante (première ou dernière) pour l'affichage
+                                et l'enregistrement.
+                            </dd>
+                            <dt>Enregistrement</dt>
+                            <dd>
+                                Détermine si une nouvelle étiquette remplace la ou les précédentes ou si elle
+                                vient s'y ajouter (et est alors insérée à la position définie ci-dessus).
+                            </dd>
+                            <dt>Validité</dt>
+                            <dd>
+                                Boutons de mise à jour groupée à afficher.
+                            </dd>
+                        </dl>
+                    </div>
+                    <img src="img/help.png" class="help_btn" data-target="data_help"/>
+                </div>
                 <div class="controls">
                     <label for="data.position">Position :</label>
-                    <fieldset id="data.position" name="data.position">
-                        <input id="data.position.0" type="radio" name="data.position" value="0"/>
-                        <label for="data.position.0">Premier</label>
+                    <select id="data.position" name="data.position">
+                        <option value="0">Première</option>
+                        <option value="-1">Dernière</option>
+                    </select>
 
-                        <input id="data.position.-1" type="radio" name="data.position" value="-1"/>
-                        <label for="data.position.-1">Dernier</label>
-                        Dernier
-                    </fieldset>
-                    <label for="data.validity">Validité :</label>
-                    <fieldset id="data.validity" name="data.validity">
-                        <input id="data.validity.col" type="radio" name="data.validity" value="col"/>
-                        <label for="data.validity.col">Champ</label>
-
-                        <input id="data.validity.fn" type="radio" name="data.validity" value="fn"/>
-                        <label for="data.validity.fn">Nom de fichier</label>
-
-                        <input id="data.validity.none" type="radio" name="data.validity" value="none"/>
-                        <label for="data.validity.none">Aucune</label>
-                    </fieldset>
                     <label for="data.save_mode">Enregistrement :</label>
-                    <fieldset id="data.save_mode" name="save_mode">
-                        <input id="data.save_mode.replace" type="radio" name="data.save_mode" value="replace"/>
-                        <label for="data.save_mode.replace">Remplacer</label>
+                    <select id="data.save_mode" name="data.save_mode">
+                        <option value="replace">Remplacer</option>
+                        <option value="add">Ajouter</option>
+                    </select>
 
-                        <input id="data.save_mode.add" type="radio" name="data.save_mode" value="add"/>
-                        <label for="data.save_mode.add">Ajouter</label>
-                    </fieldset>
+                    <label for="data.validity">Validité :</label>
+                    <select id="data.validity" name="data.validity">
+                        <option value="col">Champ</option>
+                        <option value="fn">Nom de fichier</option>
+                        <option value="non">Aucune</option>
+                    </select>
                 </div>
                 <div class="r"></div>
             </div>    
      
         </div>    
     </form>
-    <button popovertarget="options_help">Aide</button>
     <button id="settings_cancel">Annuler</button>
     <button id="settings_save">Enregistrer</button>
-    <button id="settings_test">Test</button>
-
 </body>
 
 </html>

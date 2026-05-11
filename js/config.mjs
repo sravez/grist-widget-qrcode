@@ -157,9 +157,13 @@ function init_form(a_options) {
 		form["qrcode."+o].addEventListener('change', onQRCodeOptionsChange)
 	}
 	// Affichage des aides
-	document.getElementById("display_qrcode_help").onclick = (e) => {
-		document.getElementById('qrcode_help').showPopover()
-	}
+	document.querySelectorAll(".help_btn").forEach(helpBtn => {
+		const target = document.getElementById(helpBtn.dataset.target)
+		helpBtn.onclick = (e) => {
+			target.showPopover()
+		}
+	})
+
 	// Assignation des données
 	formDataInterface.setData(options)
 }
