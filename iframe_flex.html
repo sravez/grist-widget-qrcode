@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE html>
+      <html lang="fr">
+
+      <head>
+      <meta charset="utf-8">
+      <title>Configuration</title>
+  <style>
+    #box {
+      display: flex;
+      flex-direction: column;
+      height: 500px;
+    }
+    #buttons {
+      flex: 1 50px;
+    }
+    #configuration {
+      flex: 1 auto;
+      justify-content: stretch;
+    }
+  </style>
+</head>
+<body>
+<div id="box">
+  <div id="buttons">
+    <button id="settings_cancel">Annuler</button>
+    <button id="settings_save">Enregistrer</button>
+  </div>
+  <iframe id="configuration"
+          title="Configuration"
+          src="./config.html">
+  </iframe>
+</div>
+
+</body>
+</html>
