@@ -5,7 +5,7 @@
  *
  * Une option de configuration `domain.option` (par exemple `qrccode.size`) est gérée
  * par un contrôle _input_ du formulaire dont les attributs `id` et `name` sont
- * `domain_option`.
+ * `domain.option`.
  *
  * Toutes les données étant fournies au format texte, on utilise le type de contrôle
  * pour déterminer leur type ; il est donc **primordial** que les options booléennes
@@ -72,7 +72,7 @@ function getPreviewImage() {
 		bottom: "BAS",
 		left: "GAUCHE",
 	}
-	const o = formDataInterface.getFormData()
+	const o = formDataInterface.getData()
 	preview_img.src = getQRLabel(data, o.qrcode)
 	preview_img.classList.remove("empty")
 }
@@ -164,20 +164,18 @@ function init_form(a_options) {
 		}
 	})
 
+	// Réponses aux messages
 	window.addEventListener("message", (e) => {
 		if(e.origin === window.location.origin) {
 			switch(e.data.action) {
 				case "setConfig":
-					console.debug("config received by iframe")
+					formDataInterface.setData(e.data.options)
 					break
 				case "getConfig":
 					e.source.postMessage({
-						action: "sendConfig",
-						data: {
-							size: 32
-						}
+						action: "getConfig",
+						config: formDataInterface.getData()
 					})
-					console.debug("config sent by iframe")
 					break;
 			}
 		}

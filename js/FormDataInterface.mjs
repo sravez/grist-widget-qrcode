@@ -27,7 +27,7 @@ export default class FormDataInterface {
 
     /**
      * Point de restauration : dernières valeurs assignées ou sauvegardées
-     * @type {object} Valeur à restaurer (aplaties) */
+     * @type {object} Valeur à restaurer */
     reset_data = {}
 
     /**
@@ -41,52 +41,19 @@ export default class FormDataInterface {
     }
 
     /**
-     * Assigne les données et les appique au formulaire
+     * Assigne les données et les applique au formulaire
      * @param {object} a_data
      */
     setData(a_data) {
         this.reset_data = structuredClone(a_data);
-        this.reset()
-    }
-
-    /**
-     * Applique les données au formulaire
-     */
-    reset() {
-        this.setFormData(this.reset_data);
-    }
-
-    /**
-     * Applique des données au formulaires
-     * @param {object} a_data
-     */
-    setFormData(a_data) {
-        const self = this;
-
-        function setSubData(obj, path = "") {
-            for (const key in obj) {
-                const p = path + (path ? self.sep : "") + key;
-                if (FormDataInterface.isObject(obj[key])) {
-                    setSubData(obj[key], p)
-                } else {
-                    if (self.form[p]) {
-                        if (self.form[p].type === "checkbox") {
-                            self.form[p].checked = obj[key] ?? false
-                        } else {
-                            self.form[p].value = obj[key]
-                        }
-                    }
-                }
-            }
-        }
-        setSubData(this.reset_data)
+        this.resetForm()
     }
 
     /**
      * Extrait les données du formulaire
      * @returns {object} Données _dépliées_
      */
-    getFormData() {
+    getData() {
         const result = {}
         const form_data = new FormData(this.form)
 
@@ -115,6 +82,39 @@ export default class FormDataInterface {
             insert(result, p, value)
         }
         return result;
+    }
+
+    /**
+     * Applique les données au formulaire
+     */
+    resetForm() {
+        this.setFormData(this.reset_data);
+    }
+
+    /**
+     * Applique des données au formulaire
+     * @param {object} a_data
+     */
+    setFormData(a_data) {
+        const self = this;
+
+        function setSubData(obj, path = "") {
+            for (const key in obj) {
+                const p = path + (path ? self.sep : "") + key;
+                if (FormDataInterface.isObject(obj[key])) {
+                    setSubData(obj[key], p)
+                } else {
+                    if (self.form[p]) {
+                        if (self.form[p].type === "checkbox") {
+                            self.form[p].checked = obj[key] ?? false
+                        } else {
+                            self.form[p].value = obj[key]
+                        }
+                    }
+                }
+            }
+        }
+        setSubData(this.reset_data)
     }
 
     /**

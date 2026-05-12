@@ -8,32 +8,25 @@
       <head>
       <meta charset="utf-8">
       <title>Configuration</title>
-  <style>
-    #box {
-      display: flex;
-      flex-direction: column;
-      height: 500px;
-    }
-    #buttons {
-      flex: 1 50px;
-    }
-    #configuration {
-      flex: 1 auto;
-      justify-content: stretch;
-    }
-  </style>
+      <link rel="stylesheet" href="css/config_dialog.css" />
 </head>
 <body>
-<div id="box">
-  <div id="buttons">
-    <button id="settings_cancel">Annuler</button>
-    <button id="settings_save">Enregistrer</button>
+<dialog id="config_dialog">
+  <div>
+    <div id="config_header">
+      <div id="config_title">Configuration du widget</div>
+      <button id="settings_cancel">Annuler</button>
+      <button id="settings_save">Enregistrer</button>
+    </div>
+    <iframe id="configuration"
+            title="Configuration"
+            src="./config.html">
+    </iframe>
   </div>
-  <iframe id="configuration"
-          title="Configuration"
-          src="./config.html">
-  </iframe>
-</div>
+</dialog>
 
+<script>
+  document.getElementById("config_dialog").showModal();
+</script>
 </body>
 </html>

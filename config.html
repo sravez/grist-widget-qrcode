@@ -6,173 +6,171 @@
     <title>QR Code - Configuration</title>
     <script src="./lib/qrcode.min.js"></script>
     <script src="./js/config.mjs" type="module"></script>
-    <link rel="stylesheet" href="./css/config.css" />
+    <link rel="stylesheet" href="./css/config_form.css" />
 </head>
 
 <body>
     <form id="config_form">
-        <div id="options">            
-            <div id="section_display" class="section">
-                <div class="section_title">
-                    <img src="img/section_display.png" height="14" class="section_icon" />
-                    Interface
-                    <div id="display_help" class="help_popover" popover>
-                        <p class="help_title">Réglages d'affichage<p>
-                        <dl>
-                            <dt>Taille</dt>
-                            <dd>
-                                Taille en pixels des étiquettes affichées dans le widget (la taille
-                                réelle de l'étiquette, déterminée par la section suivante, pouvant être
-                                plus grande)
-                            </dd>
-                            <dt>Génération</dt>
-                            <dd>
-                                Détermine quand une nouvelle étiquette doit être générée (mais pas
-                                enregistrée) lors de l'affichage d'une fiche.
-                            </dd>
-                            <dt>Boutons</dt>
-                            <dd>
-                                Boutons de mise à jour groupée à afficher.
-                                <ul>
-                                    <li>Tous : Mise à jour de toutes les étiquettes</li>
-                                    <li>Invalides : Mise à jour des étiquettes invalides (cf. rubrique Données)</li>
-                                </ul>
-                            </dd>
-                        </dl>
-                    </div>
-                    <img src="img/help.png" class="help_btn" data-target="display_help"/>
+        <section id="section_display">
+            <div class="section_title">
+                <img src="img/section_display.png" height="14" class="section_icon" />
+                Interface
+                <div id="display_help" class="help_popover" popover>
+                    <p class="help_title">Réglages d'affichage<p>
+                    <dl>
+                        <dt>Taille</dt>
+                        <dd>
+                            Taille en pixels des étiquettes affichées dans le widget (la taille
+                            réelle de l'étiquette, déterminée par la section suivante, pouvant être
+                            plus grande)
+                        </dd>
+                        <dt>Génération</dt>
+                        <dd>
+                            Détermine quand une nouvelle étiquette doit être générée (mais pas
+                            enregistrée) lors de l'affichage d'une fiche.
+                        </dd>
+                        <dt>Boutons</dt>
+                        <dd>
+                            Boutons de mise à jour groupée à afficher.
+                            <ul>
+                                <li>Tous : Mise à jour de toutes les étiquettes</li>
+                                <li>Invalides : Mise à jour des étiquettes invalides (cf. rubrique Données)</li>
+                            </ul>
+                        </dd>
+                    </dl>
                 </div>
-                <div class="controls">
-                    <label for="display.size">Taille :</label>
-                    <select id="display.size" name="display.size">
-                        <option value="-1"> Taille réelle</option>
-                        <option value="32" selected>32</option>
-                        <option value="64" selected>64</option>
-                        <option value="128">128</option>
-                        <option value="256">256</option>
-                    </select>
-                    
-                    <label for="display.auto_next">Génération :</label>
-                    <select id="display.auto_next" name="display.auto_next">
-                        <option value="always">Toujours</option>  
-                        <option value="invalid">Si invalide</option>
-                        <option value="never">Jamais</option>  
-                    </select>
-                    
-                    <label>Boutons :</label>
-                    <span>
-                        <input type="checkbox" id="display.btn_update_all" name="display.btn_update_all" value="true"/>
-                        <label for="display.btn_update_all">Tous</label>
-                        
-                        <input type="checkbox" id="display.btn_update_invalid" name="display.btn_update_invalid" value="true"/>
-                        <label for="display.btn_update_invalid">Invalides</label>
-                    </span>
-                </div>
-                <div class="r"></div>
-            </div>    
+                <img src="img/help.png" class="help_btn" data-target="display_help"/>
+            </div>
+            <div class="controls">
+                <label for="display.size">Taille :</label>
+                <select id="display.size" name="display.size">
+                    <option value="-1"> Taille réelle</option>
+                    <option value="32" selected>32</option>
+                    <option value="64" selected>64</option>
+                    <option value="128">128</option>
+                    <option value="256">256</option>
+                </select>
+
+                <label for="display.auto_next">Génération :</label>
+                <select id="display.auto_next" name="display.auto_next">
+                    <option value="always">Toujours</option>
+                    <option value="invalid">Si invalide</option>
+                    <option value="never">Jamais</option>
+                </select>
+
+                <label>Boutons :</label>
+                <span>
+                    <input type="checkbox" id="display.btn_update_all" name="display.btn_update_all" value="true"/>
+                    <label for="display.btn_update_all">Tous</label>
+
+                    <input type="checkbox" id="display.btn_update_invalid" name="display.btn_update_invalid" value="true"/>
+                    <label for="display.btn_update_invalid">Invalides</label>
+                </span>
+            </div>
+            <div class="r"></div>
+        </section>
             
-            <div id="section_qrcode" class="section">
-                <div class="section_title">
-                    <img src="img/section_qrcode.png" height="14" class="section_icon" />
-                    Étiquettes
-                    <div id="qrcode_help" class="help_popover" popover><img src="img/help.qrcode.png"/></div>
-                    <img src="img/help.png" class="help_btn" data-target="qrcode_help" />
-                </div>
-                <div class="controls">
-                    <label>Dimensions :</label>
-                    <span>
-                        <label for="qrcode.size" class="dim">L :</label>
-                        <input id="qrcode.size" name="qrcode.size" type="number" min="128" value="256"/>
-                        
-                        <label for="qrcode.margin" class="dim">M :</label>
-                        <input id="qrcode.margin" name="qrcode.margin" type="number" min="10" value="10"/>
-                    </span>
-                    <label></label>
-                    <span>
-                        <label for="qrcode.border" class="dim">B :</label>
-                        <input id="qrcode.border" name="qrcode.border" type="number" min="0" value="20"/>
-                    
-                        <label for="qrcode.text_size" class="dim">T :</label>
-                        <input id="qrcode.text_size" name="qrcode.text_size" type="number" min="6" value="16"/>
-                    </span>
-                
-                    <label>Couleurs :</label>
-                    <span>
-                        <label for="qrcode.foreground_color" class="colorLabel">C<sub>c</sub> :</label>
-                        <input id="qrcode.foreground_color" name="qrcode.foreground_color" type="color" value="#ffffff"/>
+        <section id="section_qrcode">
+            <div class="section_title">
+                <img src="img/section_qrcode.png" height="14" class="section_icon" />
+                Étiquettes
+                <div id="qrcode_help" class="help_popover" popover><img src="img/help.qrcode.png"/></div>
+                <img src="img/help.png" class="help_btn" data-target="qrcode_help" />
+            </div>
+            <div class="controls">
+                <label>Dimensions :</label>
+                <span>
+                    <label for="qrcode.size" class="dim">L :</label>
+                    <input id="qrcode.size" name="qrcode.size" type="number" min="128" value="256"/>
 
-                        <div class="SyncBtn" data-src="qrcode.foreground_color" data-dest="qrcode.text_color"></div>
-                        <label for="qrcode.text_color" class="colorLabel">C<sub>t</sub> :</label>
-                        <input id="qrcode.text_color" name="qrcode.text_color" type="color" value="#ffffff"/>
-                    </span>
-                    <label></label>
-                    <span>
-                        <label for="qrcode.background_color" class="colorLabel">C<sub>f</sub> :</label>
-                        <input id="qrcode.background_color" name="qrcode.background_color" type="color" value="#ffffff"/>
+                    <label for="qrcode.margin" class="dim">M :</label>
+                    <input id="qrcode.margin" name="qrcode.margin" type="number" min="10" value="10"/>
+                </span>
+                <label></label>
+                <span>
+                    <label for="qrcode.border" class="dim">B :</label>
+                    <input id="qrcode.border" name="qrcode.border" type="number" min="0" value="20"/>
 
-                        <div class="SyncBtn" data-src="qrcode.background_color" data-dest="qrcode.border_color"></div>
+                    <label for="qrcode.text_size" class="dim">T :</label>
+                    <input id="qrcode.text_size" name="qrcode.text_size" type="number" min="6" value="16"/>
+                </span>
 
-                        <label for="qrcode.border_color" class="colorLabel">C<sub>b</sub> :</label>
-                        <input id="qrcode.border_color" name="qrcode.border_color" type="color" value="#ffffff"/>
-                    </span>
+                <label>Couleurs :</label>
+                <span>
+                    <label for="qrcode.foreground_color" class="colorLabel">C<sub>c</sub> :</label>
+                    <input id="qrcode.foreground_color" name="qrcode.foreground_color" type="color" value="#ffffff"/>
 
-                    <label for="qrcode.redundancy">Résilience :</label>
-                    <select id="qrcode.redundancy" name="qrcode.redundancy">
-                        <option value="L">Basse</option>
-                        <option value="M">Moyenne</option>
-                        <option value="Q">Standard</option>
-                        <option value="H">Haute</option>
-                    </select>
-                       
-                </div>
-                <div id="preview" class="r">
-                    <img id="preview_img" src="./img/click.png" width="112px" height="112px" class="empty" alt="preview"/>
-                    <span id="preview_settings">
-                        <input id="autoPreview" type="checkbox" value="1"/>
-                        <label for="autoPreview">Afficher</label>
-                    </span>
-                    <div id="preview_popover" popover><img id="preview_popover_img" src=""/></div>
-                </div>
-            </div>    
+                    <div class="SyncBtn" data-src="qrcode.foreground_color" data-dest="qrcode.text_color"></div>
+                    <label for="qrcode.text_color" class="colorLabel">C<sub>t</sub> :</label>
+                    <input id="qrcode.text_color" name="qrcode.text_color" type="color" value="#ffffff"/>
+                </span>
+                <label></label>
+                <span>
+                    <label for="qrcode.background_color" class="colorLabel">C<sub>f</sub> :</label>
+                    <input id="qrcode.background_color" name="qrcode.background_color" type="color" value="#ffffff"/>
+
+                    <div class="SyncBtn" data-src="qrcode.background_color" data-dest="qrcode.border_color"></div>
+
+                    <label for="qrcode.border_color" class="colorLabel">C<sub>b</sub> :</label>
+                    <input id="qrcode.border_color" name="qrcode.border_color" type="color" value="#ffffff"/>
+                </span>
+
+                <label for="qrcode.redundancy">Résilience :</label>
+                <select id="qrcode.redundancy" name="qrcode.redundancy">
+                    <option value="L">Basse</option>
+                    <option value="M">Moyenne</option>
+                    <option value="Q">Standard</option>
+                    <option value="H">Haute</option>
+                </select>
+
+            </div>
+            <div id="preview" class="r">
+                <img id="preview_img" src="./img/click.png" width="112px" height="112px" class="empty" alt="preview"/>
+                <span id="preview_settings">
+                    <input id="autoPreview" type="checkbox" value="1" checked="checked"/>
+                    <label for="autoPreview">Afficher</label>
+                </span>
+                <div id="preview_popover" popover><img id="preview_popover_img" src=""/></div>
+            </div>
+        </section>
             
-            <div id="section_data" class="section">
-                <div class="section_title">
-                    <img src="img/section_data.png" height="14"/>
-                    Données
-                    <div id="data_help" class="help_popover" popover>
-                        <p class="help_title">Réglages des données<p>
-                        <dl>
-                            <dt>Position</dt>
-                            <dd>
-                                Position de l'étiquette courante (première ou dernière) pour l'affichage
-                                et l'enregistrement.
-                            </dd>
-                            <dt>Enregistrement</dt>
-                            <dd>
-                                Détermine si une nouvelle étiquette remplace la ou les précédentes ou si elle
-                                vient s'y ajouter (et est alors insérée à la position définie ci-dessus).
-                            </dd>
-                        </dl>
-                    </div>
-                    <img src="img/help.png" class="help_btn" data-target="data_help"/>
+        <section id="section_data">
+            <div class="section_title">
+                <img src="img/section_data.png" height="14"/>
+                Données
+                <div id="data_help" class="help_popover" popover>
+                    <p class="help_title">Réglages des données<p>
+                    <dl>
+                        <dt>Position</dt>
+                        <dd>
+                            Position de l'étiquette courante (première ou dernière) pour l'affichage
+                            et l'enregistrement.
+                        </dd>
+                        <dt>Enregistrement</dt>
+                        <dd>
+                            Détermine si une nouvelle étiquette remplace la ou les précédentes ou si elle
+                            vient s'y ajouter (et est alors insérée à la position définie ci-dessus).
+                        </dd>
+                    </dl>
                 </div>
-                <div class="controls">
-                    <label for="data.position">Position :</label>
-                    <select id="data.position" name="data.position">
-                        <option value="0">Première</option>
-                        <option value="-1">Dernière</option>
-                    </select>
+                <img src="img/help.png" class="help_btn" data-target="data_help"/>
+            </div>
+            <div class="controls">
+                <label for="data.position">Position :</label>
+                <select id="data.position" name="data.position">
+                    <option value="0">Première</option>
+                    <option value="-1">Dernière</option>
+                </select>
 
-                    <label for="data.save_mode">Enregistrement :</label>
-                    <select id="data.save_mode" name="data.save_mode">
-                        <option value="replace">Remplacer</option>
-                        <option value="add">Ajouter</option>
-                    </select>
-                </div>
-                <div class="r"></div>
-            </div>    
+                <label for="data.save_mode">Enregistrement :</label>
+                <select id="data.save_mode" name="data.save_mode">
+                    <option value="replace">Remplacer</option>
+                    <option value="add">Ajouter</option>
+                </select>
+            </div>
+            <div class="r"></div>
+        </section>
      
-        </div>    
     </form>
 </body>
 
