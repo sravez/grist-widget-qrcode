@@ -1,0 +1,157 @@
+/*
+    Structure
+
+        body
+            form #config_form
+                div.section
+                    div.section_title
+                    div.controls
+                    div.r
+                div.section
+
+ */
+
+/* Variables */
+:root {
+    --font: Verdana,sans-serif;
+    --fsize: 12px;
+    --ssize: calc(var(--fsize) + 2px);
+    --color: #336699;
+}
+
+
+/* ------------- #config_form ------------- */
+
+#config_form {
+    font-family: var(--font);
+    font-size: var(--fsize);
+    display: grid;
+    grid-template-columns: repeat(2, 8em 20em);
+    row-gap: 10px;
+    align-items: start;
+
+}
+
+#config_form section {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-template-rows: 25px;
+    grid-auto-rows: 20px;
+    row-gap: 3px;
+    column-gap: 3px;
+    align-items: baseline;
+}
+
+#config_form .section_title {
+    grid-column: span 2;
+    font-size: var(--ssize);
+    font-weight: bold;
+    color: var(--color);
+    padding: 0;
+}
+
+/* ------------- Contrôles ------------- */
+
+#config_form input {
+    accent-color: var(--color);
+}
+
+#config_form input[type="color"] {
+    height: 16px;
+    width: 16px;
+    padding: 0;
+}
+
+#config_form input[type="number"] {
+    width: 4em;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    text-align: center;
+    font-family: var(--font);
+    font-size: var(--fsize);
+}
+
+#config_form select {
+    width: 9em;
+    text-align: center;
+    font-family: var(--font);
+    font-size: var(--fsize);
+}
+
+#config_form fieldset {
+    border: none;
+    padding: 0px;
+}
+
+/* Alignement à droite */
+#config_form label {
+    justify-self: end;
+}
+/* Étiquettes de dimension et couleur */
+label.colorLabel, label.dim {
+    display: inline-block;
+    text-align: right;
+    width: 2em;
+}
+/* Boutons de synchronisation */
+.SyncBtn {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-size: 100%;
+    background-image: url("../img/sync_off.png");
+    cursor: pointer;
+}
+.SyncBtn.on {
+    background-image: url("../img/sync_on.png");
+}
+/* -------------- help -------------- */
+
+.help_btn {
+    width: 14px;
+    cursor: help;
+}
+
+.help_popover {
+    font: normal var(--ssize) var(--font);
+    border: 1px solid lightgray;
+    padding: 6px;
+}
+
+.help_popover dt {
+    font-weight: bold;
+    padding-top: 3px;
+}
+
+.help_title {
+    font-weight: bold;
+}
+
+/* ------------- preview ------------ */
+
+#preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#preview_img.empty {
+    cursor: url("../img/cursor_gear32.png") 1 1, cell;
+}
+
+#preview_img {
+    cursor: zoom-in;
+}
+
+/* ----------- preview zoom ---------- */
+
+#preview_popover {
+    border: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+#preview_popover::backdrop {
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(2px);
+}
+
