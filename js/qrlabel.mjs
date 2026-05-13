@@ -96,7 +96,9 @@ export default function getQRLabel(content, a_options = null) {
 	ctx.drawImage(background_canvas, 0, 0);
 	const qrc_pos = options.border + options.margin
 	ctx.drawImage(getQRCode(content.val, reset ? options : null), qrc_pos, qrc_pos)
-	drawText(canvas, content)
+	if(options.text_size > 0) {
+		drawText(canvas, content)
+	}
 	return canvas.toDataURL(mime)
 }
 
