@@ -160,11 +160,11 @@ function setMessageListeners() {
 		if(e.origin === window.location.origin) {
 			switch(e.data.action) {
 				case "setConfig":
-					setData(e.data.options)
+					setData(e.data.config)
 					break
 				case "getConfig":
 					e.source.postMessage({
-						action: "getConfig",
+						action: "getConfigResp",
 						config: formDataInterface.getData()
 					})
 					break;

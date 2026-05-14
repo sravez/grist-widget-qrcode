@@ -12,11 +12,11 @@
 /**
  * @typedef QRLabelContent Textes (QR code et bordure) de l'étiquette
  * @type {object}
- * @property {string}         val    Texte à encoder dans le QR code
- * @property {?string | null} top    Texte positionné au-dessus du QR code
- * @property {?string | null} right  Texte positionné à droite du QR code
- * @property {?string | null} bottom Texte positionné sous le QR code
- * @property {?string | null} left   Texte positionné à gauche du QR code
+ * @property {string}   val     Texte à encoder dans le QR code
+ * @property {?string} [top]    Texte positionné au-dessus du QR code
+ * @property {?string} [right]  Texte positionné à droite du QR code
+ * @property {?string} [bottom] Texte positionné sous le QR code
+ * @property {?string} [left]   Texte positionné à gauche du QR code
  */
 
 /**
@@ -27,6 +27,7 @@
  * @property {string}  border_color Couleur de la bordure
  * @property {number}  text_size    Taille du texte
  * @property {string}  text_color   Couleur du texte
+ * @property {number}  text_options Orientation du texte
  */
 
 /**
@@ -53,6 +54,7 @@ const default_options = {
 	background_color: "#FFFFFF",
 	border_color: "#FFFFFF",
 	text_color: "#000000",
+	text_options: 0b00010100
 }
 
 /**
@@ -70,28 +72,26 @@ const font = "monospace"
  * Image de fond
  * @type {HTMLCanvasElement | null}
  */
-let background_canvas
+let background_canvas = null
 
 /**
- * Options
+ * Options en cours
  * @type {QRLabelOptions}
  */
-let options
+let options = default_options
 
 /**
  * Génère une étiquette contenant le QR code éventuellement
  * entouré d'informations textuelles.
  *
- * @param {QRLabelContent}         content         Valeur à encoder et textes à afficher
- * @param {QRLabelOptions | null} [a_options=null] Paramètres : tailles et couleurs
+ * @param {QRLabelContent}   content         Valeur à encoder et textes à afficher
+ * @param {?QRLabelOptions} [a_options=null] Paramètres : tailles et couleurs ({} : par défaut)
  * @returns {DataURL}
  */
 export default function getQRLabel(content, a_options = null) {
-	let reset = !background_canvas || a_options
-	/** @type {QRLabelOptions} */
-	options = { ...default_options, ...(a_options ?? {}) }
-
-	if(reset) {
+	const reset = !background_canvas || a_options
+	if (reset) {
+		options = { ...default_options, ...(a_options ?? {}) }
 		background_canvas = getBackgroundCanvas();
 	}
 	const canvas = document.createElement("canvas")
@@ -105,6 +105,10 @@ export default function getQRLabel(content, a_options = null) {
 		drawText(canvas, content)
 	}
 	return canvas.toDataURL(mime)
+}
+
+export function init(a_options) {
+	getQRLabel({val: "test"}, a_options = {})
 }
 
 /**
@@ -141,34 +145,32 @@ function getBackgroundCanvas(o = options) {
 function drawText(canvas, content, o = options) {
 	const middle_x = Math.floor(canvas.width/2)
 	const middle_y = Math.floor(canvas.height/2)
-	const text_pos = Math.ceil(o.border/2)
+	// Distance du milieu du texte par rapport au bord extérieur de l'étiquette
+	const text_offset = Math.ceil(o.border/2)
 
 	const ctx = canvas.getContext("2d");
+
+	const rot_mask = 0b01
+	const text_options_bits = 2
 
 	ctx.textAlign = "center"
 	ctx.font = `${o.text_size}px ${font}`;
 	ctx.fillStyle = o.text_color;
 	ctx.textBaseline = "middle";
-
-	// Bas
-	if (content.bottom) {
-		ctx.fillText(content.bottom, middle_x, canvas.height-text_pos);
+	const text_positions = {
+		top   : { r: 0, x: middle_x                  , y: text_offset                },
+		right : { r: 1, x: canvas.width - text_offset, y: middle_y                   },
+		bottom: { r: 2, x: middle_x                  , y: canvas.height - text_offset},
+		left  : { r: 3, x: text_offset               , y: middle_y                   }
 	}
-	// Haut
-	if (content.top) {
-		ctx.fillText(content.top, middle_x, text_pos);
-	}
-	// Gauche
-	if(content.left) {
-		ctx.translate(text_pos, middle_y)
-		ctx.rotate(-Math.PI/2)
-		ctx.fillText(content.left, 0, 0)
-	}
-	// Droite
-	if(content.right) {
-		ctx.setTransform(1,0,0,1,0,0)
-		ctx.translate(canvas.width - text_pos, middle_y)
-		ctx.rotate(+Math.PI/2)
-		ctx.fillText(content.right, 0, 0);
+	for(const pos in text_positions ) {
+		if(content[pos]) {
+			const s = text_positions[pos].r * text_options_bits
+			const r = text_positions[pos].r + 2 * ( (o.text_options >> s) & rot_mask )
+			ctx.setTransform(1,0,0,1,0,0)
+			ctx.translate(text_positions[pos].x, text_positions[pos].y)
+			ctx.rotate(r * Math.PI/2)
+			ctx.fillText(content[pos], 0, 0);
+		}
 	}
 }

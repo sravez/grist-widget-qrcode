@@ -11,26 +11,39 @@
   </head>
   
   <body>
-    <!-- Réglages -->
     <dialog id="settings" closedby="none">
     </dialog>
     
-    <h2>QR Code</h2>
-        <div id="existing_qrcode" class="">
-          <img />
-          <p>QR Code actuel</p>
+    <h2>Étiquettes</h2>
+        <div id="label" class="">
+          <img src="./img/no_label.png"/>
+          <p>Etiquette</p>
         </div>
-        <div id="computed_qrcode">
-          <img />
-          <p>Prochain QR Code</p>
+        <div id="preview">
+          <img src = "./img/no_label.png"/>
+          <p>Preview</p>
         </div>
-        <img id="label"/>
-        <img id="qrcode"/>
+
         <button id="saveBtn">Enregistrer</button>
-    <h2>log</h2>    
-    
-    <pre id="log">---</pre>
-    
+
+    <h2>Débogage</h2>
+    <pre id="debogage"></pre>
+
+    <!-- Réglages -->
+    <dialog id="config_dialog">
+        <div>
+            <div id="config_header">
+                <div id="config_title">Configuration du widget</div>
+                <button id="cancel_btn">Annuler</button>
+                <button id="save_options_btn">Enregistrer</button>
+            </div>
+            <iframe id="configuration"
+                    title="Configuration"
+                    src="./config.form.html">
+            </iframe>
+        </div>
+    </dialog>
+
   </body>
   
 </html>

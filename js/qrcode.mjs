@@ -51,7 +51,7 @@ let factory = null;
  *
  * @param {string}               a_text           Texte à encoder
  * @param {QRCodeOptions | null} [a_options=null] Options du QR Code
- * @returns {HTMLCanvasElement}
+ * @return {HTMLCanvasElement}
  */
 export default function getQRCode(a_text, a_options = null) {
 
@@ -71,4 +71,33 @@ export default function getQRCode(a_text, a_options = null) {
         factory.makeCode(a_text);
     }
     return working_div.querySelector("canvas");
+}
+
+/**
+ * Calcule la taille du module (plus petit carré du code QR)
+ *
+ * On examine la première ligne en partant du principe que le carré
+ * 7x7 de calibration se situe dans le coin haut gauche sans marge.
+ *
+ * @param {HTMLCanvasElement} a_canvas
+ * @returns {number}
+ */
+export function getQRCodeModuleSize(a_canvas) {
+    const ctx = a_canvas.getContext("2d");
+    const w = Math.floor(a_canvas.width/2)
+    const pixels = ctx.getImageData(0, 0, w, 1);
+
+    function getPixelColor(pos) {
+        let r = ""
+        for (let i = 0; i < 4; i++) {
+            r += pixels.data[4 * pos + i].toString(16).padStart(2, "0");
+        }
+        return r
+    }
+    const c = getPixelColor(0);
+    let i = 1
+    while(i < w && getPixelColor(i) === c) {
+        i += 1
+    }
+    return i < w ? i : undefined
 }

@@ -1,96 +1,64 @@
-import getQRLabel from "./qrlabel.mjs"
-import { apply_options } from "./card.mjs"
-
-
-export let options = null
-
-/** Boîte de dialogue */
-const settings_dialog = document.getElementById("settings")
-/** Formulaire de saisie des options */
-const settings_form = document.getElementById("settings_form")
-
-export async function initOptions() {
-	if (!options) {
-		const o = await grist.getOption("options")
-		options = { ...default_options, ...(o ?? {}) }
-		if (!o) {
-			await setOptions(options)
-		} else {
-			apply_options(options)
-		}
-	}
-	setSettingsFormData(options)
-}
-
-async function setOptions(a_options) {
-	await grist.setOption("options", options)
-	apply_options(a_options)
-}
-
-function setSettingsFormData(a_options) {
-	for (const n in a_options) {
-		try {
-			settings_form[n].value = a_options[n]
-		} catch(e) {
-			
-		}
-	}
-}
-
-function resetSettingsFormData() {
-	setSettingsFormData(options)
-}
-
-/** Obtention des données du formulaire */
-function getSettingsFormData() {
-	const integers = ["qrc_size", "padding", "text_size"]
-	const form_data = {}
-	const formData = new FormData(settings_form);
-	for(let pair of formData.entries()) {
-		form_data[pair[0]] = integers.includes(pair[0])? parseInt(pair[1]) : pair[1]
-	}
-	return form_data	
-}
-
-function closeDialog() {
-	example.src = ""
-	settings_dialog.close()
-}
 /**
- * Réglages du widget
- * 
+ * ## Gestion des options du widget
+ *
+ * La variable exportée `options` contient les options en vigueur, elle ne doit pas être
+ * modifiée directement pour rester synchrone avec la valeur stockée par `grist.setOption()`.
+ *
+ * 1. Au chargement du widget (`initOptions()`), on charge les éventuelles options enregistrées
+ *    et on les combine avec les options par défaut.
+ */
+
+
+import { options } from "./index.mjs"
+import default_widget_options from "./widget_options.default.mjs";
+
+/**
+ * Boîte de dialogue de configuration
+ * @type {HTMLDialogElement}
+ */
+let config_dialog = null
+
+/**
+ * ## Initialisation des options au chargement du widget
+ *
+ * @returns {Promise<void>}
+ */
+export function optionsInit() {
+
+	config_dialog = document.getElementById("config_dialog");
+	/** iframe contenant le formulaire */
+	const config = document.getElementById("configuration");
+
+	window.addEventListener("message", async (e) => {
+		if(e.origin === window.location.origin) {
+			switch(e.data.action) {
+				case "getConfigResp":
+					await grist.setOptions({...default_widget_options, ...e.data.config ?? {}});
+					config_dialog.close()
+					break;
+			}
+		}
+	})
+
+	document.getElementById("save_options_btn").onclick = (e) => {
+		config.contentWindow.postMessage({
+			action: "getConfig",
+		});
+	}
+
+	document.getElementById("cancel_btn").onclick = (e) => {
+		config_dialog.close();
+	}
+}
+
+/**
  * Fonction appelée lorsque l'utilisateur accède à la configuration du widget.
  */
 export function onEditOptions() {
-	settings_dialog.showModal();
-	
-	const test_content = {
-		val   : "https://www.apple.com",
-		top   : "EN HAUT",
-		bottom: "EN BAS",
-		left  : "À GAUCHE",
-		right : "À DROITE"
-	}
-	
-	const example = document.getElementById("example")
-	
-	const btnTest = document.getElementById("settings_test");
-	btnTest.onclick = () => {
-		const formOptions = getSettingsFormData();
-		const qrc = getQRLabel(test_content, formOptions);
-		example.src = qrc.toDataURL();
-	}
-	
-	const btnSave = document.getElementById("settings_save");
-	btnSave.onclick = async () => {
-		closeDialog();
-		options = {...options, ...getSettingsFormData() }
-		await setOptions(options)  
-	}
-	
-	const btnCancel = document.getElementById("settings_cancel");
-	btnCancel.onclick = () => {
-		resetSettingsFormData();
-		closeDialog();
-	}	 	  
+	config_dialog.showModal();
+	const config = document.getElementById("configuration")
+	config.contentWindow.postMessage({
+		action: "setConfig",
+		config: options
+	});
 }
