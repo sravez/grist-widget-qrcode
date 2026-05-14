@@ -128,7 +128,7 @@
     <span class="multi-control">
       <label for="qrcode.size" class="dim">L :</label>
       <input id="qrcode.size" name="qrcode.size" type="number" min="128" value="256"/>
-      <img src="img/multiply.png" alt="Multiplier les dimensions par deux"/>
+      <img id="multiply" src="img/multiply.png" alt="Multiplier les dimensions par deux"/>
       <label for="qrcode.text_size" class="dim">T :</label>
       <input id="qrcode.text_size" name="qrcode.text_size" type="number" min="0" value="16"/>
     </span>
@@ -136,7 +136,7 @@
     <span class="multi-control">
       <label for="qrcode.margin" class="dim">M :</label>
       <input id="qrcode.margin" name="qrcode.margin" type="number" min="10" value="10"/>
-      <img src="img/divide.png" alt="Diviser les dimensions par deux"/>
+      <img id="divide" src="img/divide.png" alt="Diviser les dimensions par deux"/>
       <label for="qrcode.border" class="dim">B :</label>
       <input id="qrcode.border" name="qrcode.border" type="number" min="0" value="20"/>
     </span>
@@ -161,14 +161,6 @@
       <label for="qrcode.border_color" class="colorLabel">b :</label>
       <input id="qrcode.border_color" name="qrcode.border_color" type="color" value="#ffffff"/>
     </span>
-
-    <label for="qrcode.bottom_text"> Texte du bas :</label>
-    <fieldset id="qrcode.bottom_text" name="qrcode.bottom_text">
-      <input type="radio" id="qrcode.bottom_text.000" name="qrcode.bottom_text" value="0" checked="checked"/>
-      <label for="qrcode.bottom_text.000"><img src="./img/abc.png" class="rotated"/></label>
-      <input type="radio" id="qrcode.bottom_text.180" name="qrcode.bottom_text" value="180" />
-      <label for="qrcode.bottom_text.180"><img src="./img/abc.png"/></label>
-    </fieldset>
 
   </section>
 

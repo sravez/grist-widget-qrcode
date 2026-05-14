@@ -22,11 +22,11 @@
 /**
  * @typedef LabelOptions
  * @type {object} Options de production de QRLabel ajoutées à QRCodeOptions
- * @property {number}          margin           Espace de même couleur que le fond autour du QR code (_Quiet zone_)
- * @property {number}          border           Largeur de la zone extérieure accueillant l'éventuel texte
- * @property {string}          border_color     Couleur de la bordure
- * @property {number}          text_size        Taille du texte
- * @property {string}          text_color       Couleur du texte
+ * @property {number}  margin       Espace de même couleur que le fond autour du QR code (_Quiet zone_)
+ * @property {number}  border       Largeur de la zone extérieure accueillant l'éventuel texte
+ * @property {string}  border_color Couleur de la bordure
+ * @property {number}  text_size    Taille du texte
+ * @property {string}  text_color   Couleur du texte
  */
 
 /**
@@ -61,6 +61,11 @@ const default_options = {
  */
 const mime = "image/png";
 
+/**
+ * Police des textes
+ * @type {string}
+ */
+const font = "monospace"
 /**
  * Image de fond
  * @type {HTMLCanvasElement | null}
@@ -136,21 +141,19 @@ function getBackgroundCanvas(o = options) {
 function drawText(canvas, content, o = options) {
 	const middle_x = Math.floor(canvas.width/2)
 	const middle_y = Math.floor(canvas.height/2)
-	// 0.8 est empirique
-	const text_pos = Math.max(2, Math.ceil((o.border - 0.8 * o.text_size)/2))
+	const text_pos = Math.ceil(o.border/2)
 
 	const ctx = canvas.getContext("2d");
 
 	ctx.textAlign = "center"
-	ctx.font = `${o.text_size}px monospace`;
+	ctx.font = `${o.text_size}px ${font}`;
 	ctx.fillStyle = o.text_color;
+	ctx.textBaseline = "middle";
 
 	// Bas
 	if (content.bottom) {
-		ctx.textBaseline = "alphabetic"
 		ctx.fillText(content.bottom, middle_x, canvas.height-text_pos);
 	}
-	ctx.textBaseline = "hanging"
 	// Haut
 	if (content.top) {
 		ctx.fillText(content.top, middle_x, text_pos);

@@ -3,28 +3,17 @@
  */
 
 /**
- * @typedef Validity Donnée utilisée pour déterminer la validité d'une étiquette
- * * `col` : le champ `validity` mappé
- * * `fn` : le nom de fichier
- * * `col|fn` : le champ ou le nom de fichier
- * * `yes` : toutes les étiquettes sont valides
- * * `no` : toutes les étiquettes sont invalides
- * @type { "col" | "fn" | "col|fn" | "yes" | "no" }
- */
-
-/**
  * @typedef WidgetOptions Options de configuration du widget
  * @type {object}
  * @property {object}                     display                    Configuration de l'affichage
- * @property {integer}                    display.size               - Taille des QR codes à l'écran
+ * @property {number}                     display.size               - Taille des QR codes à l'écran
  * @property {"always"|"invalid"|"never"} display.auto_next          - Génération automatique du QR code (always|invalid|never)
  * @property {boolean}                    display.btn_update_all     - Affichage du bouton de mise à jour de tous les QRC
  * @property {boolean}                    display.btn_update_invalid - Affichage du bouton de mise à jour de tous les QRC invalides
- * @property {QRCodeOptions}              qrcode                     Paramètre de génération des QR codes
+ * @property {QRLabelOptions}             qrcode                     Paramètre de génération des étiquettes QR codes
  * @property {object}                     data                       Configuration de la gestion des données
  * @property {0|-1}                       data.position              - Position de l'étiquette courante dans le champ (0 : première, -1 : dernière)
  * @property {"add"|"replace"}            data.save_mode             - Mode d'enregistrement des nouvelles étiquettes
- * @property {Validity}                   data.validity              - Détermination de la validité d'une étiquette
  */
 
 // TODO : Vérifier cette histoire d'enregistrement des options/configurations
@@ -55,12 +44,11 @@ const default_widget_options = {
 		foreground_color: "#000000",
 		background_color: "#FFFFFF",
 		border_color: "#B0B0B0",
-		text_color: "#FFFFFF",
+		text_color: "#FFFFFF"
 	},
 	data: {
 		position: 0,
 		save_mode: "replace",
-		validity: "col|fn"
 	}
 }
 
