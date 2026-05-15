@@ -1,15 +1,20 @@
 /**
+ * @typedef MappedRecord
+ * @type {object}
+ * @property {number}   id         ID de l'enregistrement
+ * @property {number[]} label      ID des pièces jointes
+ * @property {string}   val        Chaîne à encoder
+ * @property {?string}  [top]      Chaîne à afficher en haut
+ * @property {?string}  [right]    Chaîne à afficher à droite
+ * @property {?string}  [bottom]   Chaîne à afficher en bas
+ * @property {?string}  [left]     Chaîne à afficher à gauche
+ * @property {?string}  [filename] Nom du fichier à créer
+ * @property {?boolean} [validity] Validité de l'étiquette existante
+ * @property {?string}  [refresh]  Valeur à modifier pour provoquer une màj
+ */
+
+/**
  * Description des alias de champs que l'utilisateur désigne
- * + label    : image(s)
- * + val      : valeur à encoder dans le QR Code
- * - filename : nom du fichier à enregistrer (aléatoire si non défini)
- * - top      : texte situé au-dessus du QR Code
- * - bottom   : texte situé en-dessous du QR Code
- * - left     : texte situé à gauche du QR Code
- * - right    : texte situé à droite du QR Code
- * - validity : TRUE si le QR Code est valide
- * - refresh  : valeur à modifier pour provoquer une mise à jour de la valeur
- *
  * @type {Array}
  */
 export const columns = [

@@ -8,7 +8,6 @@
  *    et on les combine avec les options par défaut.
  */
 
-
 import { options } from "./index.mjs"
 import default_widget_options from "./widget_options.default.mjs";
 
@@ -23,8 +22,7 @@ let config_dialog = null
  *
  * @returns {Promise<void>}
  */
-export function optionsInit() {
-
+export function init() {
 	config_dialog = document.getElementById("config_dialog");
 	/** iframe contenant le formulaire */
 	const config = document.getElementById("configuration");

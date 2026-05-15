@@ -1,15 +1,22 @@
-import mapping from "./columns.mjs"
-import { optionsInit, onEditOptions } from "./options.mjs"
-import { init as cardInit, apply_record, apply_options } from "./card.mjs"
+import columnsToMap from "./columns.mjs"
+import * as Options from "./options.mjs"
+import * as Label from "./card.mjs"
 import { init as init_factory } from "./qrlabel.mjs"
 import default_widget_options from "./widget_options.default.mjs";
-import e from "./widget_options.default.mjs";
 
 /**
  * Options en cours
  * @type {?WidgetOptions}
  */
 export let options = null
+/**
+ * Correspondance Widget => Grist
+ *
+ * Car on n'arrive pas à restreindre  mapToColumnNamesBack
+ *
+ * @type {Object.<string, string>}
+ */
+export let mapping
 
 /**
  * Initialisation
@@ -20,13 +27,16 @@ async function init() {
 
 	grist.ready({
 		requiredAccess: 'full',
-		columns: mapping,
-		onEditOptions: onEditOptions
+		columns: columnsToMap,
+		onEditOptions: Options.onEditOptions
 	});
 
-	await optionsInit();
-	cardInit();
+	mapping = await grist.sectionApi.mappings()
 
+	await Options.init();
+	await Label.init();
+
+	/** Exécuter lors de la modification des options */
 	grist.onOptions(async (a_options) => {
 
 		if(!a_options) {
@@ -35,24 +45,20 @@ async function init() {
 		} else {
 			options = a_options;
 			init_factory(a_options.qrcode)
-			apply_options(a_options)
+			Label.onOptions(a_options)
 		}
 	})
 
-	/**
-	* Changement d'enregistrement
-	*/
-	grist.onRecord(async (record) => {
-		const mappedRecord = grist.mapColumnNames(record) || {};
-		await apply_record(mappedRecord, options)
-	});
+	/** Changement d'enregistrement */
+	grist.onRecord(Label.onRecord);
 	
-	/**
-	* Actualisation après modification des données
-	*/
-	grist.onRecords((table) => {})
+	/** Après modification des données */
+	//grist.onRecords(Label.onRecords)
 }
+
 
 window.onload = async () => {
 	await init()
 }
+
+//await init()
