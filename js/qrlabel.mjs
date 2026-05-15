@@ -85,13 +85,13 @@ let options = default_options
  * entouré d'informations textuelles.
  *
  * @param {QRLabelContent}   content         Valeur à encoder et textes à afficher
- * @param {?QRLabelOptions} [a_options=null] Paramètres : tailles et couleurs ({} : par défaut)
+ * @param {?QRLabelOptions | {}} [a_options=null] Paramètres : tailles et couleurs ({} : par défaut)
  * @returns {DataURL}
  */
 export default function getQRLabel(content, a_options = null) {
 	const reset = !background_canvas || a_options
 	if (reset) {
-		options = { ...default_options, ...(a_options ?? {}) }
+		options = a_options ? {...default_options,...a_options } : options
 		background_canvas = getBackgroundCanvas();
 	}
 	const canvas = document.createElement("canvas")
@@ -107,8 +107,12 @@ export default function getQRLabel(content, a_options = null) {
 	return canvas.toDataURL(mime)
 }
 
-export function init(a_options) {
-	getQRLabel({val: "test"}, a_options = {})
+/**
+ * Initialise la factory
+ * @param {QRLabelOptions | {}} [a_options = {}]
+ */
+export function init(a_options = {}) {
+	getQRLabel({val: "test"}, a_options)
 }
 
 /**

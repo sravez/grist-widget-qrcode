@@ -1,6 +1,6 @@
 import mapping from "./columns.mjs"
 import { optionsInit, onEditOptions } from "./options.mjs"
-import { apply_record, apply_options } from "./card.mjs"
+import { init as cardInit, apply_record, apply_options } from "./card.mjs"
 import { init as init_factory } from "./qrlabel.mjs"
 import default_widget_options from "./widget_options.default.mjs";
 import e from "./widget_options.default.mjs";
@@ -25,6 +25,7 @@ async function init() {
 	});
 
 	await optionsInit();
+	cardInit();
 
 	grist.onOptions(async (a_options) => {
 
@@ -33,7 +34,7 @@ async function init() {
 			await grist.setOptions(options)
 		} else {
 			options = a_options;
-			init_factory(a_options)
+			init_factory(a_options.qrcode)
 			apply_options(a_options)
 		}
 	})

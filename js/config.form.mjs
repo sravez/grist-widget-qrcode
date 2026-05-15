@@ -72,7 +72,7 @@ function sample_management() {
 
 	// Gestion des clics sur l'échantillon
 	sample_img.onclick = (e) => {
-		if(sample_img.classList.contains("empty")) {
+		if(e.target.classList.contains("empty")) {
 			// Affichage de l'échantillon
 			updateSampleImage()
 		} else {

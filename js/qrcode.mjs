@@ -59,7 +59,7 @@ export default function getQRCode(a_text, a_options = null) {
         const o =  { ...default_options, ...(a_options ?? {}) }
         working_div.innerHTML = "";
         factory = new QRCode(working_div, {
-            text: a_text,
+            text: a_text ?? "",
             width: o.size,
             height: o.size,
             colorDark: o.foreground_color,
