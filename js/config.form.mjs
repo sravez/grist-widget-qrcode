@@ -190,12 +190,16 @@ function init_form() {
 	setMessageListeners()
 	// Assignation des données
 	setData()
+	window.parent.postMessage({action: "getConfig"})
 }
 
 /**
  * Déclenchement de l'initialisation du formulaire une fois
  * que la page a fini de charger.
  */
+/*
 window.onload = () => {
 	init_form()
 }
+*/
+init_form()

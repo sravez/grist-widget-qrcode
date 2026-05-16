@@ -9,14 +9,8 @@ import default_widget_options from "./widget_options.default.mjs";
  * @type {?WidgetOptions}
  */
 export let options = null
-/**
- * Correspondance Widget => Grist
- *
- * Car on n'arrive pas à restreindre  mapToColumnNamesBack
- *
- * @type {Object.<string, string>}
- */
-export let mapping
+
+
 
 /**
  * Initialisation
@@ -31,21 +25,23 @@ async function init() {
 		onEditOptions: Options.onEditOptions
 	});
 
-	mapping = await grist.sectionApi.mappings()
-
+	const mappings = await grist.sectionApi.mappings()
 	await Options.init();
-	await Label.init();
+	await Label.init(mappings);
 
 	/** Exécuter lors de la modification des options */
 	grist.onOptions(async (a_options) => {
-
 		if(!a_options) {
 			options = default_widget_options
 			await grist.setOptions(options)
 		} else {
+			// ATTENTION :
+			// Ne pas combiner avec les options par défaut pour ne pas
+			// écraser les options booléennes représentées par des
+			// checkbox qui seront absentes en cas de valeur négative.
 			options = a_options;
 			init_factory(a_options.qrcode)
-			Label.onOptions(a_options)
+			await Label.onOptions(a_options)
 		}
 	})
 
@@ -53,9 +49,8 @@ async function init() {
 	grist.onRecord(Label.onRecord);
 	
 	/** Après modification des données */
-	//grist.onRecords(Label.onRecords)
+	grist.onRecords(Label.onRecords)
 }
-
 
 window.onload = async () => {
 	await init()

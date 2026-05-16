@@ -66,7 +66,7 @@ export const columns = [
 	{
 		name: 'validity',
 		title: 'Validité du QR Code',
-		type: 'Boolean',
+		type: 'Bool',
 		optional: true
 	},
 	{

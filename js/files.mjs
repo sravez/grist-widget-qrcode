@@ -1,5 +1,10 @@
 import { options } from "./index.mjs"
-import { mapping } from "./index.mjs"
+
+/**
+ * Gestion des fichiers
+ *
+ * @see https://forum.grist.libre.sh/t/tutoriel-importer-des-pieces-jointes-dans-une-table-grist/3479
+ */
 /**
  * ### Enregistre un fichier / blob
  *
@@ -11,12 +16,14 @@ import { mapping } from "./index.mjs"
  *    précédent dans le champ correspondant.
  *
  * @param {MappedRecord} rec      Enregistrement à modifier
- * @param {string}       col      Nom mappé du champ à modifier
+ * @param {string}       w_col    Colonne du widget à modifier
+ * @param {string}       g_col    Colonne Grist destination mappée avec w_col
  * @param {Blob}         blob     Blob à _uploader_
  * @param {string}       filename Nom du fichier
+ * @returns {Promise<void>}
+ * @throws {Error}
  */
-export async function upload_blob(rec, col, blob,  filename = "generic") {
-	try {
+export async function upload_blob(rec, w_col, g_col, blob,  filename = "generic") {
 		/* *** 1. Obtention du jeton *** */
 		const tokenInfo = await grist.docApi.getAccessToken({ readOnly: false });
 
@@ -29,13 +36,13 @@ export async function upload_blob(rec, col, blob,  filename = "generic") {
 			headers: { "X-Requested-With": "XMLHttpRequest" },
 		});
 		if (!response.ok) {
-			throw new Error(`Upload échoué: ${response.status} ${response.statusText}`);
+			throw new Error(`[UPLOAD_ERROR:${response.status}] ${response.statusText}`);
 		}
 		// result[0] : ID de l'image chargée sur le serveur
 		const result = await response.json();
 
 		/* *** 3. Mise à jour de l'enregistrement *** */
-		const attachmentList = options.data.save_mode  === "replace" ? [] : rec[col] ?? []
+		const attachmentList = options.data.save_mode  === "replace" ? [] : rec[w_col] ?? []
 		if (options.data.position === -1) {
 			attachmentList.push(result[0])
 		} else {
@@ -43,16 +50,13 @@ export async function upload_blob(rec, col, blob,  filename = "generic") {
 		}
 
 		const d = {}
-		d[mapping[col]] = [ 'L', ...attachmentList]
+		d[g_col] = [ 'L', ...attachmentList]
 
 		const t = grist.getTable()
 		await t.update({
 			id: rec.id,
 			fields: d
 		});
-	} catch (err) {
-		console.error(err.message);
-	}
 }
 
 /**
@@ -74,12 +78,18 @@ export async function getAttachmentURL(a_id) {
  * ### Enregistrement d'une image
  *
  * @param {MappedRecord}     rec      Enregistrement à modifier
- * @param {string}           col      Nom mappé du champ à modifier
- * @param {HTMLImageElement} img      Image à sauvegarder
+ * @param {string}           w_col    Colonne du widget à modifier
+ * @param {string}           g_col    Colonne Grist destination mappée avec w_col
+ * @param {string}           url      Image à sauvegarder
  * @param {string}           filename Nom du fichier
  * @returns {Promise<void>}
  */
-export async function save_image(rec, col, img, filename) {
-	const blob = await fetch(img.src).then(r => r.blob());
-	await upload_blob(rec, col, blob, filename)
+export async function save_image(rec, w_col, g_col, url, filename) {
+	let blob = null
+	try {
+		blob = await fetch(url).then(r => r.blob());
+	} catch (e) {
+		throw new Error(`[FETCH_ERROR] ${e.message}`);
+	}
+	await upload_blob(rec, w_col, g_col, blob, filename)
 }

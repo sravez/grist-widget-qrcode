@@ -3,33 +3,28 @@
   
   <head>
     <meta charset="utf-8">
-    <title>QR Code</title>
+    <title>Étiquette QR</title>
     <script src="https://docs.getgrist.com/grist-plugin-api.js"></script>
     <script src="./lib/qrcode.min.js"></script>
     <script src="./js/index.mjs" type="module"></script>
+    <link rel="stylesheet" href="css/zoom.css" />
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   
   <body>
-    <dialog id="settings" closedby="none">
-    </dialog>
-    
-    <h2>Étiquettes</h2>
-        <div id="label" class="">
-          <img src="./img/no_label.png" class="zoomable empty"/>
-          <p>Etiquette</p>
-        </div>
-        <div id="preview">
-          <img src = "./img/no_label.png" class="zoomable empty"/>
-          <p>Preview</p>
-        </div>
+    <button id="change_all_btn">Tout modifier</button>
 
-        <button id="save_btn">Enregistrer</button>
+    <h2 id="record_name"></h2>
+        <div id="labels">
+            <div id="label" class="label_box"><img src="" class="label invalid zoomable empty"/></div>
+            <button id="save_label_btn">⬅ Enregistrer</button>
+            <div id="preview" class="label_box"><img src="./img/no_label.png" class="zoomable empty"/></div>
+        </div>
 
     <!-- Zoom -->
     <dialog id="zoom_dialog" class="zoom">
-        <button commandfor="zoom_dialog" command="close" class="close_btn"></button>
-        <img id="zoom" src="" class="zoom"/>
+        <button commandfor="zoom_dialog" command="close" class="zoom_close_btn"></button>
+        <img id="zoomed" src="" class="zoom"/>
     </dialog>
 
 
@@ -39,7 +34,8 @@
         <div>
             <div id="config_header">
                 <div id="config_title">Configuration du widget</div>
-                <button id="cancel_btn">Annuler</button>
+                <button id="cancel_options_btn">Annuler</button>
+                <button id="reset_options_btn">Reset</button>
                 <button id="save_options_btn">Enregistrer</button>
             </div>
             <iframe id="configuration"
