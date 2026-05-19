@@ -82,7 +82,7 @@ export async function init(mappings) {
 			const m = grist.mapColumnNames(rec);
 			const qrc_DataUrl = getQRLabel(m)
 			try {
-				await save_image(m, "label", mappings.label, qrc_DataUrl, m.filename+".png")
+				await save_image(m, "label", mappings.label, qrc_DataUrl, m.filename)
 				i++
 			} catch (e) {
 				console.error("WIDGET_QRLABEL:CHANGE " + e.message)
