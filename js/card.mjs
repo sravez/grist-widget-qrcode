@@ -66,7 +66,7 @@ export async function init(mappings) {
 	/* Bouton d'enregistrement */
 	document.getElementById("save_label_btn").onclick = async (e) => {
 		const fn = (current_mapped_record.filename
-			     ?? "L_"+current_mapped_record.id)+".png"
+			     ?? "L_"+current_mapped_record.id+".png")
 		try {
 			await save_image(current_mapped_record, "label", mappings.label, preview_img.src, fn)
 		} catch (e) {
