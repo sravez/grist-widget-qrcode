@@ -66,7 +66,7 @@ export async function init(mappings) {
 	/* Bouton d'enregistrement */
 	document.getElementById("save_label_btn").onclick = async (e) => {
 		const fn = (current_mapped_record.filename
-			     ?? "L_"+current_mapped_record.id)+".png"
+			     ?? "L_"+current_mapped_record.id+".png")
 		try {
 			await save_image(current_mapped_record, "label", mappings.label, preview_img.src, fn)
 		} catch (e) {
@@ -82,7 +82,7 @@ export async function init(mappings) {
 			const m = grist.mapColumnNames(rec);
 			const qrc_DataUrl = getQRLabel(m)
 			try {
-				await save_image(m, "label", mappings.label, qrc_DataUrl, m.filename+".png")
+				await save_image(m, "label", mappings.label, qrc_DataUrl, m.filename)
 				i++
 			} catch (e) {
 				console.error("WIDGET_QRLABEL:CHANGE " + e.message)

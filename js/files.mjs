@@ -29,7 +29,7 @@ export async function upload_blob(rec, w_col, g_col, blob,  filename = "generic"
 
 		/* *** 2. Upload du fichier *** */
 		const formData = new FormData();
-		formData.append('upload', blob, filename ?? blob.name ?? "generic");
+		formData.append('upload', blob, filename ?? blob.name ?? "generic.png");
 		const response = await fetch(`${tokenInfo.baseUrl}/attachments?auth=${tokenInfo.token}`, {
 			method: 'POST',
 			body: formData,
