@@ -21,6 +21,10 @@
 	cursor: pointer;
 }
 
+#save_label_btn:has(~ div img.empty) {
+ visibility: hidden;
+}
+
 .label_box {
 	height: max-content;
 	width: max-content;
