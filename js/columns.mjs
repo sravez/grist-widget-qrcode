@@ -70,9 +70,9 @@ export const columns = [
 		optional: true
 	},
 	{
-		name: 'refresh',
-		title: 'Mise à jour',
-		type: 'Text',
+		name: 'trigger',
+		title: 'Modification des URL',
+		type: 'Bool',
 		optional: true
 	}
 ]

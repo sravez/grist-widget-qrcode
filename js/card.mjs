@@ -1,5 +1,5 @@
 import getQRLabel from "./qrlabel.mjs"
-import { getAttachmentURL, save_image } from "./files.mjs"
+import { getAttachmentURL, save_image, trigger_update } from "./files.mjs"
 import {options} from "./index.mjs";
 
 /**
@@ -74,7 +74,7 @@ export async function init(mappings) {
 		}
 	}
 
-	document.getElementById("change_all_btn").onclick = async (e) => {
+	document.getElementById("update_labels_btn").onclick = async (e) => {
 		const filtered = await grist.docApi.fetchSelectedTable({format:"rows", includeColumns:"shown"})
 
 		let i = 0
@@ -91,6 +91,37 @@ export async function init(mappings) {
 		const s = i > 1 ? "s" : ""
 		alert(`${i} enregistrement${s} modifié${s} sur ${filtered.length}`)
 	}
+
+	const trigger_btn = document.getElementById("trigger_url_update_btn")
+	// Masquage/affichage du bouton en fonction de l'existence d'un champ trigger
+	trigger_btn.style.visibility = mappings.trigger ? "visible":"hidden"
+
+	trigger_btn.onclick = async (e) => {
+		if(confirm("Les étiquettes existantes seront inopérantes.\nConfirmez-vous la modification ?")) {
+			const filtered = await grist.docApi.fetchSelectedTable({format:"rows", includeColumns:"shown"})
+
+			const u = {}
+			u[mappings.trigger] = true
+
+			let i = 0
+			for(const rec of filtered) {
+				await trigger_update(rec, u)
+				/*
+				const m = grist.mapColumnNames(rec);
+				const qrc_DataUrl = getQRLabel(m)
+				try {
+					await save_image(m, "label", mappings.label, qrc_DataUrl, m.filename)
+					i++
+				} catch (e) {
+					console.error("WIDGET_QRLABEL:CHANGE " + e.message)
+				}
+				 */
+			}
+			const s = i > 1 ? "s" : ""
+			alert(`${i} enregistrement${s} modifié${s} sur ${filtered.length}`)
+		}
+	}
+
 }
 
 /**
@@ -111,8 +142,6 @@ export async function onOptions(a_options) {
  */
 export async function onRecord(record, mappings) {
 	current_mapped_record = grist.mapColumnNames(record) || {};
-	document.getElementById("record_name").innerHTML = current_mapped_record.top
-
 	label_img.classList.remove("valid", "invalid", "empty")
 
 	if( (current_mapped_record.label?.length ?? 0) > 0) {
@@ -146,6 +175,9 @@ export async function onRecord(record, mappings) {
  * @see https://bureautique-libre.strasbourg.eu/Templates/inspect/api.html
  */
 export async function onRecords(records) {
+	document.querySelectorAll(".label_count").forEach(el => {
+		el.innerHTML = records.length
+	})
 	/*
 	document.getElementById("selectedTable").innerHTML = JSON.stringify(grist.selectedTable);
 
