@@ -6,7 +6,7 @@
   "grist": [
     {
       "name": "QR Code by sravez",
-      "url": "https://gristlabs.github.io/grist-widget/sravez-qrcode/index.html",
+      "url": "https://gristlabs.github.io/grist-widget/sravez-qrcode/src/index.html",
       "widgetId": "@sravez/widget-qrcode",
       "published": true,
       "accessLevel": "full",
