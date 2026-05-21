@@ -1,2 +1,4 @@
 # Mac Finder
 .DS_Store
+
+.node_modules/
