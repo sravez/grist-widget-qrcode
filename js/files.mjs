@@ -33,7 +33,7 @@ export async function upload_blob(rec, w_col, g_col, blob,  filename = "generic"
 		const response = await fetch(`${tokenInfo.baseUrl}/attachments?auth=${tokenInfo.token}`, {
 			method: 'POST',
 			body: formData,
-			headers: { "X-Requested-With": "XMLHttpRequest" },
+			headers: { "X-Requested-With": "XMLHttpRequest" }
 		});
 		if (!response.ok) {
 			throw new Error(`[UPLOAD_ERROR:${response.status}] ${response.statusText}`);
