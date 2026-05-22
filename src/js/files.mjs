@@ -94,10 +94,3 @@ export async function save_image(rec, w_col, g_col, url, filename) {
 	await upload_blob(rec, w_col, g_col, blob, filename)
 }
 
-export async function trigger_update(rec, update) {
-	const t = grist.getTable()
-	await t.update({
-		id: rec.id,
-		fields: update
-	});
-}

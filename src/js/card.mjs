@@ -97,16 +97,19 @@ export async function init(mappings) {
 	trigger_btn.style.visibility = mappings.trigger ? "visible":"hidden"
 
 	trigger_btn.onclick = async (e) => {
-		if(confirm("Les étiquettes existantes seront inopérantes.\nConfirmez-vous la modification ?")) {
+		if(confirm("ATTENTION : les étiquettes existantes seront potentiellement inopérantes.\nConfirmez-vous la modification ?")) {
 			const filtered = await grist.docApi.fetchSelectedTable({format:"rows", includeColumns:"shown"})
 
+			const t = await table.getTableId()
+			console.debug("TABLE ", t)
 			const u = {}
 			u[mappings.trigger] = true
 
 			let i = 0
 			for(const rec of filtered) {
-				await trigger_update(rec, u)
-				/*
+				await grist.docApi.applyUserActions([
+					["UpdateRecord",t, rec.id, u]
+				])
 				const m = grist.mapColumnNames(rec);
 				const qrc_DataUrl = getQRLabel(m)
 				try {
@@ -115,7 +118,6 @@ export async function init(mappings) {
 				} catch (e) {
 					console.error("WIDGET_QRLABEL:CHANGE " + e.message)
 				}
-				 */
 			}
 			const s = i > 1 ? "s" : ""
 			alert(`${i} enregistrement${s} modifié${s} sur ${filtered.length}`)
@@ -132,6 +134,7 @@ export async function onOptions(a_options) {
 	label_img.style.height   = a_options.display.size+"px"
 	preview_img.style.height = a_options.display.size+"px"
 	build_preview(false)
+	// TODO : gérer l'affichage des boutons
 }
 
 /**

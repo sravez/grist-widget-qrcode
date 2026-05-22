@@ -17,6 +17,9 @@
  * @property {"L"|"M"|"Q"|"H"} redundancy       Niveau de correction du code QR
  */
 
+// QRCodeLib est défini dans webpack.config.js
+import QRCode from 'QRCodeLib'
+
 /**
  * Options par défaut
  * @type {QRCodeOptions}
