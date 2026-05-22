@@ -1,6 +1,111 @@
 <!DOCTYPE html>
 
-<html>
-  <head>
-  </head>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Widget Grist QRLabel</title>
+</head>
+
+<body>
+<h1>Widget Grist QRLabel</h1>
+
+Widget Grist de génération d'étiquettes organisées autour d'un QR code.
+
+<h2>Exemple d'étiquette</h2>
+
+
+<h2>Intégration dans votre document</h2>
+
+<h3>Ajout d'un widget personnalisé</h3>
+
+<h3>Autorisation d'accès</h3>
+
+<h3>Correspondance des champs/colonnes (<i>Mapping</i>)</h3>
+
+<table id="mapping">
+  <thead>
+    <th>Colonne</th><th>Type</th><th>Obligatoire</th><th>Description</th>
+  </thead>
+  <tr>
+    <td class="column"><code>label</code></td>
+    <td>Pièce jointe</td>
+    <td>Oui</td>
+    <td>Image de l'étiquette</td>
+  </tr>
+  <tr>
+    <td class="column"><code>val</code></td>
+    <td>Texte</td>
+    <td>Oui</td>
+    <td>Texte encodé dans le QR code</td>
+  </tr>
+  <tr>
+    <td class="column"><code>filename</code></td>
+    <td>Texte</td>
+    <td>Non</td>
+    <td>Nom sous lequel sera enregistrée l'étiquette</td>
+  </tr>
+  <tr>
+    <td class="column"><code>top</code></td>
+    <td>Texte</td>
+    <td>Non</td>
+    <td>Texte situé au-dessus du QR code</td>
+  </tr>
+  <tr>
+    <td class="column"><code>right</code></td>
+    <td>Texte</td>
+    <td>Non</td>
+    <td>Texte situé à droite du QR code</td>
+  </tr>
+  <tr>
+    <td class="column"><code>bottom</code></td>
+    <td>Texte</td>
+    <td>Non</td>
+    <td>Texte situé sous le QR code</td>
+  </tr>
+  <tr>
+    <td class="column"><code>left</code></td>
+    <td>Texte</td>
+    <td>Non</td>
+    <td>Texte situé à gauche du QR code</td>
+  </tr>
+  <tr>
+    <td class="column"><code>validity</code></td>
+    <td>Booléen</td>
+    <td>Non</td>
+    <td>Validité de l'étiquette</td>
+  </tr>
+  <tr>
+    <td class="column"><code>trigger</code></td>
+    <td>Booléen</td>
+    <td>Non</td>
+    <td>Génération d'une nouvelle valeur pour <code>val</code></td>
+  </tr>
+
+
+</table>
+
+<h4>Colonne <code>val</code></h4>
+
+
+
+
+<h2>Utilisation</h2>
+
+<h3>Configuration</h3>
+
+<h4>Affichage</h4>
+
+<h4>Données</h4>
+
+<h4>QR code</h4>
+
+<h3>Mise à jour des visuelles</h3>
+
+<h4>Mise à jour individuelle</h4>
+
+<h4>Mise à jour globale</h4>
+
+<h3>Renouvellement</h3>
+</body>
+
 </html>
