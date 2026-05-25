@@ -14,10 +14,6 @@ export default {
     },
     mode: "development",
     devtool: "eval-source-map",
-    externals: {
-        QRCodeLib: "var QRCode",
-        grist: "var grist"
-    },
     plugins: [
         new HtmlBundlerPlugin({
             entry: {
@@ -43,7 +39,7 @@ export default {
                 type: 'asset',
                 generator: {
                     // save images to file
-                    filename: 'img/[name].[hash:8][ext]',
+                    filename: 'img/[name][ext]',
                 },
                 parser: {
                     dataUrlCondition: {

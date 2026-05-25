@@ -6,6 +6,7 @@
  *
  * @see https://davidshimjs.github.io/qrcodejs/
  * @see https://github.com/davidshimjs/qrcodejs
+ * @see https://github.com/kazuhikoarase/qrcode-generator/tree/master
  */
 
 /**
@@ -18,7 +19,7 @@
  */
 
 // QRCodeLib est défini dans webpack.config.js
-import QRCode from 'QRCodeLib'
+//import QRCode from 'QRCode_lib'
 
 /**
  * Options par défaut

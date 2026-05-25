@@ -1,4 +1,4 @@
-import { options } from "./index.mjs"
+import { options } from "./index.js"
 
 /**
  * Gestion des fichiers

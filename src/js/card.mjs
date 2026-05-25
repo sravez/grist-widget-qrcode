@@ -1,6 +1,6 @@
 import getQRLabel from "./qrlabel.mjs"
 import { getAttachmentURL, save_image, trigger_update } from "./files.mjs"
-import {options} from "./index.mjs";
+import {options} from "./index.js";
 
 /**
  * Table Grist

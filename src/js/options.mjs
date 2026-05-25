@@ -8,7 +8,7 @@
  *    et on les combine avec les options par défaut.
  */
 
-import { options } from "./index.mjs"
+import { options } from "./index.js"
 import default_widget_options from "./widget_options.default.mjs";
 
 /**
