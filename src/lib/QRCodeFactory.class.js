@@ -9,6 +9,15 @@
  */
 
 /**
+ * @typedef QRResponse
+ * @type {object}
+ * @property {HTMLCanvasElement} canvas  Canvas contenant le QR code et la marge
+ * @property {number}            size    Taille du canvas
+ * @property {number}            margin  Marge autour du QR code
+ * @property {number}            modules Nombre de modules par ligne (ou colonne)
+ */
+
+/**
  * _Factory_ de production de QR codes
  */
 export default class QRCodeFactory {
@@ -40,7 +49,6 @@ export default class QRCodeFactory {
    */
   options = this.default_rendering_options
 
-
   /**
    * Initialisation de la _factory_
    * @param {number}           type                 Type de QR code (1 à 40, 0 pour automatique)
@@ -54,14 +62,13 @@ export default class QRCodeFactory {
   }
 
   /**
-   * Crée un élément canvas
+   * Crée un élément canvas contenant QR code et marge
    * @param {string} txt
-   * @returns {canvas: HTMLCanvasElement, size: number, margin: number, modules: number}
+   * @returns {QRResponse}
    */
   getQRCanvas(txt) {
     const m = new QRModules(this.typeNumber, this.errorCorrectionLevel);
-    m.setData(txt);
-    m.make()
+    m.make(txt)
     if(this.options.size) {
       this.cellSize = Math.floor(this.options.size / (m.getModuleCount() + (this.options.margin ?? 8))) || 1
     }
@@ -72,9 +79,10 @@ export default class QRCodeFactory {
     canvas.width = size
     canvas.height = size
     const ctx = canvas.getContext("2d");
+    // Rectangle de fond
     ctx.fillStyle = this.options.bgColor ;
     ctx.fillRect(0, 0, size, size);
-
+    // Dessin du QR code
     ctx.translate(this.options.margin, this.options.margin);
     this.renderTo2dContext(m, ctx)
 
@@ -85,8 +93,7 @@ export default class QRCodeFactory {
       modules: m.getModuleCount()
     }
   }
-
-
+  
   /**
    * Dessine le QR code dans un canvas (sans marge)
    * @param {QRModules}                modules
@@ -116,24 +123,28 @@ class QRModules {
    * Type de QR code (1 - 40, 0 pour automatique)
    * @type {number}
    */
-  _typeNumber = 0;
+  #typeNumber = 0;
   /**
    * Niveau de redondance _traduit_
    * @type {1|0|3|2}
    */
-  _errorCorrectionLevel;
+  #errorCorrectionLevel;
   /**
    * Nombre de modules par ligne (et colonne)
    * @type {number}
    */
-  _moduleCount = 0
+  #moduleCount = 0
   /**
    * Valeur des modules
+   *
+   * Tableau de tableaux de booléens (initialisé à null)
    * @type {[[null|boolean]]}
    */
-  _modules = null
-  _dataCache = null
-  _dataList = []
+  #modules = null
+  /** Liste des données avant encodage */
+  #dataList = []
+  /** Données encodées */
+  #dataCache = null
 
   /**
    * Constructeur
@@ -141,191 +152,31 @@ class QRModules {
    * @param {'L'|'M'|'Q'|'H'} a_errorCorrectionLevel Niveau de redondance ('L','M','Q','H')
    */
   constructor(a_typeNumber, a_errorCorrectionLevel) {
-    this._typeNumber = a_typeNumber;
-    this._errorCorrectionLevel = QRErrorCorrectionLevel[a_errorCorrectionLevel];
+    this.#typeNumber = a_typeNumber;
+    this.#errorCorrectionLevel = QRErrorCorrectionLevel[a_errorCorrectionLevel];
   }
 
   /**
    * Création du QR code logique
    * * détermine le cas échéant le type (1 - 40) le plus adapté
-   * * applique les données (méthode `build()`
+   * * applique les données (méthode `#build()`
+   * @param {string} [data]
    */
-  make() {
-    if (this._typeNumber < 1) {
-      // Mode automatique
-      let typeNumber = 1;
-      // Détermination du premier type pouvant stocker les données
-      for (; typeNumber < 40; typeNumber++) {
-        const rsBlocks = QRRSBlock.getRSBlocks(typeNumber, this._errorCorrectionLevel);
-        const buffer = qrBitBuffer();
-
-        for (let i = 0; i < this._dataList.length; i++) {
-          const data = this._dataList[i];
-          buffer.put(data.getMode(), 4);
-          buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
-          data.write(buffer);
-        }
-
-        let totalDataCount = 0;
-        for (let i = 0; i < rsBlocks.length; i++) {
-          totalDataCount += rsBlocks[i].dataCount;
-        }
-
-        if (buffer.getLengthInBits() <= totalDataCount * 8) {
-          break;
-        }
-      }
-      this._typeNumber = typeNumber;
+  make(data) {
+    if(data) {
+      this.setData(data);
     }
-    this.build(false, this.getBestMaskPattern() );
-  };
-
-  /**
-   * Application des données
-   * @param {boolean} test
-   * @param {number}  maskPattern
-   * @returns {void}
-   */
-  build(test, maskPattern) {
-    this._moduleCount = this._typeNumber * 4 + 17;
-    // Crée les modules vides
-    this._modules = new Array(this._moduleCount);
-    for (let row = 0; row < this._moduleCount; row += 1) {
-      this._modules[row] = new Array(this._moduleCount);
-      for (let col = 0; col < this._moduleCount; col += 1) {
-        this._modules[row][col] = null;
-      }
+    if (this.#typeNumber < 1) {
+      this.#setBestTypeNumber()
     }
-
-    this.setupPositionProbePattern(0, 0);
-    this.setupPositionProbePattern(this._moduleCount - 7, 0);
-    this.setupPositionProbePattern(0, this._moduleCount - 7);
-    this.setupPositionAdjustPattern()
-    this.setupTimingPattern()
-    this.setupTypeInfo(test, maskPattern);
-    if(this._typeNumber >= 7) {
-      this.setupTypeNumber(test)
-    }
-    if (this._dataCache == null) {
-      this._dataCache = createData(this._typeNumber, this._errorCorrectionLevel, this._dataList);
-    }
-    this.mapData(this._dataCache, maskPattern);
+    this.#build(false, this.getBestMaskPattern() );
   }
 
   /**
-   * Inscription d'un motif de positionnement
-   * @param {number} row Rangée du coin supérieur gauche du motif
-   * @param {number} col Colonne du coin supérieur gauche du motif
+   * Ajoute des données à la propriété `#dataList`
+   * @param {any}                                      data
+   * @param {'Byte'|'Numeric'|'Alphanumeric'|'Kanji'} [mode='Byte'] Mode d'interprétation de `data`
    */
-  setupPositionProbePattern(row, col) {
-    for (let r = -1; r <= 7; r += 1) {
-      if (row + r <= -1 || this._moduleCount <= row + r) continue;
-      for (let c = -1; c <= 7; c += 1) {
-        if (col + c <= -1 || this._moduleCount <= col + c) continue;
-        if ( (0 <= r && r <= 6 && (c === 0 || c === 6) )
-            || (0 <= c && c <= 6 && (r === 0 || r === 6) )
-            || (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
-          this._modules[row + r][col + c] = true;
-        } else {
-          this._modules[row + r][col + c] = false;
-        }
-      }
-    }
-  }
-
-  setupPositionAdjustPattern() {
-    const pos = QRUtil.getPatternPosition(this._typeNumber);
-
-    for (let i = 0; i < pos.length; i += 1) {
-      for (let j = 0; j < pos.length; j += 1) {
-        const row = pos[i];
-        const col = pos[j];
-        if (this._modules[row][col] != null) {
-          continue;
-        }
-        for (let r = -2; r <= 2; r += 1) {
-          for (let c = -2; c <= 2; c += 1) {
-            if (r === -2 || r === 2 || c === -2 || c === 2
-                || (r === 0 && c === 0) ) {
-              this._modules[row + r][col + c] = true;
-            } else {
-              this._modules[row + r][col + c] = false;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  setupTimingPattern() {
-
-    for (let r = 8; r < this._moduleCount - 8; r += 1) {
-      if (this._modules[r][6] != null) {
-        continue;
-      }
-      this._modules[r][6] = (r % 2 === 0);
-    }
-
-    for (let c = 8; c < this._moduleCount - 8; c += 1) {
-      if (this._modules[6][c] != null) {
-        continue;
-      }
-      this._modules[6][c] = (c % 2 === 0);
-    }
-  }
-
-  setupTypeInfo(test, maskPattern) {
-
-    const data = (this._errorCorrectionLevel << 3) | maskPattern;
-    const bits = QRUtil.getBCHTypeInfo(data);
-
-    // vertical
-    for (let i = 0; i < 15; i += 1) {
-
-      const mod = (!test && ( (bits >> i) & 1) === 1);
-
-      if (i < 6) {
-        this._modules[i][8] = mod;
-      } else if (i < 8) {
-        this._modules[i + 1][8] = mod;
-      } else {
-        this._modules[this._moduleCount - 15 + i][8] = mod;
-      }
-    }
-
-    // horizontal
-    for (let i = 0; i < 15; i += 1) {
-
-      const mod = (!test && ( (bits >> i) & 1) === 1);
-
-      if (i < 8) {
-        this._modules[8][this._moduleCount - i - 1] = mod;
-      } else if (i < 9) {
-        this._modules[8][15 - i - 1 + 1] = mod;
-      } else {
-        this._modules[8][15 - i - 1] = mod;
-      }
-    }
-
-    // fixed module
-    this._modules[this._moduleCount - 8][8] = (!test);
-  }
-
-  setupTypeNumber(test) {
-
-    const bits = QRUtil.getBCHTypeNumber(this._typeNumber);
-
-    for (let i = 0; i < 18; i += 1) {
-      const mod = (!test && ( (bits >> i) & 1) === 1);
-      this._modules[Math.floor(i / 3)][i % 3 + this._moduleCount - 8 - 3] = mod;
-    }
-
-    for (let i = 0; i < 18; i += 1) {
-      const mod = (!test && ( (bits >> i) & 1) === 1);
-      this._modules[i % 3 + this._moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
-    }
-  }
-
   addData(data, mode) {
     mode = mode || 'Byte';
     let newData = null;
@@ -346,24 +197,237 @@ class QRModules {
       default :
         throw 'mode:' + mode;
     }
-    this._dataList.push(newData);
-    this._dataCache = null;
+    this.#dataList.push(newData);
+    this.#dataCache = null;
   }
 
+  /**
+   * Réinitialise les données
+   * @param {any}                                      data
+   * @param {'Byte'|'Numeric'|'Alphanumeric'|'Kanji'} [mode='Byte'] Mode d'interprétation de `data`
+   */
   setData(data, mode) {
-    this._dataList = [];
+    this.#dataList = [];
     this.addData(data, mode);
   }
 
+  /**
+   * Indique si un module est _noir_
+   * @param {number} row
+   * @param {number} col
+   * @returns {boolean}
+   */
   isDark(row, col) {
-    if (row < 0 || this._moduleCount <= row || col < 0 || this._moduleCount <= col) {
+    if (row < 0 || this.#moduleCount <= row || col < 0 || this.#moduleCount <= col) {
       throw row + ',' + col;
     }
-    return this._modules[row][col];
+    return this.#modules[row][col];
   }
 
+  /**
+   * Nombre de modules par ligne ou colonne
+   * @returns {number}
+   */
   getModuleCount() {
-    return this._moduleCount;
+    return this.#moduleCount;
+  }
+
+  /**
+   * Détermination du meilleur type en mode automatique
+   *
+   * Ajuste la propriété `#typeNumber` en fonction de la quantité de
+   * données à stocker.
+   * @private
+   */
+  #setBestTypeNumber() {
+    let typeNumber = 1;
+    for (; typeNumber < 40; typeNumber++) {
+      const rsBlocks = QRRSBlock.getRSBlocks(typeNumber, this.#errorCorrectionLevel);
+      const buffer = qrBitBuffer();
+
+      for (let i = 0; i < this.#dataList.length; i++) {
+        const data = this.#dataList[i];
+        buffer.put(data.getMode(), 4);
+        buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+        data.write(buffer);
+      }
+
+      let totalDataCount = 0;
+      for (let i = 0; i < rsBlocks.length; i++) {
+        totalDataCount += rsBlocks[i].dataCount;
+      }
+
+      if (buffer.getLengthInBits() <= totalDataCount * 8) {
+        break;
+      }
+    }
+    this.#typeNumber = typeNumber;
+  }
+
+  /**
+   * Application des données
+   * @param {boolean} test
+   * @param {number}  maskPattern
+   * @returns {void}
+   */
+  #build(test, maskPattern) {
+    this.#moduleCount = this.#typeNumber * 4 + 17;
+    // Crée les modules vides
+    this.#modules = new Array(this.#moduleCount);
+    for (let row = 0; row < this.#moduleCount; row += 1) {
+      this.#modules[row] = new Array(this.#moduleCount);
+      for (let col = 0; col < this.#moduleCount; col += 1) {
+        this.#modules[row][col] = null;
+      }
+    }
+
+    this.setupPositionProbePattern(0, 0);
+    this.setupPositionProbePattern(this.#moduleCount - 7, 0);
+    this.setupPositionProbePattern(0, this.#moduleCount - 7);
+    this.setupPositionAdjustPattern()
+    this.setupTimingPattern()
+    this.setupTypeInfo(test, maskPattern);
+    if(this.#typeNumber >= 7) {
+      this.setupTypeNumber(test)
+    }
+    // Création des données résilientes
+    if (this.#dataCache == null) {
+      this.#dataCache = createData(this.#typeNumber, this.#errorCorrectionLevel, this.#dataList);
+    }
+    // Création du QR code logique
+    this.mapData(this.#dataCache, maskPattern);
+  }
+
+  /**
+   * Inscription d'un motif de positionnement
+   *
+   * Il y en a 3 : en haut à gauche, en haut à droit et en bas à gauche
+   *
+   * @param {number} row Rangée du coin supérieur gauche du motif
+   * @param {number} col Colonne du coin supérieur gauche du motif
+   */
+  setupPositionProbePattern(row, col) {
+    for (let r = -1; r <= 7; r += 1) {
+      if (row + r <= -1 || this.#moduleCount <= row + r) continue;
+      for (let c = -1; c <= 7; c += 1) {
+        if (col + c <= -1 || this.#moduleCount <= col + c) continue;
+        if ( (0 <= r && r <= 6 && (c === 0 || c === 6) )
+            || (0 <= c && c <= 6 && (r === 0 || r === 6) )
+            || (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+          this.#modules[row + r][col + c] = true;
+        } else {
+          this.#modules[row + r][col + c] = false;
+        }
+      }
+    }
+  }
+
+  /**
+   * Inscription des motifs d'ajustement de positionnement
+   */
+  setupPositionAdjustPattern() {
+    const pos = QRUtil.getPatternPosition(this.#typeNumber);
+
+    for (let i = 0; i < pos.length; i += 1) {
+      for (let j = 0; j < pos.length; j += 1) {
+        const row = pos[i];
+        const col = pos[j];
+        if (this.#modules[row][col] != null) {
+          continue;
+        }
+        for (let r = -2; r <= 2; r += 1) {
+          for (let c = -2; c <= 2; c += 1) {
+            if (r === -2 || r === 2 || c === -2 || c === 2
+                || (r === 0 && c === 0) ) {
+              this.#modules[row + r][col + c] = true;
+            } else {
+              this.#modules[row + r][col + c] = false;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Inscription du motif de synchronisation
+   */
+  setupTimingPattern() {
+
+    for (let r = 8; r < this.#moduleCount - 8; r += 1) {
+      if (this.#modules[r][6] != null) {
+        continue;
+      }
+      this.#modules[r][6] = (r % 2 === 0);
+    }
+
+    for (let c = 8; c < this.#moduleCount - 8; c += 1) {
+      if (this.#modules[6][c] != null) {
+        continue;
+      }
+      this.#modules[6][c] = (c % 2 === 0);
+    }
+  }
+
+  /**
+   * Inscription de l'information de type
+   * @param test
+   * @param maskPattern
+   */
+  setupTypeInfo(test, maskPattern) {
+
+    const data = (this.#errorCorrectionLevel << 3) | maskPattern;
+    const bits = QRUtil.getBCHTypeInfo(data);
+
+    // vertical
+    for (let i = 0; i < 15; i += 1) {
+
+      const mod = (!test && ( (bits >> i) & 1) === 1);
+
+      if (i < 6) {
+        this.#modules[i][8] = mod;
+      } else if (i < 8) {
+        this.#modules[i + 1][8] = mod;
+      } else {
+        this.#modules[this.#moduleCount - 15 + i][8] = mod;
+      }
+    }
+
+    // horizontal
+    for (let i = 0; i < 15; i += 1) {
+
+      const mod = (!test && ( (bits >> i) & 1) === 1);
+
+      if (i < 8) {
+        this.#modules[8][this.#moduleCount - i - 1] = mod;
+      } else if (i < 9) {
+        this.#modules[8][15 - i - 1 + 1] = mod;
+      } else {
+        this.#modules[8][15 - i - 1] = mod;
+      }
+    }
+
+    // fixed module
+    this.#modules[this.#moduleCount - 8][8] = (!test);
+  }
+
+  /**
+   * Inscription du type
+   * @param test
+   */
+  setupTypeNumber(test) {
+
+    const bits = QRUtil.getBCHTypeNumber(this.#typeNumber);
+
+    for (let i = 0; i < 18; i += 1) {
+      const mod = (!test && ( (bits >> i) & 1) === 1);
+      this.#modules[Math.floor(i / 3)][i % 3 + this.#moduleCount - 8 - 3] = mod;
+    }
+
+    for (let i = 0; i < 18; i += 1) {
+      const mod = (!test && ( (bits >> i) & 1) === 1);
+      this.#modules[i % 3 + this.#moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
+    }
   }
 
   getBestMaskPattern() {
@@ -371,7 +435,7 @@ class QRModules {
     let pattern = 0;
 
     for (let i = 0; i < 8; i += 1) {
-      this.build(true, i);
+      this.#build(true, i);
       const lostPoint = QRUtil.getLostPoint(this);
       if (i === 0 || minLostPoint > lostPoint) {
         minLostPoint = lostPoint;
@@ -382,19 +446,19 @@ class QRModules {
   }
 
   /**
-   * Positionne les modules en fonction des données
-   * @param data
-   * @param maskPattern
+   * Inscrit les données
+   * @param {number[]} data Données (tableau d'octets) incluant les codes de correction d'erreurs
+   * @param {number}   maskPattern
    */
   mapData(data, maskPattern) {
 
     let inc = -1;
-    let row = this._moduleCount - 1;
+    let row = this.#moduleCount - 1;
     let bitIndex = 7;
     let byteIndex = 0;
     const maskFunc = QRUtil.getMaskFunction(maskPattern);
 
-    for (let col = this._moduleCount - 1; col > 0; col -= 2) {
+    for (let col = this.#moduleCount - 1; col > 0; col -= 2) {
 
       if (col === 6) col -= 1;
 
@@ -402,7 +466,7 @@ class QRModules {
 
         for (let c = 0; c < 2; c += 1) {
 
-          if (this._modules[row][col - c] == null) {
+          if (this.#modules[row][col - c] == null) {
 
             let dark = false;
 
@@ -416,7 +480,7 @@ class QRModules {
               dark = !dark;
             }
 
-            this._modules[row][col - c] = dark;
+            this.#modules[row][col - c] = dark;
             bitIndex -= 1;
 
             if (bitIndex === -1) {
@@ -428,7 +492,7 @@ class QRModules {
 
         row += inc;
 
-        if (row < 0 || this._moduleCount <= row) {
+        if (row < 0 || this.#moduleCount <= row) {
           row -= inc;
           inc = -inc;
           break;
@@ -531,8 +595,8 @@ function createStringToBytes(unicodeData, numChars) {
 }
 
 /**
- * Injecte la redondance dans les données à encoder dans le QR code.
- * @param buffer    Données brutes
+ * Injecte la redondance dans les données à encoder dans le QR code (appelé par `createData()`)
+ * @param buffer    Données sous forme d'un tableau d'octets
  * @param rsBlocks
  * @returns {number[]} Tableau d'octets avec redondance
  */
@@ -602,6 +666,7 @@ function createBytes(buffer, rsBlocks) {
 }
 
 /**
+ * Transforme les données en tableau d'octets et y insère la correction d'erreurs
  *
  * @param {number} typeNumber           Type de QR code (1-40)
  * @param {number} errorCorrectionLevel Niveau de résilience (0-3)
