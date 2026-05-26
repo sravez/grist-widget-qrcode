@@ -1,11 +1,13 @@
 /**
- * @typedef RenderingOptions
+ * @typedef QRCodeOptions
  * @type {object}
  * @property {number} [size]     Taille de l'image (prioritaire sur cellSize)
  * @property {number} [cellSize] Taille d'un module
  * @property {number} [margin]   Marge autour du QR code
  * @property {string} [bgColor]  Couleur des modules
  * @property {string} [fgColor]  Couleur du fond
+ * @property {number} [type=0]   Type de QR code
+ * @property {"L"|"M"|"Q"|"H"} [errorCorrectionLevel = "Q"]
  */
 
 /**
@@ -14,51 +16,39 @@
  * @property {HTMLCanvasElement} canvas  Canvas contenant le QR code et la marge
  * @property {number}            size    Taille du canvas
  * @property {number}            margin  Marge autour du QR code
+ * @property {number}            type    Type de QR code (1 - 40)
  * @property {number}            modules Nombre de modules par ligne (ou colonne)
  */
 
+/**
+ * Options par défaut
+ * @type {QRCodeOptions}
+ */
+const default_options = {
+  size: null,
+  cellSize: 4,
+  margin: null,
+  fgColor: "#000000",
+  bgColor: "#ffffff",
+  type: 0,
+  errorCorrectionLevel: "Q"
+}
 /**
  * _Factory_ de production de QR codes
  */
 export default class QRCodeFactory {
   /**
-   * Type de QR code (1 à 40, 0 pour automatique
-   * @type {number}
-   */
-  typeNumber = 0
-  /**
-   * Niveau de redondance/correction d'erreur
-   * @type {string}
-   */
-  errorCorrectionLevel = "Q";
-  /**
-   * Options par défaut
-   * @type {RenderingOptions}
-   */
-  default_rendering_options = {
-    size: null,
-    cellSize: 4,
-    margin: null,
-    fgColor: "#000000",
-    bgColor: "#ffffff",
-    scalable: true
-  }
-  /**
    * Options en cours
-   * @type {RenderingOptions}
+   * @type {QRCodeOptions}
    */
-  options = this.default_rendering_options
+  options = default_options
 
   /**
    * Initialisation de la _factory_
-   * @param {number}           type                 Type de QR code (1 à 40, 0 pour automatique)
-   * @param {"L"|"M"|"Q"|"H"}  errorCorrectionLevel Niveau de redondance
-   * @param {RenderingOptions} renderingOptions     Options
+   * @param {QRCodeOptions} options     Options
    */
-  constructor(type, errorCorrectionLevel, renderingOptions = {}) {
-      this.typeNumber = type;
-      this.errorCorrectionLevel = errorCorrectionLevel;
-      this.options = {...this.default_rendering_options, ...renderingOptions };
+  constructor(options = {}) {
+      this.options = {...default_options, ...options };
   }
 
   /**
@@ -67,10 +57,11 @@ export default class QRCodeFactory {
    * @returns {QRResponse}
    */
   getQRCanvas(txt) {
-    const m = new QRModules(this.typeNumber, this.errorCorrectionLevel);
+    const m = new QRModules(this.options.type, this.options.errorCorrectionLevel);
     m.make(txt)
+
     if(this.options.size) {
-      this.cellSize = Math.floor(this.options.size / (m.getModuleCount() + (this.options.margin ?? 8))) || 1
+      this.options.cellSize = Math.floor(this.options.size / (m.getModuleCount() + (this.options.margin ?? 8))) || 1
     }
     this.options.margin ??=  this.options.cellSize * 4 ;
 
@@ -90,10 +81,11 @@ export default class QRCodeFactory {
       canvas: canvas,
       size: size,
       margin: this.options.margin,
+      type: m.getTypeNumber(),
       modules: m.getModuleCount()
     }
   }
-  
+
   /**
    * Dessine le QR code dans un canvas (sans marge)
    * @param {QRModules}                modules
@@ -230,6 +222,14 @@ class QRModules {
    */
   getModuleCount() {
     return this.#moduleCount;
+  }
+
+  /**
+   * Type du QRCode
+   * @returns {number}
+   */
+  getTypeNumber() {
+    return this.#typeNumber;
   }
 
   /**

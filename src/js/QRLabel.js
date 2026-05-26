@@ -22,11 +22,8 @@
 /**
  * @typedef LabelOptions
  * @type {object} Options de production de QRLabel ajoutées à QRCodeOptions
- * @property {number}  margin       Espace de même couleur que le fond autour du QR code (_Quiet zone_)
- * @property {number}  border       Largeur de la zone extérieure accueillant l'éventuel texte
- * @property {string}  border_color Couleur de la bordure
+ * @property {number}  border       Espace de même couleur que le fond accueillant le texte
  * @property {number}  text_size    Taille du texte
- * @property {string}  text_color   Couleur du texte
  * @property {number}  text_options Orientation du texte
  */
 
@@ -39,21 +36,18 @@
  * @see https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data
  */
 
-import getQRCode from "./qrcode.mjs"
+import QRCodeFactory from "../lib/QRCodeFactory.class.js"
 
 /**
  * Options par défaut
  * @type {QRLabelOptions} */
 const default_options = {
 	size: 256,
-	margin: 12,
-	border: 30,
+	border: 24,
 	text_size: 18,
 	redundancy: "Q",
-	foreground_color: "#000000",
-	background_color: "#FFFFFF",
-	border_color: "#FFFFFF",
-	text_color: "#000000",
+	fgColor: "#000000",
+	bgColor: "#FFFFFF",
 	text_options: 0b00010100
 }
 
@@ -68,17 +62,26 @@ const mime = "image/png";
  * @type {string}
  */
 const font = "monospace"
-/**
- * Image de fond
- * @type {HTMLCanvasElement | null}
- */
-let background_canvas = null
 
 /**
  * Options en cours
  * @type {QRLabelOptions}
  */
 let options = default_options
+
+/**
+ * @type {QRCodeFactory}
+ */
+let factory = null
+
+/**
+ * Initialise la factory
+ * @param {QRLabelOptions | {}} [a_options = {}]
+ */
+export function init(a_options = {}) {
+	options = { ...default_options, ...(a_options ?? {})}
+	factory = new QRCodeFactory(options);
+}
 
 /**
  * Génère une étiquette contenant le QR code éventuellement
@@ -89,55 +92,25 @@ let options = default_options
  * @returns {DataURL}
  */
 export default function getQRLabel(content, a_options = null) {
-	const reset = !background_canvas || a_options
-	if (reset) {
-		options = a_options ? {...default_options,...a_options } : options
-		background_canvas = getBackgroundCanvas();
+	if (a_options || !factory) {
+		init(a_options)
 	}
+	const qrCanvas = factory.getQRCanvas(content.val)
 	const canvas = document.createElement("canvas")
-	canvas.width = background_canvas.width
-	canvas.height = background_canvas.height
+	const size = qrCanvas.size + options.border
+	canvas.width = size
+	canvas.height = size
 	const ctx = canvas.getContext("2d");
-	ctx.drawImage(background_canvas, 0, 0);
-	const qrc_pos = options.border + options.margin
-	ctx.drawImage(getQRCode(content.val, reset ? options : null), qrc_pos, qrc_pos)
+	if(options.border) {
+		ctx.fillStyle = options.bgColor;
+		ctx.roundRect(0, 0, canvas.width, canvas.height, Math.min(10, Math.floor(options.border/2)));
+		ctx.fill()
+	}
+	ctx.drawImage(qrCanvas, options.border, options.border)
 	if(options.text_size > 0) {
 		drawText(canvas, content)
 	}
 	return canvas.toDataURL(mime)
-}
-
-/**
- * Initialise la factory
- * @param {QRLabelOptions | {}} [a_options = {}]
- */
-export function init(a_options = {}) {
-	getQRLabel({val: "test"}, a_options)
-}
-
-/**
- * Renvoie un canvas comportant le fond (bordure et marge)
- * @param {QRLabelOptions} [o] Paramètres : tailles et couleurs
- */
-function getBackgroundCanvas(o = options) {
-	const canvas = document.createElement("canvas")
-	/** Taille de l'étiquette, en pixels */
-	const size = o.size + 2 * (o.margin + o.border)
-	canvas.width = size
-	canvas.height = size
-	const ctx = canvas.getContext("2d");
-	// Bordure extérieure à coins arrondis
-	if(o.border) {
-		ctx.fillStyle = o.border_color;
-		ctx.roundRect(0, 0, canvas.width, canvas.height, Math.floor(o.border/2));
-		ctx.fill()
-	}
-	// Marge / Quiet zone de même couleur que le fond du QR code
-	if(o.margin) {
-		ctx.fillStyle = o.background_color;
-		ctx.fillRect(o.border, o.border, o.size + 2 * o.margin, o.size + 2 * o.margin);
-	}
-	return canvas
 }
 
 /**
@@ -159,7 +132,7 @@ function drawText(canvas, content, o = options) {
 
 	ctx.textAlign = "center"
 	ctx.font = `${o.text_size}px ${font}`;
-	ctx.fillStyle = o.text_color;
+	ctx.fillStyle = o.fgColor;
 	ctx.textBaseline = "middle";
 	const text_positions = {
 		top   : { r: 0, x: middle_x                  , y: text_offset                },

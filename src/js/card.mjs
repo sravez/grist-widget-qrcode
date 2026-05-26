@@ -1,4 +1,4 @@
-import getQRLabel from "./qrlabel.mjs"
+import getQRLabel from "./QRLabel.js"
 import { getAttachmentURL, save_image, trigger_update } from "./files.mjs"
 import {options} from "./index.js";
 

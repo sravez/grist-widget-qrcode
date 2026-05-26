@@ -21,7 +21,7 @@
 import FormDataInterface from "./FormDataInterface.mjs";
 
 /** Générateur d'étiquette */
-import getQRLabel from "./qrlabel.mjs"
+import getQRLabel from "./QRLabel.js"
 
 /** Options par défaut */
 import default_options from "./widget_options.default.mjs"

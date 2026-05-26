@@ -1,7 +1,7 @@
 import columnsToMap from "./columns.mjs"
 import * as Options from "./options.mjs"
 import * as Label from "./card.mjs"
-import { init as init_factory } from "./qrlabel.mjs"
+import { init as init_factory } from "./QRLabel.js"
 import default_widget_options from "./widget_options.default.mjs";
 
 /**
