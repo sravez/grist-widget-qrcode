@@ -116,8 +116,8 @@
     </div>
     <div id="qrcode_help" class="help_popover" popover><img src="img/help.qrcode.png" alt="Descriptif d'une étiquette"/></div>
     <!-- Contrôles -->
-    <label for="qrcode.redundancy">Résilience :</label>
-    <select id="qrcode.redundancy" name="qrcode.redundancy">
+    <label for="qrcode.errorCorrectionLevel">Résilience :</label>
+    <select id="qrcode.errorCorrectionLevel" name="qrcode.errorCorrectionLevel">
       <option value="L">Basse</option>
       <option value="M">Moyenne</option>
       <option value="Q">Standard</option>
@@ -134,32 +134,18 @@
     </span>
     <label></label>
     <span class="multi-control">
-      <label for="qrcode.margin" class="dim">M :</label>
-      <input id="qrcode.margin" name="qrcode.margin" type="number" min="10" value="10"/>
-      <img id="divide" src="img/divide.png" alt="Diviser les dimensions par deux"/>
       <label for="qrcode.border" class="dim">B :</label>
       <input id="qrcode.border" name="qrcode.border" type="number" min="0" value="20"/>
+      <img id="divide" src="img/divide.png" alt="Diviser les dimensions par deux"/>
+      <span></span>
+      <span></span>
     </span>
 
     <label>Couleurs :</label>
-    <span class="multi-control">
-      <label for="qrcode.foreground_color" class="colorLabel">c :</label>
-      <input id="qrcode.foreground_color" name="qrcode.foreground_color" type="color" value="#ffffff"/>
-
-      <div class="SyncBtn" data-src="qrcode.foreground_color" data-dest="qrcode.text_color"></div>
-
-      <label for="qrcode.text_color" class="colorLabel">t :</label>
-      <input id="qrcode.text_color" name="qrcode.text_color" type="color" value="#ffffff"/>
-    </span>
-    <label></label>
-    <span class="multi-control">
-      <label for="qrcode.background_color" class="colorLabel">f :</label>
-      <input id="qrcode.background_color" name="qrcode.background_color" type="color" value="#ffffff"/>
-
-      <div class="SyncBtn" data-src="qrcode.background_color" data-dest="qrcode.border_color"></div>
-
-      <label for="qrcode.border_color" class="colorLabel">b :</label>
-      <input id="qrcode.border_color" name="qrcode.border_color" type="color" value="#ffffff"/>
+    <span id="colors">
+      <input id="qrcode.fgColor" name="qrcode.fgColor" type="color" value="#000000"/>
+      &nbsp;/&nbsp;
+      <input id="qrcode.bgColor" name="qrcode.bgColor" type="color" value="#ffffff"/>
     </span>
 
   </section>

@@ -672,6 +672,7 @@ function createBytes(buffer, rsBlocks) {
  * @param {number} errorCorrectionLevel Niveau de résilience (0-3)
  * @param          dataList             Données fournies par l'utilisateur
  * @returns {number[]} Chaîne redondante à afficher dans le QR code
+ * @throws {message: "code length overflow. [...]} Si il y a trop de données à stocker
  */
 function createData(typeNumber, errorCorrectionLevel, dataList) {
 

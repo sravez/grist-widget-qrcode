@@ -95,35 +95,11 @@ function sample_management() {
 }
 
 
-/**
- * Synchronisation des couleurs
- */
-function setSyncListeners() {
-	// Gestion de la synchronisation (à injecter avant onQROptionsChange)
-	document.querySelectorAll(".SyncBtn").forEach(syncBtn => {
-
-		syncBtn.addEventListener("click", (e) => {
-			syncBtn.classList.toggle("on")
-			if (syncBtn.classList.contains("on")) {
-				form[syncBtn.dataset.src]?.dispatchEvent(new Event('change'))
-			}
-		})
-
-		if (form[syncBtn.dataset.src] && form[syncBtn.dataset.dest]) {
-			form[syncBtn.dataset.src].addEventListener("change", (e) => {
-				// les arrow functions mémorise le syncBtn au moment de leur création
-				if (syncBtn.classList.contains("on")) {
-					form[syncBtn.dataset.dest].value = e.target.value
-				}
-			})
-		}
-	})
-}
 
 function setSizeListeners() {
 
 	function multiply(x) {
-		const ctrls = ["qrcode.size", "qrcode.margin", "qrcode.border", "qrcode.text_size"]
+		const ctrls = ["qrcode.size", "qrcode.border", "qrcode.text_size"]
 		for(const c of ctrls) {
 			form[c].value = Math.ceil(x * form[c].value);
 		}
@@ -183,7 +159,6 @@ function init_form() {
 	form = document.getElementById("config_form")
 	formDataInterface = new FormDataInterface(form, ".");
 	// Doit être exécuté avant sample_management() qui assigne des onchange
-	setSyncListeners()
 	sample_management()
 	setSizeListeners()
 	setHelpListeners()

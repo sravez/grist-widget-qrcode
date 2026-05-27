@@ -37,14 +37,11 @@ const default_widget_options = {
 	},
 	qrcode: {
 		size: 256,
-		margin: 24,
 		border: 48,
 		text_size: 18,
-		redundancy: "Q",
-		foreground_color: "#000000",
-		background_color: "#FFFFFF",
-		border_color: "#B0B0B0",
-		text_color: "#FFFFFF"
+		fgColor: "#000000",
+		bgColor: "#FFFFFF",
+		errorCorrectionLevel: "Q",
 	},
 	data: {
 		position: 0,

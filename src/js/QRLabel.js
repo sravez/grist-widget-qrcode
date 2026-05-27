@@ -24,7 +24,7 @@
  * @type {object} Options de production de QRLabel ajoutées à QRCodeOptions
  * @property {number}  border       Espace de même couleur que le fond accueillant le texte
  * @property {number}  text_size    Taille du texte
- * @property {number}  text_options Orientation du texte
+ * @property {number}  [text_options] Orientation du texte
  */
 
 /**
@@ -87,17 +87,26 @@ export function init(a_options = {}) {
  * Génère une étiquette contenant le QR code éventuellement
  * entouré d'informations textuelles.
  *
+ * Renvoie null s'il n'est pas possible de produire le QR code.
+ *
  * @param {QRLabelContent}   content         Valeur à encoder et textes à afficher
  * @param {?QRLabelOptions | {}} [a_options=null] Paramètres : tailles et couleurs ({} : par défaut)
- * @returns {DataURL}
+ * @returns {DataURL | null}
  */
 export default function getQRLabel(content, a_options = null) {
 	if (a_options || !factory) {
 		init(a_options)
 	}
-	const qrCanvas = factory.getQRCanvas(content.val)
 	const canvas = document.createElement("canvas")
-	const size = qrCanvas.size + options.border
+	/** @type {QRResponse} */
+	let qrCanvas
+	try {
+		qrCanvas = factory.getQRCanvas(content.val)
+	} catch(e) {
+		console.error(`getQRLabel(): impossible de générer le QR code (${e})`)
+		return null
+	}
+	const size = qrCanvas.size + 2 * options.border
 	canvas.width = size
 	canvas.height = size
 	const ctx = canvas.getContext("2d");
@@ -106,7 +115,7 @@ export default function getQRLabel(content, a_options = null) {
 		ctx.roundRect(0, 0, canvas.width, canvas.height, Math.min(10, Math.floor(options.border/2)));
 		ctx.fill()
 	}
-	ctx.drawImage(qrCanvas, options.border, options.border)
+	ctx.drawImage(qrCanvas.canvas, options.border, options.border)
 	if(options.text_size > 0) {
 		drawText(canvas, content)
 	}
@@ -123,7 +132,7 @@ function drawText(canvas, content, o = options) {
 	const middle_x = Math.floor(canvas.width/2)
 	const middle_y = Math.floor(canvas.height/2)
 	// Distance du milieu du texte par rapport au bord extérieur de l'étiquette
-	const text_offset = Math.ceil(o.border/2)
+	const text_offset = 1.2 * Math.max(Math.ceil(o.border/2), Math.ceil(o.text_size/2))
 
 	const ctx = canvas.getContext("2d");
 
