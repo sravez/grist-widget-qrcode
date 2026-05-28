@@ -1,6 +1,7 @@
 import getQRLabel from "./QRLabel.js"
 import { getAttachmentURL, save_image, trigger_update } from "./files.mjs"
-import {options} from "./index.js";
+import { options } from "./index.js";
+import { update_sheet } from "./print.js";
 
 /**
  * Table Grist
@@ -13,6 +14,11 @@ let table
  * @type {object}
  */
 let current_mapped_record = null;
+/**
+ * Enregistrements filtrés non mappés
+ * @type {object[]}
+ */
+let unmapped_records = []
 /**
  * Objet Image contenant l'étiquette courante
  * @type {HTMLImageElement}
@@ -48,7 +54,6 @@ export async function init(mappings) {
 	zoom_dlg = document.querySelector("#zoom_dialog")
 	zoom_img = document.getElementById("zoomed")
 
-
 	label_img.onclick = (e) => {
 		if(!e.target.classList.contains("empty")){
 			zoom_in(e.target)
@@ -75,10 +80,8 @@ export async function init(mappings) {
 	}
 
 	document.getElementById("update_labels_btn").onclick = async (e) => {
-		const filtered = await grist.docApi.fetchSelectedTable({format:"rows", includeColumns:"shown"})
-
 		let i = 0
-		for(const rec of filtered) {
+		for(const rec of unmapped_records) {
 			const m = grist.mapColumnNames(rec);
 			const qrc_DataUrl = getQRLabel(m)
 			try {
@@ -98,15 +101,13 @@ export async function init(mappings) {
 
 	trigger_btn.onclick = async (e) => {
 		if(confirm("ATTENTION : les étiquettes existantes seront potentiellement inopérantes.\nConfirmez-vous la modification ?")) {
-			const filtered = await grist.docApi.fetchSelectedTable({format:"rows", includeColumns:"shown"})
-
 			const t = await table.getTableId()
 			console.debug("TABLE ", t)
 			const u = {}
 			u[mappings.trigger] = true
 
 			let i = 0
-			for(const rec of filtered) {
+			for(const rec of unmapped_records) {
 				await grist.docApi.applyUserActions([
 					["UpdateRecord",t, rec.id, u]
 				])
@@ -124,6 +125,29 @@ export async function init(mappings) {
 		}
 	}
 
+	document.getElementById("print-number").onchange = async (e) => {
+		await update_print_sheet()
+	}
+
+	document.getElementById("print-offset").onchange = async (e) => {
+		await update_print_sheet()
+	}
+	document.getElementById("print-btn").onclick = (e) => {
+		window.print()
+	}
+
+}
+
+/**
+ * Met à jour la feuille d'impression
+ * @returns {Promise<void>}
+ */
+async function update_print_sheet() {
+	await update_sheet(
+		unmapped_records,
+		document.getElementById("print-number").value,
+		document.getElementById("print-offset").value
+	)
 }
 
 /**
@@ -172,33 +196,17 @@ export async function onRecord(record, mappings) {
 
 /**
  *
- * @param records
+ * @param {object[]} records Enregistrement NON MAPPÉS
  * @returns {Promise<void>}
  *
  * @see https://bureautique-libre.strasbourg.eu/Templates/inspect/api.html
  */
 export async function onRecords(records) {
+	unmapped_records = records ?? []
 	document.querySelectorAll(".label_count").forEach(el => {
-		el.innerHTML = records.length
+		el.innerHTML = `${records.length}`
 	})
-	/*
-	document.getElementById("selectedTable").innerHTML = JSON.stringify(grist.selectedTable);
-
-	const table = await grist.getTable()
-	document.getElementById("table").innerHTML = JSON.stringify(table);
-
-	const tables = await grist.docApi.listTables()
-	document.getElementById("tables").innerHTML = JSON.stringify(tables);
-
-	const g = await grist.docApi.fetchTable("Labels")
-	document.getElementById("count_grist").innerHTML = g.id.length;
-
-
-	document.getElementById("count_widget").innerHTML = records.length;
-
-	const s = await grist.docApi.fetchSelectedTable({format:"rows", includeColumns:"shown"})
-	document.getElementById("count_selected").innerHTML = s.length;
-	 */
+	await update_print_sheet()
 }
 
 /**

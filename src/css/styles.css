@@ -1,3 +1,13 @@
+@media print {
+	#selected-label, #zoom_dialog, #config_dialog, #print-selector {
+		display: none;
+	}
+	body {
+		margin: 0;
+		padding: 0;
+	}
+}
+
 /* Variables */
 :root {
 	--font: Verdana, sans-serif;
@@ -5,7 +15,6 @@
 	--ssize: calc(var(--fsize) + 2px);
 	--color: #336699;
 }
-
 
 #labels {
 	display: flex;
@@ -74,7 +83,7 @@ img.invalid{
 	border-radius: 10px;
 }
 
-/* Introduit pour avoir à gérer le display de #config_dialog */
+/* Introduit pour ne pas avoir à gérer le display flex/none  */
 #config_dialog > div {
 	width: 100%;
 	height: 100%;
@@ -99,4 +108,44 @@ img.invalid{
 #configuration {
 	flex-grow: 1;
 	border: none
+}
+
+/* Impression */
+@page {
+	size: A4;
+	margin-top: 10mm;
+	margin-left: 10mm;
+}
+
+#print-number, #print-offset {
+	width: 4em;
+	text-align: center;
+}
+
+.print-sheet {
+	break-after: page;
+	display: grid;
+	grid-template-columns: repeat(4, 35mm);
+	grid-auto-rows: 35mm;
+	column-gap: 10mm;
+	row-gap: 10mm;
+}
+.print-sheet:not(:last-of-type) {
+	border-bottom: red solid 1px;
+
+}
+
+.print-label {
+	border: dotted gray 1px;
+	width: 100%;
+}
+
+@media print {
+	.print-label {
+		/* Mettre none en production */
+		border:solid 1px gray;
+	}
+	.print-sheet {
+		border: none;
+	}
 }

@@ -66,7 +66,7 @@ export async function upload_blob(rec, w_col, g_col, blob,  filename = "generic"
  * ensuite télécharger via un appel à `fetch()` sur la base d'une URL contenant
  * un jeton temporaire obtenu par `getAccessToken()`.
  *
- * @param {number} a_id ID de la pièce jointe dont
+ * @param {number} a_id ID de la pièce jointe dont on souhaite l'URL
  * @returns {Promise<string>} URL de téléchargement
  */
 export async function getAttachmentURL(a_id) {
