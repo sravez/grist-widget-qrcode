@@ -160,7 +160,89 @@
     </div>
     <div id="preview_popover" popover><img id="preview_popover_img" src=""/></div>
   </section>
+
+  <section id="section_print">
+    <div class="section_title">
+      <img src="img/printer.png" height="14px" class="section_icon" alt="Icône de la section"/>
+      Impression
+      <img src="img/help.png" class="help_btn" data-target="display_help" alt="Aide sur la section"/>
+    </div>
+
+    <div id="print_help" class="help_popover" popover>
+      <p class="help_title">Réglages d'affichage<p>
+      <dl>
+        <dt>Taille</dt>
+        <dd>
+          Taille en pixels des étiquettes affichées dans le widget (la taille
+          réelle de l'étiquette, déterminée par la section suivante, pouvant être
+          plus grande)
+        </dd>
+        <dt>Génération</dt>
+        <dd>
+          Détermine quand une nouvelle étiquette doit être générée (mais pas
+          enregistrée) lors de l'affichage d'une fiche.
+        </dd>
+        <dt>Boutons</dt>
+        <dd>
+          Boutons de mise à jour groupée à afficher.
+          <ul>
+            <li>Tous : Mise à jour de toutes les étiquettes</li>
+            <li>Invalides : Mise à jour des étiquettes invalides (cf. rubrique Données)</li>
+          </ul>
+        </dd>
+      </dl>
+    </div>
+    <!-- Contrôles -->
+    <label>Page :</label>
+    <span class="multi-control">
+      <label for="print.pageWidth" class="dim">l :</label>
+      <input id="print.pageWidth" name="print.pageWidth" type="number" min="11" value="210"/>
+      <span></span>
+      <label for="print.pageHeight" class="dim">h :</label>
+      <input id="print.pageHeight" name="print.pageHeight" type="number" min="1" value="297"/>
+    </span>
+
+    <label>Marges :</label>
+    <span class="multi-control">
+      <label for="print.topMargin" class="dim">T :</label>
+      <input id="print.topMargin" name="print.topMargin" type="number" min="0" value="0"/>
+      <span></span>
+      <label for="print.leftMargin" class="dim">G :</label>
+      <input id="print.leftMargin" name="print.leftMargin" type="number" min="0" value="0"/>
+    </span>
+
+    <label>Nombre :</label>
+    <span class="multi-control">
+      <label for="print.rows" class="dim">R :</label>
+      <input id="print.rows" name="print.rows" type="number" min="1" value="0"/>
+      <span></span>
+      <label for="print.cols" class="dim">C :</label>
+      <input id="print.cols" name="print.cols" type="number" min="1" value="0"/>
+    </span>
+
+    <label>Dimensions :</label>
+    <span class="multi-control">
+      <label for="print.labelWidth" class="dim">L :</label>
+      <input id="print.labelWidth" name="print.labelWidth" type="number" min="1" value="0"/>
+      <span></span>
+      <label for="print.labelHeight" class="dim">H :</label>
+      <input id="print.labelHeight" name="print.labelHeight" type="number" min="1" value="0"/>
+    </span>
+
+    <label>Périodes :</label>
+    <span class="multi-control">
+      <label for="print.hStep" class="dim">h :</label>
+      <input id="print.hStep" name="print.hStep" type="number" min="1" value="0"/>
+      <span></span>
+      <label for="print.vStep" class="dim">v :</label>
+      <input id="print.vStep" name="print.vStep" type="number" min="1" value="0"/>
+    </span>
+
+
+  </section>
+
 </form>
+
 
 </body>
 

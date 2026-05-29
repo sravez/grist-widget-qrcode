@@ -14,6 +14,7 @@
  * @property {object}                     data                       Configuration de la gestion des données
  * @property {0|-1}                       data.position              - Position de l'étiquette courante dans le champ (0 : première, -1 : dernière)
  * @property {"add"|"replace"}            data.save_mode             - Mode d'enregistrement des nouvelles étiquettes
+ * @property {Layout}                     print                      Disposition des feuilles d'impression
  */
 
 // TODO : Vérifier cette histoire d'enregistrement des options/configurations
@@ -46,6 +47,18 @@ const default_widget_options = {
 	data: {
 		position: 0,
 		save_mode: "replace",
+	},
+	print: {
+		pageWidth: 210,
+		pageHeight: 297,
+		topMargin: 0,
+		leftMargin: 0,
+		cols: 4,
+		rows: 5,
+		labelWidth: 35,
+		labelHeight: 35,
+		hStep: 40,
+		vStep: 40
 	}
 }
 

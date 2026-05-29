@@ -1,5 +1,5 @@
 @media print {
-	#selected-label, #zoom_dialog, #config_dialog, #print-selector {
+	#selected-label, #zoom_dialog, #config_dialog, #print-selector, .print-separator {
 		display: none;
 	}
 	body {
@@ -15,7 +15,37 @@
 	--ssize: calc(var(--fsize) + 2px);
 	--color: #336699;
 }
+/*
+ * Styles globaux
+ */
+body {
+	font-family: var(--font);
+	font-size: var(--ssize);
+}
 
+h2 {
+	color: var(--color);
+	font-size: 18px;
+	font-weight: bold;
+}
+
+button {
+	appearance: none;
+	padding: 4px 8px 5px 8px;
+	margin: 6px;
+	border: none;
+	background-color: gainsboro;
+	border-radius: 4px;
+}
+
+button:hover {
+	cursor: pointer;
+	background-color: var(--color);
+	color: white;
+}
+/*
+ * Enregistrement courant
+ */
 #labels {
 	display: flex;
 	flex-direction: row;
@@ -75,6 +105,9 @@ img.invalid{
 	}
 }
 
+/*
+ * Boîte de dialogue de configuration
+ */
 #config_dialog {
 	width: 100%;
 	height: 100%;
@@ -110,29 +143,25 @@ img.invalid{
 	border: none
 }
 
-/* Impression */
-@page {
-	size: A4;
-	margin-top: 10mm;
-	margin-left: 10mm;
+/*
+ * Impression
+ */
+
+#print-selector {
+	border-bottom: var(--color) 1px solid;
+	margin-bottom: 10px;
 }
 
+
 #print-number, #print-offset {
-	width: 4em;
+	width: 3em;
 	text-align: center;
 }
 
-.print-sheet {
-	break-after: page;
-	display: grid;
-	grid-template-columns: repeat(4, 35mm);
-	grid-auto-rows: 35mm;
-	column-gap: 10mm;
-	row-gap: 10mm;
-}
 .print-sheet:not(:last-of-type) {
-	border-bottom: red solid 1px;
-
+	padding-bottom : 5mm;
+	border-bottom: red 1px dashed;
+	margin-bottom: 5mm;
 }
 
 .print-label {
@@ -143,9 +172,12 @@ img.invalid{
 @media print {
 	.print-label {
 		/* Mettre none en production */
-		border:solid 1px gray;
+		border:none;
 	}
-	.print-sheet {
+
+	.print-sheet:not(:last-of-type) {
 		border: none;
+		padding: 0;
+		margin: 0;
 	}
 }

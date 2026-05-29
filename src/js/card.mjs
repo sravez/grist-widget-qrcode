@@ -1,7 +1,7 @@
 import getQRLabel from "./QRLabel.js"
 import { getAttachmentURL, save_image, trigger_update } from "./files.mjs"
 import { options } from "./index.js";
-import { update_sheet } from "./print.js";
+import { apply_layout, update_sheet } from "./print.js";
 
 /**
  * Table Grist
@@ -80,20 +80,9 @@ export async function init(mappings) {
 	}
 
 	document.getElementById("update_labels_btn").onclick = async (e) => {
-		let i = 0
-		for(const rec of unmapped_records) {
-			const m = grist.mapColumnNames(rec);
-			const qrc_DataUrl = getQRLabel(m)
-			try {
-				await save_image(m, "label", mappings.label, qrc_DataUrl, m.filename)
-				i++
-			} catch (e) {
-				console.error("WIDGET_QRLABEL:CHANGE " + e.message)
-			}
-		}
-		const s = i > 1 ? "s" : ""
-		alert(`${i} enregistrement${s} modifié${s} sur ${filtered.length}`)
+		await facelift(mappings)
 	}
+
 
 	const trigger_btn = document.getElementById("trigger_url_update_btn")
 	// Masquage/affichage du bouton en fonction de l'existence d'un champ trigger
@@ -101,27 +90,20 @@ export async function init(mappings) {
 
 	trigger_btn.onclick = async (e) => {
 		if(confirm("ATTENTION : les étiquettes existantes seront potentiellement inopérantes.\nConfirmez-vous la modification ?")) {
+			/*
 			const t = await table.getTableId()
-			console.debug("TABLE ", t)
 			const u = {}
 			u[mappings.trigger] = true
 
 			let i = 0
 			for(const rec of unmapped_records) {
 				await grist.docApi.applyUserActions([
-					["UpdateRecord",t, rec.id, u]
+					["UpdateRecord", t, rec.id, u]
 				])
-				const m = grist.mapColumnNames(rec);
-				const qrc_DataUrl = getQRLabel(m)
-				try {
-					await save_image(m, "label", mappings.label, qrc_DataUrl, m.filename)
-					i++
-				} catch (e) {
-					console.error("WIDGET_QRLABEL:CHANGE " + e.message)
-				}
 			}
-			const s = i > 1 ? "s" : ""
-			alert(`${i} enregistrement${s} modifié${s} sur ${filtered.length}`)
+			 */
+			await refresh(mappings)
+			await facelift(mappings)
 		}
 	}
 
@@ -136,6 +118,51 @@ export async function init(mappings) {
 		window.print()
 	}
 
+}
+
+/**
+ * Génère et sauvegarde les étiquettes sans modifier l'alias
+ * @param {Object.<string, string>} mappings Correspondance widget => Grist
+ * @returns {Promise<void>}
+ */
+async function facelift(mappings) {
+	const rows = await grist.docApi.fetchSelectedTable({format:"rows", includeColumns:"shown"})
+	let i = 0
+	for(const rec of rows) {
+		const m = grist.mapColumnNames(rec);
+		const qrc_DataUrl = getQRLabel(m)
+		try {
+			await save_image(m, "label", mappings.label, qrc_DataUrl, m.filename)
+			i++
+		} catch (e) {
+			console.error("WIDGET_QRLABEL:CHANGE " + e.message)
+		}
+	}
+	const s = i > 1 ? "s" : ""
+	alert(`${i} enregistrement${s} modifié${s} sur ${unmapped_records.length}`)
+}
+
+/**
+ * Active si disponible la génération d'un nouveau contenu (sans mettre à jour les étiquettes)
+ * @param mappings
+ * @returns {Promise<void>}
+ */
+async function refresh(mappings) {
+	const t = await table.getTableId()
+	const u = {}
+	u[mappings.trigger] = true
+/*
+	const data = await grist.docApi.fetchSelectedTable({includeColumns:"shown"})
+	//alert(JSON.stringify(data.id))
+	await grist.docApi.applyUserActions([
+		["BulkUpdateRecord", t, data.id, u]
+	])
+*/
+	for(const rec of unmapped_records) {
+		await grist.docApi.applyUserActions([
+			["UpdateRecord", t, rec.id, u]
+		])
+	}
 }
 
 /**
@@ -158,6 +185,7 @@ export async function onOptions(a_options) {
 	label_img.style.height   = a_options.display.size+"px"
 	preview_img.style.height = a_options.display.size+"px"
 	build_preview(false)
+	apply_layout(a_options.print)
 	// TODO : gérer l'affichage des boutons
 }
 

@@ -1,17 +1,4 @@
-/**
- * @typedef Layout Disposition d'une feuille d'impression
- * @type {object}
- * @property {number} pageWidth   Largeur de page (en mm)
- * @property {number} pageHeight  Hauteur de page (en mm)
- * @property {number} topMargin   Marge haute (en mm)
- * @property {number} leftMargin  Marge gauche (en mm)
- * @property {number} cols        Nombre de colonnes
- * @property {rows}   rows        Nombre de lignes
- * @property {number} labelWidth  Largeur d'une étiquette (en mm)
- * @property {number} labelHeight Hauteur d'une étiquette (en mm)
- * @property {number} colGap      Espace horizontal entre deux étiquettes (en mm)
- * @property {number} rowGap      Espace vertical entre deux étiquettes (en mm)
- */
+
 
 /**
  * Vérifie la cohérence d'une disposition
