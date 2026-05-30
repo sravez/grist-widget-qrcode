@@ -1,7 +1,7 @@
 import getQRLabel from "./QRLabel.js"
-import { getAttachmentURL, save_image, trigger_update } from "./files.mjs"
+import { getAttachmentURL, attach_file_from_url, trigger_update } from "./files.mjs"
 import { options } from "./index.js";
-import { apply_layout, update_sheet } from "./print.js";
+import { apply_layout, create_sheets } from "./print.js";
 
 /**
  * Table Grist
@@ -42,7 +42,9 @@ let zoom_img
 
 /**
  * Initialisation de la vue du widget
- * @param {Object.<string, string>} mappings Correspondance widget => Grist
+ * * Variables du module
+ * * Gestionnaires d'événements
+ * @param {Object.<string, string>} mappings Correspondance widget → Grist
  * @returns {Promise<void>}
  */
 export async function init(mappings) {
@@ -68,17 +70,12 @@ export async function init(mappings) {
 			zoom_in(e.target)
 		}
 	}
-	/* Bouton d'enregistrement */
+	/* ******** ENREGISTREMENT ******** */
+	// Enregistrement de la preview
 	document.getElementById("save_label_btn").onclick = async (e) => {
-		const fn = (current_mapped_record.filename
-			     ?? "L_"+current_mapped_record.id+".png")
-		try {
-			await save_image(current_mapped_record, "label", mappings.label, preview_img.src, fn)
-		} catch (e) {
-			console.error("WIDGET_QRLABEL:SAVE " + e.message)
-		}
+		await save_label(current_mapped_record, preview_img.src, mappings)
 	}
-
+	// Mise à jour de tous les visuels
 	document.getElementById("update_labels_btn").onclick = async (e) => {
 		await facelift(mappings)
 	}
@@ -90,34 +87,44 @@ export async function init(mappings) {
 
 	trigger_btn.onclick = async (e) => {
 		if(confirm("ATTENTION : les étiquettes existantes seront potentiellement inopérantes.\nConfirmez-vous la modification ?")) {
-			/*
-			const t = await table.getTableId()
-			const u = {}
-			u[mappings.trigger] = true
-
-			let i = 0
-			for(const rec of unmapped_records) {
-				await grist.docApi.applyUserActions([
-					["UpdateRecord", t, rec.id, u]
-				])
-			}
-			 */
 			await refresh(mappings)
 			await facelift(mappings)
 		}
 	}
 
+	/* ******** IMPRESSION ******** */
+	// Modification du nombre d'étiquettes à imprimer
 	document.getElementById("print-number").onchange = async (e) => {
-		await update_print_sheet()
+		await update_print_sheets()
 	}
-
+	// Modification du décalage d'impression
 	document.getElementById("print-offset").onchange = async (e) => {
-		await update_print_sheet()
+		await update_print_sheets()
 	}
+	// Impression
 	document.getElementById("print-btn").onclick = (e) => {
 		window.print()
 	}
 
+}
+
+/**
+ * Enregistre une étiquette (sous la forme de DataURL)
+ *
+ * @param {MappedRecord} a_mapped_rec Enregistrement destination (mappé)
+ * @param {string}       a_DataUrl    URL à téléverser
+ * @param {object}       mappings     Correspondance des noms de colonnes (widget -> grist)
+ * @returns {Promise<number>}
+ */
+async function save_label(a_mapped_rec, a_DataUrl, mappings) {
+	const fn = (a_mapped_rec.filename ?? "L_"+a_mapped_rec.id) + ".png"
+	try {
+		await attach_file_from_url(a_mapped_rec, "label", mappings.label, a_DataUrl, fn)
+		return 1
+	} catch (e) {
+		console.error("WIDGET_QRLABEL:SAVE " + e.message)
+		return 0
+	}
 }
 
 /**
@@ -130,13 +137,8 @@ async function facelift(mappings) {
 	let i = 0
 	for(const rec of rows) {
 		const m = grist.mapColumnNames(rec);
-		const qrc_DataUrl = getQRLabel(m)
-		try {
-			await save_image(m, "label", mappings.label, qrc_DataUrl, m.filename)
-			i++
-		} catch (e) {
-			console.error("WIDGET_QRLABEL:CHANGE " + e.message)
-		}
+		const qrc_DataUrl = getQRLabel(m);
+		i += await save_label(m, qrc_DataUrl, mappings)
 	}
 	const s = i > 1 ? "s" : ""
 	alert(`${i} enregistrement${s} modifié${s} sur ${unmapped_records.length}`)
@@ -151,13 +153,13 @@ async function refresh(mappings) {
 	const t = await table.getTableId()
 	const u = {}
 	u[mappings.trigger] = true
-/*
+	/*
+	// BulkUpdateRecord semble ne pas fonctionner
 	const data = await grist.docApi.fetchSelectedTable({includeColumns:"shown"})
-	//alert(JSON.stringify(data.id))
 	await grist.docApi.applyUserActions([
 		["BulkUpdateRecord", t, data.id, u]
 	])
-*/
+	*/
 	for(const rec of unmapped_records) {
 		await grist.docApi.applyUserActions([
 			["UpdateRecord", t, rec.id, u]
@@ -166,20 +168,28 @@ async function refresh(mappings) {
 }
 
 /**
- * Met à jour la feuille d'impression
+ * ### Crée les pages d'impression
  * @returns {Promise<void>}
  */
-async function update_print_sheet() {
-	await update_sheet(
+async function update_print_sheets() {
+	const r = await create_sheets(
 		unmapped_records,
 		document.getElementById("print-number").value,
 		document.getElementById("print-offset").value
 	)
+	document.getElementById("label-count").innerHTML = " "
+		+ r.labels + " étiquette" + (r.labels > 1 ? "s" : "")
+	    + " (" + r.pages + " page" + (r.pages > 1 ? "s" : "") + ")"
 }
 
 /**
- * Application des options
- * @param {WidgetOptions} a_options
+ * ### Application des options
+ * * Taille des étiquettes
+ * * Réinitialise la prévisualisation
+ * * Feuilles d'impression
+ * * Affichage des boutons
+ *
+ * @param {WidgetOptions} a_options Options à appliquer
  */
 export async function onOptions(a_options) {
 	label_img.style.height   = a_options.display.size+"px"
@@ -190,15 +200,20 @@ export async function onOptions(a_options) {
 }
 
 /**
- * Transition vers un nouvel enregistrement
- * @param {object} record Enregistrement non mappé
- * @param {object} mappings Correspondance { Widget:Grist }
+ * ### Transition vers un nouvel enregistrement
+ * * Stocke l'enregistrement courant mappé.
+ * * Met à jour le titre de la fiche.
+ * * Affiche l'éventuelle étiquette courante.
+ * * Gère la prévisualisation.
+ *
+ * @param {object} record   Enregistrement non mappé
+ * @param {object} mapping Correspondance { Widget:Grist }
  * @returns {Promise<void>}
  */
-export async function onRecord(record, mappings) {
+export async function onRecord(record, mapping) {
 	current_mapped_record = grist.mapColumnNames(record) || {};
 	label_img.classList.remove("valid", "invalid", "empty")
-
+	document.getElementById("card_title").innerHTML = current_mapped_record.title ?? "Sélection"
 	if( (current_mapped_record.label?.length ?? 0) > 0) {
 		const current_label = (current_mapped_record.label).at(options.data.position);
 		label_img.src = await getAttachmentURL(current_label);
@@ -221,10 +236,13 @@ export async function onRecord(record, mappings) {
 		          || (options.display.auto_next === "invalid" && current_mapped_record.validity === false))
 }
 
-
 /**
+ * ### Fonction exécutée à chaque modification des données
+ * * Stocke les données mappées.
+ * * Affiche le nombre d'enregistrements dans les boutons d'actions globales.
+ * * Met à jour les feuilles d'impression.
  *
- * @param {object[]} records Enregistrement NON MAPPÉS
+ * @param {object[]} records Enregistrements NON MAPPÉS
  * @returns {Promise<void>}
  *
  * @see https://bureautique-libre.strasbourg.eu/Templates/inspect/api.html
@@ -234,7 +252,7 @@ export async function onRecords(records) {
 	document.querySelectorAll(".label_count").forEach(el => {
 		el.innerHTML = `${records.length}`
 	})
-	await update_print_sheet()
+	await update_print_sheets()
 }
 
 /**

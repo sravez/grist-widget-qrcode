@@ -18,7 +18,8 @@ export default {
         new HtmlBundlerPlugin({
             entry: {
                 index : './src/index.html',
-                config: './src/config.html'
+                config: './src/config.html',
+                help_display: './src/help_display.html',
             },
             js: {
                 // output filename of extracted JS from source script loaded in HTML via `<script>` tag

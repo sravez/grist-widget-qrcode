@@ -29,7 +29,7 @@ export async function upload_blob(rec, w_col, g_col, blob,  filename = "generic"
 
 		/* *** 2. Upload du fichier *** */
 		const formData = new FormData();
-		formData.append('upload', blob, filename ?? blob.name ?? "generic.png");
+		formData.append('upload', blob, filename ?? blob.name ?? "generic");
 		const response = await fetch(`${tokenInfo.baseUrl}/attachments?auth=${tokenInfo.token}`, {
 			method: 'POST',
 			body: formData,
@@ -80,11 +80,11 @@ export async function getAttachmentURL(a_id) {
  * @param {MappedRecord}     rec      Enregistrement à modifier
  * @param {string}           w_col    Colonne du widget à modifier
  * @param {string}           g_col    Colonne Grist destination mappée avec w_col
- * @param {string}           url      Image à sauvegarder
+ * @param {string}           url      URL du fichier à sauvegarder
  * @param {string}           filename Nom du fichier
  * @returns {Promise<void>}
  */
-export async function save_image(rec, w_col, g_col, url, filename) {
+export async function attach_file_from_url(rec, w_col, g_col, url, filename) {
 	let blob = null
 	try {
 		blob = await fetch(url).then(r => r.blob());

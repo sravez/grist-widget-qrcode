@@ -13,7 +13,7 @@
   
   <body>
     <div id="selected-label">
-        <h2><img src="./img/qrcode.png"/> Enregistrement courant</h2>
+        <h2><img src="./img/qrcode.png"/> <span id="card_title">Enregistrement courant</span></h2>
         <div id="labels">
             <div id="label" class="label_box"><img src="" class="label invalid zoomable empty"/></div>
             <button id="save_label_btn">⬅ Enregistrer</button>
@@ -25,12 +25,16 @@
         <!-- Modifie tous les liens -->
         <button id="trigger_url_update_btn">Renouvellement (<span class="label_count"></span>)</button>
     </div>
+
     <!-- Zoom -->
+
     <dialog id="zoom_dialog" class="zoom">
         <button commandfor="zoom_dialog" command="close" class="zoom_close_btn"></button>
         <img id="zoomed" src="" class="zoom"/>
     </dialog>
+
     <!-- Réglages -->
+
     <dialog id="config_dialog">
         <div>
             <div id="config_header">
@@ -46,6 +50,9 @@
             </iframe>
         </div>
     </dialog>
+
+    <!-- Impression -->
+
     <div id="print-selector">
         <h2><img src="./img/printer.png"/> Impression</h2>
         <label for="print-number">Nombre :</label>
@@ -53,8 +60,8 @@
 
         <label for="print-offset">Décaler de :</label>
         <input id="print-offset" name="print-offset" type="number"  min="0" value="0" />
-
-        <button id="print-btn">Imprimer</button>
+        <br/>
+        <button id="print-btn">Imprimer<span id="label-count"></span></button>
     </div>
     <div id="print-sheets">
 

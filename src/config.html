@@ -4,7 +4,6 @@
 <head>
   <meta charset="utf-8">
   <title>QR Code - Configuration</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="js/config.js" type="module"></script>
   <link rel="stylesheet" href="css/config.form.css" />
 </head>
@@ -19,31 +18,13 @@
       Interface
       <img src="img/help.png" class="help_btn" data-target="display_help" alt="Aide sur la section"/>
     </div>
+    <iframe id="display_help"
+            title="Affichage"
+            src="help_display.html"
+            class="help_popover"
+            popover>
+    </iframe>
 
-    <div id="display_help" class="help_popover" popover>
-      <p class="help_title">Réglages d'affichage<p>
-      <dl>
-        <dt>Taille</dt>
-        <dd>
-          Taille en pixels des étiquettes affichées dans le widget (la taille
-          réelle de l'étiquette, déterminée par la section suivante, pouvant être
-          plus grande)
-        </dd>
-        <dt>Génération</dt>
-        <dd>
-          Détermine quand une nouvelle étiquette doit être générée (mais pas
-          enregistrée) lors de l'affichage d'une fiche.
-        </dd>
-        <dt>Boutons</dt>
-        <dd>
-          Boutons de mise à jour groupée à afficher.
-          <ul>
-            <li>Tous : Mise à jour de toutes les étiquettes</li>
-            <li>Invalides : Mise à jour des étiquettes invalides (cf. rubrique Données)</li>
-          </ul>
-        </dd>
-      </dl>
-    </div>
     <!-- Contrôles -->
     <label for="display.size">Taille :</label>
     <select id="display.size" name="display.size">
