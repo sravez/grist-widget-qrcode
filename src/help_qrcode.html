@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/help.css" />
+    <style>
+        body {
+            display:grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        #help_qrcode_label {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <ul>
+        <li>
+            <b>L</b> : largeur du code et de la <i>Quiet Zone</i> qui facilite la lecture
+            du QR code et possède une largeur égale à 4 fois celle d'un module (plus petit
+            carré du QR code).
+        </li>
+        <li>
+            <b>B</b> : largeur de la bordure extérieure accueillant le texte ; une valeur nulle
+            supprime l'ajout du texte.
+        </li>
+        <li>
+            <b>T</b> : taille du texte inséré dans la bordure.
+        </li>
+        <li>
+            <b>Couleurs</b> : si le contraste entre les couleurs un triangle apparaît (rouge pour un
+            contraste inférieur à 4,5 et orange pour un contraste entre 4,5 et 12.
+            <br/>
+            <img id="help_contrast" src="img/help_contrast.png" alt="Contraste insuffisant"/>
+        </li>
+    </ul>
+
+</div>
+<img id="help_qrcode_label" src="img/help_qrcode.png" alt="Descriptif d'une étiquette"/>
+</body>
+</html>

@@ -8,8 +8,6 @@
  * @property {object}                     display                    Configuration de l'affichage
  * @property {number}                     display.size               - Taille des QR codes à l'écran
  * @property {"always"|"invalid"|"never"} display.auto_next          - Génération automatique du QR code (always|invalid|never)
- * @property {boolean}                    display.btn_update_all     - Affichage du bouton de mise à jour de tous les QRC
- * @property {boolean}                    display.btn_update_invalid - Affichage du bouton de mise à jour de tous les QRC invalides
  * @property {QRLabelOptions}             qrcode                     Paramètre de génération des étiquettes QR codes
  * @property {object}                     data                       Configuration de la gestion des données
  * @property {0|-1}                       data.position              - Position de l'étiquette courante dans le champ (0 : première, -1 : dernière)
@@ -32,9 +30,7 @@
 const default_widget_options = {
 	display: {
 		size: 64,
-		auto_next: "invalid",
-		btn_update_all: false,
-		btn_update_invalid: true
+		auto_next: "invalid"
 	},
 	qrcode: {
 		size: 256,

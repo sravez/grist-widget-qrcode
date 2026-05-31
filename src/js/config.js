@@ -18,7 +18,8 @@
  * @author Serge RAVEZ
  */
 
-import FormDataInterface from "./FormDataInterface.mjs";
+import FormDataInterface from "../lib/FormDataInterface.js";
+import getContrast from "../lib/contrast.js"
 
 /** Générateur d'étiquette */
 import getQRLabel from "./QRLabel.js"
@@ -116,18 +117,45 @@ function setSizeListeners() {
 
 function setHelpListeners() {
 	// Affichage des aides
+	/** @type {HTMLDialogElement} */
+	const dialog = document.getElementById("help_dialog")
+	/** @type {HTMLIFrameElement} */
+	const iframe = document.getElementById("help_iframe")
+
 	document.querySelectorAll(".help_btn").forEach(helpBtn => {
-		const target = document.getElementById(helpBtn.dataset.target)
 		helpBtn.onclick = (e) => {
-			target.showPopover()
+			iframe.src = `./help_${helpBtn.dataset.target}.html`
+			dialog.showModal()
 		}
 	})
+}
+
+
+const fgColor = document.getElementById("qrcode.fgColor")
+const bgColor = document.getElementById("qrcode.bgColor")
+const danger = document.getElementById("contrast_check")
+
+function contrast_check() {
+	danger.classList.remove("warn", "error")
+	const c = getContrast(fgColor.value, bgColor.value)
+	if (c < 4.5) {
+		danger.classList.add("error")
+	} else if (c < 12) {
+		danger.classList.add("warn")
+	}
+}
+
+function setColorListeners() {
+	fgColor.addEventListener("change", contrast_check)
+	bgColor.addEventListener("change", contrast_check)
 }
 
 function setData(a_options = {}) {
 	const o = {...default_options, ...a_options};
 	formDataInterface.setData(o);
+	contrast_check()
 	updateSampleImage(false)
+
 }
 
 function setMessageListeners() {
@@ -161,6 +189,7 @@ function init_form() {
 	// Doit être exécuté avant sample_management() qui assigne des onchange
 	sample_management()
 	setSizeListeners()
+	setColorListeners()
 	setHelpListeners()
 	setMessageListeners()
 	// Assignation des données

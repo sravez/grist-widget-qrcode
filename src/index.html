@@ -19,13 +19,14 @@
             <button id="save_label_btn">⬅ Enregistrer</button>
             <div id="preview" class="label_box"><img src="img/no_label.png" class="zoomable empty"/></div>
         </div>
+    </div>
+    <div id="global-actions">
         <h2><img src="./img/globe.png"/> Actions globales</h2>
         <!-- Mise à jour des visuels -->
         <button id="update_labels_btn">Mise à jour des visuels (<span class="label_count"></span>)</button>
         <!-- Modifie tous les liens -->
         <button id="trigger_url_update_btn">Renouvellement (<span class="label_count"></span>)</button>
     </div>
-
     <!-- Zoom -->
 
     <dialog id="zoom_dialog" class="zoom">
@@ -41,6 +42,7 @@
                 <div id="config_title">Configuration du widget</div>
                 <button id="cancel_options_btn">Annuler</button>
                 <button id="reset_options_btn">Reset</button>
+                <button id="default_options_btn">Défaut</button>
                 <button id="save_options_btn">Enregistrer</button>
             </div>
             <iframe id="configuration"

@@ -99,3 +99,4 @@ export function contrast(a_color1, a_color2) {
     return c >= 1 ? c : 1/c
 }
 
+export default contrast

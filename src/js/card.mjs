@@ -231,9 +231,18 @@ export async function onRecord(record, mapping) {
 		label_img.src = "./img/no_label.png"
 		label_img.classList.add("empty")
 	}
-	build_preview(options.display.auto_next === "always"
-		          || label_img.classList.contains("empty")
-		          || (options.display.auto_next === "invalid" && current_mapped_record.validity === false))
+	if(current_mapped_record.editable === false) {
+		preview_img.classList.add("uneditable")
+		document.getElementById("save_label_btn").classList.add("uneditable")
+		document.getElementById("global-actions").classList.add("uneditable")
+	} else {
+		preview_img.classList.remove("uneditable")
+		document.getElementById("save_label_btn").classList.remove("uneditable")
+		document.getElementById("global-actions").classList.remove("uneditable")
+		build_preview(options.display.auto_next === "always"
+			|| label_img.classList.contains("empty")
+			|| (options.display.auto_next === "invalid" && current_mapped_record.validity === false))
+	}
 }
 
 /**

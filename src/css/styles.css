@@ -1,5 +1,5 @@
 @media print {
-	#selected-label, #zoom_dialog, #config_dialog, #print-selector, .print-separator {
+	#selected-label, #global-actions, #zoom_dialog, #config_dialog, #print-selector, .print-separator {
 		display: none;
 	}
 	body {
@@ -62,6 +62,9 @@ button:hover {
 
 #save_label_btn:has(~ div img.empty) {
  visibility: hidden;
+}
+.uneditable {
+	display: none;
 }
 
 .label_box {

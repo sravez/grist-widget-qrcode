@@ -1,0 +1,14 @@
+/* Variables */
+:root {
+    --font: Verdana, sans-serif;
+    --fsize: 12px;
+    --ssize: calc(var(--fsize) + 2px);
+    --color: #336699;
+}
+/*
+ * Styles globaux
+ */
+body {
+    font-family: var(--font);
+    font-size: var(--ssize);
+}

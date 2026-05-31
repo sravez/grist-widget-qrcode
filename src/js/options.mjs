@@ -57,6 +57,11 @@ export function init() {
 		});
 	}
 
+	document.getElementById("default_options_btn").onclick = async (e) => {
+		await grist.setOptions(default_widget_options);
+		config_dialog.close()
+	}
+
 	document.getElementById("reset_options_btn").onclick = (e) => {
 		window.postMessage({ action:"sendConfig" })
 	}

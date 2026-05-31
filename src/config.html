@@ -9,6 +9,13 @@
 </head>
 
 <body>
+
+<dialog id="help_dialog">
+    <div>
+      <iframe id="help_iframe" src="help_display.html"></iframe>
+    </div>
+</dialog>
+
 <form id="config_form">
 
   <section id="section_display">
@@ -16,14 +23,9 @@
     <div class="section_title">
       <img src="img/section_display.png" height="14px" class="section_icon" alt="Icône de la section"/>
       Interface
-      <img src="img/help.png" class="help_btn" data-target="display_help" alt="Aide sur la section"/>
+      <img src="img/help.png" class="help_btn" data-target="display" alt="Aide sur la section"/>
     </div>
-    <iframe id="display_help"
-            title="Affichage"
-            src="help_display.html"
-            class="help_popover"
-            popover>
-    </iframe>
+
 
     <!-- Contrôles -->
     <label for="display.size">Taille :</label>
@@ -42,14 +44,6 @@
       <option value="never">Jamais</option>
     </select>
 
-    <label>Boutons :</label>
-    <span>
-      <input type="checkbox" id="display.btn_update_all" name="display.btn_update_all" value="true"/>
-      <label for="display.btn_update_all">MàJ tous</label>
-
-      <input type="checkbox" id="display.btn_update_invalid" name="display.btn_update_invalid" value="true"/>
-      <label for="display.btn_update_invalid">MàJ invalides</label>
-    </span>
   </section>
 
   <section id="section_data">
@@ -57,22 +51,7 @@
     <div class="section_title">
       <img src="img/section_data.png" height="14px" class="section_icon" alt="Icône de la section"/>
       Enregistrement
-      <img src="img/help.png" class="help_btn" data-target="data_help" alt="Aide sur la section"/>
-      <div id="data_help" class="help_popover" popover>
-        <p class="help_title">Réglages des données<p>
-        <dl>
-          <dt>Position</dt>
-          <dd>
-            Position de l'étiquette courante (première ou dernière) pour l'affichage
-            et l'enregistrement.
-          </dd>
-          <dt>Enregistrement</dt>
-          <dd>
-            Détermine si une nouvelle étiquette remplace la ou les précédentes ou si elle
-            vient s'y ajouter (et est alors insérée à la position définie ci-dessus).
-          </dd>
-        </dl>
-      </div>
+      <img src="img/help.png" class="help_btn" data-target="data" alt="Aide sur la section"/>
     </div>
     <!-- Contrôles -->
     <label for="data.position">Position :</label>
@@ -93,9 +72,8 @@
     <div class="section_title">
       <img src="img/section_qrcode.png" height="14px" class="section_icon" alt="Icône de la section"/>
       Étiquettes
-      <img src="img/help.png" class="help_btn" data-target="qrcode_help" alt="Aide sur la section"/>
+      <img src="img/help.png" class="help_btn" data-target="qrcode" alt="Aide sur la section"/>
     </div>
-    <div id="qrcode_help" class="help_popover" popover><img src="img/help.qrcode.png" alt="Descriptif d'une étiquette"/></div>
     <!-- Contrôles -->
     <label for="qrcode.errorCorrectionLevel">Résilience :</label>
     <select id="qrcode.errorCorrectionLevel" name="qrcode.errorCorrectionLevel">
@@ -122,7 +100,7 @@
       <span></span>
     </span>
 
-    <label>Couleurs :</label>
+    <label><span id="contrast_check">▲ </span>Couleurs :</label>
     <span id="colors">
       <input id="qrcode.fgColor" name="qrcode.fgColor" type="color" value="#000000"/>
       &nbsp;/&nbsp;
@@ -146,33 +124,9 @@
     <div class="section_title">
       <img src="img/printer.png" height="14px" class="section_icon" alt="Icône de la section"/>
       Impression
-      <img src="img/help.png" class="help_btn" data-target="display_help" alt="Aide sur la section"/>
+      <img src="img/help.png" class="help_btn" data-target="print" alt="Aide sur la section"/>
     </div>
 
-    <div id="print_help" class="help_popover" popover>
-      <p class="help_title">Réglages d'affichage<p>
-      <dl>
-        <dt>Taille</dt>
-        <dd>
-          Taille en pixels des étiquettes affichées dans le widget (la taille
-          réelle de l'étiquette, déterminée par la section suivante, pouvant être
-          plus grande)
-        </dd>
-        <dt>Génération</dt>
-        <dd>
-          Détermine quand une nouvelle étiquette doit être générée (mais pas
-          enregistrée) lors de l'affichage d'une fiche.
-        </dd>
-        <dt>Boutons</dt>
-        <dd>
-          Boutons de mise à jour groupée à afficher.
-          <ul>
-            <li>Tous : Mise à jour de toutes les étiquettes</li>
-            <li>Invalides : Mise à jour des étiquettes invalides (cf. rubrique Données)</li>
-          </ul>
-        </dd>
-      </dl>
-    </div>
     <!-- Contrôles -->
     <label>Page :</label>
     <span class="multi-control">
