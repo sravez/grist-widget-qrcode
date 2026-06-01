@@ -4,6 +4,24 @@
 <head>
   <meta charset="utf-8">
   <title>Widget Grist QRLabel</title>
+  <style>
+    :root {
+      --font: Verdana, sans-serif;
+      --fsize: 12px;
+      --ssize: calc(var(--fsize) + 2px);
+      --color: #336699;
+    }
+    /*
+     * Styles globaux
+     */
+    body {
+      font-family: var(--font);
+      font-size: var(--ssize);
+    }
+    h1, h2, h3 {
+      color: var(--color);
+    }
+  </style>
 </head>
 
 <body>
@@ -12,15 +30,37 @@
 Widget Grist de génération d'étiquettes organisées autour d'un QR code.
 
 <h2>Exemple d'étiquette</h2>
-
+<p>
+Il est possible de personnaliser l'étiquette en choisissant :
+</p>
+<ul>
+  <li>les couleurs de premier plan et d'arrière-plan,</li>
+  <li>la taille de la bordure et du texte entourant le QR code.</li>
+</ul>
+<p>
+L'orientation des textes et la taille de la <i>quiet zone</i> (zone vierge encadrant le QR code de même
+couleur que le fond) sont fixes.
+</p>
+<img src="img/Label_example.png" height="139" width="139" alt="Exemple d'étiquette"/>
 
 <h2>Intégration dans votre document</h2>
 
 <h3>Ajout d'un widget personnalisé</h3>
 
+<p>Ajouter le widget en ajoutant une vue personnalisée&nbsp;; choisir le widget <i>URL personnalisée</i>
+et saisir l'ULR suivante&nbsp;:</p>
+<pre>https://github.io/.../releases/latest</pre>
+
+<img src="img/custom_url_widget.png" height="114" width="126"/>
+
 <h3>Autorisation d'accès</h3>
 
+Pour profiter de toutes les fonctionnalités, il vous faut donner un accès complet du widget à la table
+sous-jacente.
+
 <h3>Correspondance des champs/colonnes (<i>Mapping</i>)</h3>
+
+Vous devez ensuite inidiquer au widget les colonnes de votre table à utiliser.
 
 <table id="mapping">
   <thead>
@@ -42,7 +82,7 @@ Widget Grist de génération d'étiquettes organisées autour d'un QR code.
     <td class="column"><code>filename</code></td>
     <td>Texte</td>
     <td>Non</td>
-    <td>Nom sous lequel sera enregistrée l'étiquette</td>
+    <td>Nom (sans extension) sous lequel sera enregistrée l'étiquette</td>
   </tr>
   <tr>
     <td class="column"><code>top</code></td>
@@ -72,7 +112,7 @@ Widget Grist de génération d'étiquettes organisées autour d'un QR code.
     <td class="column"><code>validity</code></td>
     <td>Booléen</td>
     <td>Non</td>
-    <td>Validité de l'étiquette</td>
+    <td>Validité de l'étiquette déterminée par votre application</td>
   </tr>
   <tr>
     <td class="column"><code>trigger</code></td>
@@ -80,14 +120,38 @@ Widget Grist de génération d'étiquettes organisées autour d'un QR code.
     <td>Non</td>
     <td>Génération d'une nouvelle valeur pour <code>val</code></td>
   </tr>
-
+  <tr>
+    <td class="column"><code>editable</code></td>
+    <td>Booléen</td>
+    <td>Non</td>
+    <td>Affichage de mise à jour des étiquettes</td>
+  </tr>
 
 </table>
 
 <h4>Colonne <code>val</code></h4>
+  Texte (le plus souvent une URL) encodé dans le QR code.
 
+<h4>Colonne <code>filename</code></h4>
+  <p>Nom (complété par <code>.png</code>) sous lequel sera enregistré le fichier
+  graphique de l'étiquette.</p>
 
+  <p>En liant le nom de fichier et <code>val</code>, vous pouvez estimer la validité
+  de l'étiquette et alimenter la colonne <code>validity</code>.</p>
 
+<h4>Colonnes <code>top</code>, <code>right</code>, <code>bottom</code>, <code>left</code></h4>
+  <p>Textes affichés sur chacun des côtés du QR code.</p>
+
+<h4>Colonne <code>validity</code></h4>
+  <p>Estimation par votre application de la validité de l'étiquette courante, basée par exemple
+  sur le nom du fichier. Cela permet à utilisateur de filtrer sur cette colonne et de procéder
+  à la génération d'une nouvelle étiquette.</p>
+
+<h4>Colonne <code>trigger</code></h4>
+  <p>Éventuelle colonne booléenne dont la mise à <b>true</b> génère une nouvelle valeur pour <code>val</code>.</p>
+
+<h4>Colonne <code>editable</code></h4>
+<p>Si <b>true</b>, on affiche les boutons permettant d'enregistrer et d'actualiser l'étiquette.</p>
 
 <h2>Utilisation</h2>
 

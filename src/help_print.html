@@ -2,9 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <link rel="stylesheet" href="css/help.css" />
+    <style>
+        body {
+            display:grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        #help_qrcode_label {
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
+<div>
+    Toutes les dimensions sont exprimées en <b>mm</b>&nbsp;:
+    <ul>
+        <li>
+            <b>l</b> : largeur de la page.
+        </li>
+        <li>
+            <b>h</b> : hauteur de la page.
+        </li>
+        <li>
+            <b>C</b> : nombre de colonnes.
+        </li>
+        <li>
+            <b>R</b> : nombre de rangées.
+        </li>
+        <li>
+            <b>L</b> : largeur de l'étiquette.
+        </li>
+        <li>
+            <b>H</b> : hauteur de l'étiquette.
+        </li>
+        <li>
+            <b>P<sub>h</sub></b> : période horizontale, distance horizontale entre les 2 mêmes points de deux étiquettes voisines.
+        </li>
+        <li>
+            <b>P<sub>v</sub></b> : période verticale, distance verticale entre les 2 mêmes points de deux étiquettes voisines.
+        </li>
+        <li>
+            Les marges haute et gauche (<b>T</b> et <b>G</b>) doivent être ajustées en fonction du navigateur et de l'imprimante.
+            Positionnez-les à 0 dans un premier temps, imprimez et ajustez pour correspondre à vos feuilles d'étiquettes.
+        </li>
+    </ul>
 
+</div>
+<img id="help_qrcode_label" src="img/help_print.png" alt="Descriptif d'une étiquette"/>
 </body>
 </html>
