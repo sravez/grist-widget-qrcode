@@ -6,7 +6,6 @@
   <title>Widget Grist QRLabel</title>
   <style>
     :root {
-      --font: Verdana, sans-serif;
       --fsize: 12px;
       --ssize: calc(var(--fsize) + 2px);
       --color: #336699;
@@ -15,24 +14,30 @@
      * Styles globaux
      */
     body {
-      font-family: var(--font);
+      font-family: Verdana, sans-serif;
       font-size: var(--ssize);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #content {
+      width: 800px;
     }
     h1, h2, h3 {
-      color: var(--color);
+      color: #336699;
     }
   </style>
 </head>
 
 <body>
+<div id="content">
 <h1>Widget Grist QRLabel</h1>
 
 Widget Grist de génération d'étiquettes organisées autour d'un QR code.
 
 <h2>Exemple d'étiquette</h2>
-<p>
-Il est possible de personnaliser l'étiquette en choisissant :
-</p>
+<img src="img/Label_example.png" height="139" width="139" alt="Exemple d'étiquette" style="float: right" />
+<p>Il est possible de personnaliser l'étiquette en choisissant :</p>
 <ul>
   <li>les couleurs de premier plan et d'arrière-plan,</li>
   <li>la taille de la bordure et du texte entourant le QR code.</li>
@@ -41,17 +46,14 @@ Il est possible de personnaliser l'étiquette en choisissant :
 L'orientation des textes et la taille de la <i>quiet zone</i> (zone vierge encadrant le QR code de même
 couleur que le fond) sont fixes.
 </p>
-<img src="img/Label_example.png" height="139" width="139" alt="Exemple d'étiquette"/>
 
 <h2>Intégration dans votre document</h2>
 
 <h3>Ajout d'un widget personnalisé</h3>
-
+  <img src="img/custom_url_widget.png" height="114" width="126" style="float: right" />
 <p>Ajouter le widget en ajoutant une vue personnalisée&nbsp;; choisir le widget <i>URL personnalisée</i>
-et saisir l'ULR suivante&nbsp;:</p>
+et saisir l'URL suivante&nbsp;:</p>
 <pre>https://github.io/.../releases/latest</pre>
-
-<img src="img/custom_url_widget.png" height="114" width="126"/>
 
 <h3>Autorisation d'accès</h3>
 
@@ -60,11 +62,13 @@ sous-jacente.
 
 <h3>Correspondance des champs/colonnes (<i>Mapping</i>)</h3>
 
-Vous devez ensuite inidiquer au widget les colonnes de votre table à utiliser.
+Vous devez ensuite indiquer au widget les colonnes de votre table à utiliser.
 
 <table id="mapping">
   <thead>
+  <tr>
     <th>Colonne</th><th>Type</th><th>Obligatoire</th><th>Description</th>
+  </tr>
   </thead>
   <tr>
     <td class="column"><code>label</code></td>
@@ -157,19 +161,26 @@ Vous devez ensuite inidiquer au widget les colonnes de votre table à utiliser.
 
 <h3>Configuration</h3>
 
-<h4>Affichage</h4>
+La configuration du widget est accessible via le volet latéral gauche. Elle permet de régler les paramètres suivants&nbsp;:
+<ul>
+  <li>Affichage : taille des étiquettes et génération des visuels&nbsp;</li>
+  <li>Données : position de l'étiquette courante et conservation de l'historique&nbsp;</li>
+  <li>Étiquettes : tailles et couleurs&nbsp;</li>
+  <li>Impression : mise en page des feuilles d'étiquettes.</li>
+</ul>
 
-<h4>Données</h4>
+Une aide détaillée est accessible pour chaque rubrique depuis la fenêtre de configuration.
 
-<h4>QR code</h4>
+<h3>Mise à jour</h3>
 
-<h3>Mise à jour des visuelles</h3>
+<p>Si l'utilisateur dispose des droits, il lui est possible d'appliquer un nouveau visuel à l'étiquette courante ou
+  à toutes les étiquettes correspondant au(x) filtre(s).</p>
 
-<h4>Mise à jour individuelle</h4>
-
-<h4>Mise à jour globale</h4>
-
-<h3>Renouvellement</h3>
+<p>Il est en outre possible de donner la possibilité à l'utilisateur de rafraîchir l'étiquette via une colonne <i>trigger</i>
+qui peut modifier la valeur à encoder et mettre à jour les étiquettes. Cela peut être utile si on veut désactiver les
+étiquettes courantes si elles sont utilisées indûment.
+</p>
+</div>
 </body>
 
 </html>
