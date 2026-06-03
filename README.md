@@ -1,2 +1,2 @@
-# grist-widget-qrcode
-QR Code widget for Grist
+# Widget Grist QRLabel
+

@@ -13,15 +13,15 @@
   
   <body>
     <div id="selected-label">
-        <h2><img src="./img/qrcode.png"/> <span id="card_title">Enregistrement courant</span></h2>
+        <h2><img src="./img/qrcode.png" alt="Icône étiquette"/> <span id="card_title">Enregistrement courant</span></h2>
         <div id="labels">
-            <div id="label" class="label_box"><img src="" class="label invalid zoomable empty"/></div>
+            <div id="label" class="label_box"><img src="" alt="Éventuelle étiquette courante" class="label invalid zoomable empty"/></div>
             <button id="save_label_btn">⬅ Enregistrer</button>
-            <div id="preview" class="label_box"><img src="img/no_label.png" class="zoomable empty"/></div>
+            <div id="preview" class="label_box"><img src="img/no_label.png" alt="Éventuelle étiquette candidate" class="zoomable empty"/></div>
         </div>
     </div>
     <div id="global-actions">
-        <h2><img src="./img/globe.png"/> Actions globales</h2>
+        <h2><img src="./img/globe.png" alt="Icône globe"/> Actions globales</h2>
         <!-- Mise à jour des visuels -->
         <button id="update_labels_btn">Mise à jour des visuels (<span class="label_count"></span>)</button>
         <!-- Modifie tous les liens -->
@@ -31,7 +31,7 @@
 
     <dialog id="zoom_dialog" class="zoom">
         <button commandfor="zoom_dialog" command="close" class="zoom_close_btn"></button>
-        <img id="zoomed" src="" class="zoom"/>
+        <img id="zoomed" src="" alt="Zoom sur étiquette" class="zoom"/>
     </dialog>
 
     <!-- Réglages -->
@@ -56,7 +56,7 @@
     <!-- Impression -->
 
     <div id="print-selector">
-        <h2><img src="./img/printer.png"/> Impression</h2>
+        <h2><img src="./img/printer.png" alt="Icône imprimante"/> Impression</h2>
         <label for="print-number">Nombre :</label>
         <input id="print-number" name="print-number" type="number" min="1" value="1" />
 

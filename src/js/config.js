@@ -1,5 +1,5 @@
 /**
- * # Gestion du questionnaire de configuration
+ * ## Gestion du questionnaire de configuration
  *
  * ## Structure du formulaire
  *
@@ -38,8 +38,15 @@ let form;
  */
 let formDataInterface;
 
+/**
+ * ### Actualisation de la vignette de prévisualisation des réglages
+ *
+ * @param {boolean} [on=true] Si **true** on force l'affichage
+ */
 function updateSampleImage(on = true) {
+	/** @type {HTMLImageElement} */
 	const sample_img = document.getElementById("preview_img")
+	/** @type {HTMLImageElement} */
 	const preview_popover_img = document.getElementById("preview_popover_img")
 
 	const sample_data = {
@@ -61,13 +68,14 @@ function updateSampleImage(on = true) {
 }
 
 /**
- * ### Gestion de l'échantillon
+ * ### Gestion des clics sur l'échantillon
  *
  * Le comportement est déterminé par la présence ou absence de la classe `empty` :
  * * présente : on charge l'image,
- * * absente : on affiche le pop-up après y avoir assigné l'image.
+ * * absente : on affiche le pop-up de zoom.
  */
 function sample_management() {
+	/** @type {HTMLImageElement} */
 	const sample_img = document.getElementById("preview_img")
 	const preview_popover = document.getElementById("preview_popover")
 
@@ -95,8 +103,10 @@ function sample_management() {
 	}
 }
 
-
-
+/**
+ * Assignation des gestionnaires d'événements des contrôles permettant de doubler
+ * ou diviser par deux la taille des étiquettes.
+ */
 function setSizeListeners() {
 
 	function multiply(x) {
@@ -115,6 +125,9 @@ function setSizeListeners() {
 	}
 }
 
+/**
+ * Gestion des boutons/images d'affichage d'aide
+ */
 function setHelpListeners() {
 	// Affichage des aides
 	/** @type {HTMLDialogElement} */
@@ -130,12 +143,19 @@ function setHelpListeners() {
 	})
 }
 
-
+/**
+ * Contrôle de couleur de premier plan
+ * @type {HTMLInputElement}
+ */
 const fgColor = document.getElementById("qrcode.fgColor")
+/**
+ * Contrôle de couleur d'arrière plan
+ * @type {HTMLInputElement}
+ */
 const bgColor = document.getElementById("qrcode.bgColor")
-const danger = document.getElementById("contrast_check")
 
 function contrast_check() {
+	const danger = document.getElementById("contrast_check")
 	danger.classList.remove("warn", "error")
 	const c = getContrast(fgColor.value, bgColor.value)
 	if (c < 4.5) {
@@ -145,11 +165,18 @@ function contrast_check() {
 	}
 }
 
+/**
+ * Calcul du contraste suite à modification d'une couleur
+ */
 function setColorListeners() {
 	fgColor.addEventListener("change", contrast_check)
 	bgColor.addEventListener("change", contrast_check)
 }
 
+/**
+ * Assignation d'une configuration au formulaire
+ * @param {WidgetOptions} a_options
+ */
 function setData(a_options = {}) {
 	const o = {...default_options, ...a_options};
 	formDataInterface.setData(o);
@@ -158,15 +185,20 @@ function setData(a_options = {}) {
 
 }
 
+/**
+ * Réception et réponse aux messages
+ * * `setExistingConfig` : on applique les données au formulaire
+ * * `getModifiedConfig` : on envoie la nouvelle configuration
+ */
 function setMessageListeners() {
 	// Réponses aux messages
 	window.addEventListener("message", (e) => {
 		if(e.origin === window.location.origin) {
 			switch(e.data.action) {
-				case "setConfig":
+				case "setExistingConfig":
 					setData(e.data.config)
 					break
-				case "getConfig":
+				case "getModifiedConfig":
 					e.source.postMessage({
 						action: "getConfigResp",
 						config: formDataInterface.getData()
@@ -194,7 +226,7 @@ function init_form() {
 	setMessageListeners()
 	// Assignation des données
 	setData()
-	window.parent.postMessage({action: "getConfig"})
+	window.parent.postMessage({action: "getExistingConfig"})
 }
 
 /**

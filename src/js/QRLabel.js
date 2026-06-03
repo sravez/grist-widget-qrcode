@@ -4,6 +4,7 @@
  * En partant du centre l'étiquette est constituée de :
  * * un QR code,
  * * une marge ou _Quiet zone_ de même couleur que le fond autour du QR code,
+ *   établie automatiquement à 4 fois la taille d'un module,
  * * une bordure pouvant accueillir du texte.
  *
  * Le résultat est fourni sous forme d'une image Data URL.
