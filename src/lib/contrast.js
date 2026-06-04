@@ -1,5 +1,7 @@
 /**
- * Calcule du contraste entre deux couleurs
+ * Calcul du contraste entre deux couleurs
+ *
+ * Le contraste est une valeur entre 1 et 21
  */
 
 /**
@@ -24,7 +26,7 @@
  */
 
 /**
- * Convertit une couleur objet
+ * Convertit une couleur objet en ArrayColor
  * @param {ObjColor} a_oc
  * @returns {ArrayColor}
  */
@@ -33,7 +35,7 @@ function ObjColor_to_ArrayColor(a_oc) {
 }
 
 /**
- * Convertit une couleur hexadécimale
+ * Convertit une couleur hexadécimale en ArrayColor
  * @param {HexColor} a_hc
  * @returns {ArrayColor}
  */
@@ -53,7 +55,7 @@ function HexColor_to_ArrayColor(a_hc) {
 
 /**
  * Convertit une couleur en ArrayColor
- * @param {ArrayColor, HexColor, ObjColor} a_color
+ * @param {ArrayColor|HexColor|ObjColor} a_color
  * @returns {ArrayColor}
  */
 function getArrayColor(a_color) {
@@ -89,8 +91,8 @@ function luminance(a_color) {
 
 /**
  * Calcule le contraste entre 2 couleurs
- * @param {ArrayColor, HexColor, ObjColor} a_color1
- * @param {ArrayColor, HexColor, ObjColor} a_color2
+ * @param {ArrayColor|HexColor|ObjColor} a_color1
+ * @param {ArrayColor|HexColor|ObjColor} a_color2
  * @returns {number}
  */
 export function contrast(a_color1, a_color2) {

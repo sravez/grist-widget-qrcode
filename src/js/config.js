@@ -22,7 +22,7 @@ import FormDataInterface from "../lib/FormDataInterface.js";
 import getContrast from "../lib/contrast.js"
 
 /** Générateur d'étiquette */
-import getQRLabel from "./QRLabel.js"
+import getQRLabel from "../lib/QRLabel.js"
 
 /** Options par défaut */
 import default_options from "./widget_options.default.mjs"

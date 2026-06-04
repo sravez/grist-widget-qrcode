@@ -1,5 +1,16 @@
-import getQRLabel from "./QRLabel.js"
-import { getAttachmentURL, attach_file_from_url, trigger_update } from "./files.mjs"
+/**
+ * ## Module de gestion de la vue principale du widget `index.html`
+ *
+ * Il exporte les fonctions suivantes :
+ * — `init()` : assignation des gestionnaires d'événements ;
+ * — `onOptions()` : mise à jour de la vue sur changement de configuration ;
+ * — `onRecord()` : mise à jour de la vue après transition vers un autre enregistrement ;
+ * — `onRecords()` : mise à jour de la vue après la modification des données.
+ *
+ * @author Serge RAVEZ
+ */
+import getQRLabel from "../lib/QRLabel.js"
+import { getAttachmentURL, attach_file_from_url } from "../lib/attachements.js"
 import { options } from "./index.js";
 import { apply_layout, create_sheets } from "./print.js";
 
@@ -246,10 +257,11 @@ export async function onRecord(record, mapping) {
 }
 
 /**
- * ### Fonction exécutée à chaque modification des données
- * * Stocke les données mappées.
- * * Affiche le nombre d'enregistrements dans les boutons d'actions globales.
- * * Met à jour les feuilles d'impression.
+ * ### Fonction exécutée à chaque modification des données (y compris filtre).
+ *
+ * — Stocke les données mappées.
+ * — Affiche le nombre d'enregistrements dans les boutons d'actions globales.
+ * — Met à jour les feuilles d'impression.
  *
  * @param {object[]} records Enregistrements NON MAPPÉS
  * @returns {Promise<void>}
@@ -279,6 +291,8 @@ function build_preview(on = true) {
 
 /**
  * Zoom sur une image
+ * — lie l'image à la boîte de dialogue,
+ * — affiche la boîte de dialogue.
  * @param {HTMLImageElement} a_img
  */
 function zoom_in(a_img) {

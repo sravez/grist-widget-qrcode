@@ -1,5 +1,25 @@
-import { getAttachmentURL } from "./files.mjs";
-import {options} from "./index.js";
+/**
+ * ## Impression d'étiquettes
+ *
+ * Ce module construit les planches d'impression d'étiquettes.
+ *
+ * La disposition des planches d'étiquettes est décrites dans la configuration
+ * du widget. Elle est ensuite traduite dans une feuille de styles CSS ajoutée
+ * à `document.adoptedStyleSheets` pour compléter les règles génériques.
+ *
+ * On utilise le mode `grid` de CSS. À noter que la définition des marges haute
+ * et gauche nécessite un ajustement, car le navigateur peut ajouter une valeur
+ * a priori indéterminée aux marges CSS.
+ *
+ * La feuille de style globale masque tous les éléments ne devant pas être imprimés
+ * et introduit automatiquement un saut de page après chaque élément de classe
+ * `print-sheet` qui n'est pas le dernier.
+ *
+ * @author Serge RAVEZ
+ */
+
+import { getAttachmentURL } from "../lib/attachements.js";
+import { options } from "./index.js";
 
 /**
  * @typedef Layout Disposition d'une feuille d'impression
@@ -23,8 +43,8 @@ import {options} from "./index.js";
 const sheets = document.getElementById("print-sheets")
 /**
  * Feuille de style gérant la disposition :
- * * Ajoutée à _document.adoptedStyleSheets_ (tableau de _CSSStyleSheet_) ;
- * * Définit la page et la grille des feuilles.
+ * — Ajoutée à _document.adoptedStyleSheets_ (tableau de _CSSStyleSheet_) ;
+ * — Définit la page et la grille des feuilles.
  * @type {CSSStyleSheet}
  */
 let css
@@ -61,7 +81,6 @@ export async function create_sheets(a_recs, a_number= 1, a_offset= 0) {
      * @type {number}
      */
     let pages = 0
-
     /**
      * Nombre d'étiquettes
      * @type {number}
@@ -69,7 +88,7 @@ export async function create_sheets(a_recs, a_number= 1, a_offset= 0) {
     let labels = 0
 
     /**
-     * Gestion du nombre d'étiquettes de la page courante
+     * Gestion du nombre d'emplacements de la page courante
      * et création éventuelle d'une nouvelle page.
      */
     function incSlotCount() {
@@ -97,7 +116,7 @@ export async function create_sheets(a_recs, a_number= 1, a_offset= 0) {
             for(let i = 1; i <= a_number; i++) {
                 incSlotCount()
                 labels++
-                current_sheet.innerHTML += `<img class="print-label" src="${url}"/>`
+                current_sheet.innerHTML += `<img class="print-label" src="${url}" alt="Étiquette ${labels}"/>`
             }
         }
     }
@@ -139,9 +158,9 @@ function getStyleString(a_layout) {
 
 /**
  * ### Applique une disposition
- * * Crée la feuille de style si elle n'existe pas et l'ajoute à
+ * — Crée la feuille de style si elle n'existe pas et l'ajoute à
  *   _document.adoptedStyleSheet_.
- * * Remplace son contenu avec les nouveaux styles de page et de grille.
+ * — Remplace son contenu avec les nouveaux styles de page et de grille.
  *
  * @param {Layout} a_layout Disposition des étiquettes sur les feuilles à imprimer
  */

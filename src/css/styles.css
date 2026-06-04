@@ -1,5 +1,5 @@
 @media print {
-	#selected-label, #global-actions, #zoom_dialog, #config_dialog, #print-selector, .print-separator {
+	#selected-label, #global-actions, #zoom_dialog, #config_dialog, #print-selector {
 		display: none;
 	}
 	body {

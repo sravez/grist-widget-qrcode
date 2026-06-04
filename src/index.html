@@ -1,4 +1,21 @@
 <!DOCTYPE html>
+<!--
+Vue principale du widget composée de :
+
+— <div id="selected-label"> : affichage et mise à jour de l'enregistrement courant,
+— <div id="global-actions"> : modification en masse,
+— <dialog id="zoom_dialog"> : boîte de dialogue affichant les images en taille réelle,
+— <dialog id="config_dialog"> : boîte de dialogue affichant un iframe contenant le formulaire de configuration
+— <div id="print_selector"> : configuration de l'impression (nombre et décalage>
+— <div id="print-sheets"> : planches d'étiquettes à imprimer
+
+À l'exception du dernier élément, tous sont exclus de l'impression via une règle CSS :
+@media print {
+	#selected-label, #global-actions, #zoom_dialog, #config_dialog, #print-selector {
+		display: none;
+}
+
+-->
 <html lang="fr">
   
   <head>

@@ -37,7 +37,7 @@
  * @see https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data
  */
 
-import QRCodeFactory from "../lib/QRCodeFactory.class.js"
+import QRCodeFactory from "./QRCodeFactory.class.js"
 
 /**
  * Options par défaut

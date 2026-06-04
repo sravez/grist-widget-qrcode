@@ -26,8 +26,8 @@
  */
 import columnsToMap from "./columns.mjs"
 import * as Options from "./options.mjs"
-import * as Label from "./card.mjs"
-import { init as init_factory } from "./QRLabel.js"
+import * as Label from "./view.js"
+import { init as init_factory } from "../lib/QRLabel.js"
 import default_widget_options from "./widget_options.default.mjs";
 
 /**
