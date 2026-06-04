@@ -4,7 +4,7 @@
  * Les colonnes de type _Attachement / pièce jointe_ référence par leur _id_ dans un tableau
  * des fichiers enregistrées sur le serveur ; le premier élément de ce tableau est la chaîne
  * "L" (qui est cependant ignorée lors de l'accès dans les formules ou l'objet passé en argument
- * à `onRecord()`.
+ * à `onRecord()`).
  *
  * @see https://forum.grist.libre.sh/t/tutoriel-importer-des-pieces-jointes-dans-une-table-grist/3479
  */
